@@ -31,13 +31,6 @@
 			padding-block: 0.5rem;
 			text-align: center;
 			width: 100%;
-
-			h1 {
-				border: 1px solid black;
-				font-size: 1.5rem;
-				text-align: center;
-				width: 100%;
-			}
 		}
 
 		a {
