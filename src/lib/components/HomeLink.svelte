@@ -10,9 +10,9 @@
 	a:visited {
 		font-family: 'Rocksoldier', sans-serif;
 		font-weight: bold;
-		font-size: 4cqw;
+		font-size: 4vw;
 		letter-spacing: 0.25rem;
-		margin-top: -0.5vw;
+		margin-top: -1vw;
 		padding: 1rem;
 		padding-block: 0;
 		position: absolute;

@@ -2,6 +2,32 @@
 @import 'open-props/normalize';
 @import 'open-props/buttons';
 
+* {
+	--mutedTeal-1: #c0d1c5;
+	--mutedTeal-2: #c0d1c5;
+	--mutedTeal-3: #b4c7ba;
+	--mutedTeal-4: #a7beae;
+	--mutedTeal: #a7beae;
+	--mutedTeal-5: #a7beae;
+	--mutedTeal-6: #8fa395;
+	--mutedTeal-7: #77887c;
+	--mutedTeal-8: #5f6d63;
+	--mutedTeal-9: #48514b;
+
+	--lightBeige-1: #f1f2e5;
+	--lightBeige-2: #f1f2e5;
+	--lightBeige-3: #eeefde;
+	--lightBeige-4: #eaebd8;
+	--lightBeige: #e7e8d1;
+	--lightBeige-5: #e7e8d1;
+	--lightBeige-6: #c6c7b3;
+	--lightBeige-7: #a5a695;
+	--lightBeige-8: #848577;
+	--lightBeige-9: #63635a;
+
+	--terracotta: #b85042;
+}
+
 html,
 body {
 	margin: 0;

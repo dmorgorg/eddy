@@ -21,7 +21,7 @@
 		margin-inline: auto;
 		// align-items: center;
 		border: 1px solid #a00;
-		width: 50%;
+		width: min(95%, 50rem);
 
 		header {
 			background-color: #a00;

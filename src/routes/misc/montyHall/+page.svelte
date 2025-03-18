@@ -87,7 +87,7 @@
 </script>
 
 <div class="outer">
-	<HomeLink color="purple" />
+	<HomeLink color="#A7BEAE" shadow="black" />
 	<div class="title">Monty Hall Paradox &ndash; A Simul8r</div>
 	<div class="wrapper">
 		<button>What is the Monty Hall Paradox?</button>
@@ -232,7 +232,7 @@
 		<section class="buttonList">
 			<div>
 				<img
-					src="/montyHall/rightTrans.png"
+					src="/montyHall/rightTransMed.png"
 					alt="rightTrans"
 					class="hide"
 					class:show={buttonsIndex === 1}
@@ -240,7 +240,7 @@
 			</div>
 			<div>
 				<img
-					src="/montyHall/rightTrans.png"
+					src="/montyHall/rightTransMed.png"
 					alt="rightTrans"
 					class="hide"
 					class:show={buttonsIndex === 2}
@@ -250,7 +250,7 @@
 			</div>
 			<div>
 				<img
-					src="/montyHall/rightTrans.png"
+					src="/montyHall/rightTransMed.png"
 					alt="rightTrans"
 					class="hide"
 					class:show={buttonsIndex === 3}
@@ -258,7 +258,7 @@
 			</div>
 			<div>
 				<img
-					src="/montyHall/rightTrans.png"
+					src="/montyHall/rightTransMed.png"
 					alt="rightTrans"
 					class="hide"
 					class:show={buttonsIndex === 4}
@@ -268,7 +268,7 @@
 			</div>
 			<div>
 				<img
-					src="/montyHall/rightTrans.png"
+					src="/montyHall/rightTransMed.png"
 					alt="rightTrans"
 					class="hide"
 					class:show={buttonsIndex === 5}
@@ -276,7 +276,7 @@
 			</div>
 			<div>
 				<img
-					src="/montyHall/rightTrans.png"
+					src="/montyHall/rightTransMed.png"
 					alt="rightTrans"
 					class="hide"
 					class:show={buttonsIndex === 6}
@@ -289,15 +289,12 @@
 
 <style lang="scss">
 	.outer {
-		background-color: black;
-		background-color: orange;
+		background-color: var(--terracotta);
 		min-height: 100vh;
 		overflow-x: none;
 
 		.title {
-			color: green;
-			color: purple;
-			// color: yellow
+			color: var(--mutedTeal-6);
 			display: inline-block;
 			font-family: 'AlkesRgIt';
 			font-weight: bold;
@@ -307,39 +304,39 @@
 			padding-block-start: 4vw;
 			padding-block-end: 2vw;
 			text-align: center;
-			text-shadow: 0.05vw 0.1vw 0 white;
+			text-shadow: 0.05vw 0.1vw 0 var(--mutedTeal-9);
 			width: 100vw;
 			// border: 1px solid white;
 		}
 
 		.wrapper {
 			align-items: center;
-			background-color: #f8f0ff;
-			border: 0.25vw solid purple;
+			background-color: var(--lightBeige-3);
+			border: 0.5vw solid var(--mutedTeal-6);
 			border-radius: 0.5vw;
 			display: flex;
 			flex-direction: column;
 			font-size: clamp(10px, 1.5vw, 24px);
 			width: min(95%, 40rem);
 			margin-inline: auto;
-			// padding-inline: 3rem;
 			padding-inline: 1.5vw;
 			padding-block: 1.5rem;
-			// border: 2px solid orange;
 
 			.simWrap {
 				.title,
 				.result,
 				.totals {
+					color: var(--mutedTeal-7);
 					display: flex;
 					font-family: var(--font-sans);
 					font-size: clamp(12px, 2.25vw, 24px);
-					font-weight: 600;
+					font-weight: 700;
 					line-height: 1;
 					margin: 0;
 					margin-top: 1.5rem;
 					margin-bottom: -0.5rem;
 					padding: 0;
+					text-shadow: none;
 					width: 100%;
 
 					.stick {
@@ -353,11 +350,10 @@
 				}
 
 				.totals {
-					height: 2.5rem;
-					margin-top: -2.25rem;
+					height: 1.75rem;
+					margin-top: -3rem;
 					margin-bottom: 0.5rem;
 					text-align: center;
-					color: purple;
 				}
 
 				.result {
@@ -368,15 +364,13 @@
 					text-shadow: 0.05vw 0.05vw 0.1vw white;
 					.stick {
 						animation: wiggle 0.5s 4;
-						// animation-iteration-count: 4;
-						width: 47.5%;
-						margin-inline-end: 2.5%;
+						margin-inline: 0;
+						width: 60%;
 					}
 					.switch {
 						animation: wiggle 0.5s 4;
-						// animation-iteration-count: 4;
-						width: 47.5%;
-						margin-inline-start: 2.5%;
+						margin-inline: 0;
+						width: 55%;
 					}
 				}
 
@@ -392,10 +386,10 @@
 					.switch,
 					.dontSwitch {
 						background: white;
-						border: 0.2vw solid purple;
+						border: 0.2vw solid var(--mutedTeal-6);
 						border-radius: var(--radius-2);
 						box-shadow: var(--shadow-4);
-						row-gap: calc(0.5vw + 0.125rem);
+						column-gap: calc(0.75vw + 0.125rem);
 						display: grid;
 						grid-template-columns: 1fr 1fr 1fr;
 						grid-template-rows: repeat(4, min-content);
@@ -427,26 +421,16 @@
 		}
 	}
 	.win {
-		color: #32cd32;
-		color: purple;
-		// color: #8db600;
+		color: var(--lightBeige-6);
 		font-family: 'awesome';
 		font-weight: bold;
 		letter-spacing: 0.4rem;
-		margin-top: -0.75rem;
-		text-shadow: 0.1vw 0.1vw 0.2vw white;
+		text-shadow: 0.1vw 0.1vw 0.2vw var(--mutedTeal-9);
 		&::before {
 			content: 'Win!';
 		}
 	}
-	.lose {
-		color: red;
-		font-family: 'domestic';
-		text-shadow: 0.1vw 0.1vw 0.2vw black;
-		&::before {
-			content: '';
-		}
-	}
+
 	@keyframes wiggle {
 		0% {
 			transform: translateX(0);
@@ -472,11 +456,10 @@
 	}
 
 	img {
-		// border: 1px solid black;
 		height: 100%;
 		width: 100%;
 		&.raise {
-			margin-top: -1.9vw;
+			margin-top: -1vw;
 		}
 
 		&.scale50 {
@@ -492,30 +475,36 @@
 	}
 
 	button {
-		border: 0.2vw solid purple;
-		background-color: #e7c7ff;
+		border: 0.2vw solid var(--mutedTeal-7);
+		background-color: var(--lightBeige-3);
+		background-color: white;
 		box-shadow: var(--shadow-4);
-		font-weight: 500;
+		font-weight: 700;
 		// font-weight: bold;
-		font-size: clamp(12px, 1.5vw, 24px);
-		color: purple;
+		font-size: clamp(12px, 1.75vw, 24px);
+		color: var(--mutedTeal-7);
 		padding: 0.125rem;
 		padding-inline: 1rem;
 		margin-block: 0.25rem;
 		text-align: right;
+		text-shadow: none;
 		width: 100%;
 
 		&:hover:enabled {
 			// text-shadow: 0.025vw 0.025vw 0.05vw purple;
 			color: white;
-			background-color: purple;
+			background-color: var(--mutedTeal-7);
+			border-color: var(--mutedTeal-8);
 		}
 
 		&:disabled {
-			background-color: white;
-			color: #d59eff;
+			background-color: var(--lightBeige-6);
+			// border: none;
+			border-color: white;
+			color: white;
 			cursor: default;
-			font-weight: 400;
+			font-weight: 700;
+			text-shadow: 0.1vw 0.1vw 0.2vw var(--mutedTeal-9);
 			// font-weight: normal;
 		}
 		&.fifty {
