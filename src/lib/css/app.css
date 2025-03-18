@@ -70,6 +70,27 @@ body {
 .mr-4 {
 	margin-right: 1rem;
 }
+.mi-0 {
+	margin-inline: 0;
+}
+.mi-1 {
+	margin-inline: 0.25rem;
+}
+.mi-2 {
+	margin-inline: 0.5rem;
+}
+.mi-2-5 {
+	margin-inline: 0.625rem;
+}
+.mi-3 {
+	margin-inline: 0.75rem;
+}
+.mi-3-5 {
+	margin-inline: 0.875rem;
+}
+.mi-4 {
+	margin-inline: 1rem;
+}
 .mt-0 {
 	margin-top: 0;
 }
@@ -96,6 +117,33 @@ body {
 }
 .mt-8 {
 	margin-top: 2rem;
+}
+.ml-0 {
+	margin-left: 0;
+}
+.ml-1 {
+	margin-left: 0.25rem;
+}
+.ml-2 {
+	margin-left: 0.5rem;
+}
+.ml-3 {
+	margin-left: 0.75rem;
+}
+.ml-4 {
+	margin-left: 1rem;
+}
+.ml-5 {
+	margin-left: 1.25rem;
+}
+.ml-6 {
+	margin-left: 1.5rem;
+}
+.ml-7 {
+	margin-left: 1.75rem;
+}
+.ml-8 {
+	margin-left: 2rem;
 }
 .mb-0 {
 	margin-bottom: 0;

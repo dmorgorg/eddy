@@ -13,6 +13,12 @@
 	let switchTotal = $state(0);
 	let totalGames = $derived(stickTotal + switchTotal);
 
+	let prefersReducedMotion = $state(false);
+
+	const toggleReducedMotion = () => {
+		prefersReducedMotion = !prefersReducedMotion;
+	};
+
 	const placeVehice = () => {
 		car = Math.floor(Math.random() * 3) + 1;
 		buttonsIndex = 2;
@@ -84,13 +90,30 @@
 		stickTotal = 0;
 		switchTotal = 0;
 	};
-	const runSimulation = (/** @type {number} */ times) => {
+
+	const easeInOutQuad = (/** @type {number} */ t) => {
+		return t < 0.5 ? 2 * t * t : -1 + (4 - 2 * t) * t;
+	};
+
+	const runSimulation = async (/** @type {number} */ times) => {
 		for (let i = 0; i < times; i++) {
 			placeVehice();
 			chooseDoor();
 			openDoor();
 			switchGuess();
 			isWinner();
+
+			if (!prefersReducedMotion) {
+				let delay = 0;
+				if (i < times * 0.1) {
+					delay = 100 - easeInOutQuad(i / (times * 0.1)) * 90; // smooth acceleration
+				} else if (i > times * 0.9) {
+					delay = 10 + easeInOutQuad((i - times * 0.9) / (times * 0.1)) * 90; // smooth deceleration
+				} else {
+					delay = 10; // fast middle
+				}
+				await new Promise((resolve) => setTimeout(resolve, delay));
+			}
 		}
 	};
 </script>
@@ -321,11 +344,18 @@
 					class:show={buttonsIndex === 6}
 				/><button onclick={reset} disabled={buttonsIndex !== 6}>Step Through Again?</button>
 			</div>
-			<button onclick={zero} class="fifty mr-4" disabled={totalGames === 0}>Reset All To 0?</button>
-			<div class="runSim">
+
+			<div class="runSim mt-4">
 				<button onclick={() => runSimulation(100)}>Run Simulation<br />100&times; more</button>
 				<button onclick={() => runSimulation(250)}>Run Simulation<br /> 250&times; more</button>
 				<button onclick={() => runSimulation(1000)}>Run Simulation<br /> 1000&times; more</button>
+				<!-- <button onclick={zero} class="mt-4" disabled={totalGames === 0}>Reset All To 0?</button> -->
+			</div>
+			<div class="mt-2 ml-4">
+				<button onclick={zero} class="mt-4" disabled={totalGames === 0}>Reset All To 0?</button>
+				<button onclick={toggleReducedMotion} class="mt-4">
+					{prefersReducedMotion ? 'Enable Motion' : 'Disable Motion'}
+				</button>
 			</div>
 		</section>
 	</div>
@@ -373,7 +403,7 @@
 					color: var(--mutedTeal-7);
 					display: flex;
 					font-family: var(--font-sans);
-					font-size: clamp(12px, 2.25vw, 24px);
+					font-size: clamp(12px, 1.75vw, 24px);
 					font-weight: 700;
 					line-height: 1;
 					margin: 0;
@@ -547,8 +577,9 @@
 
 		&:disabled {
 			background-color: var(--lightBeige-6);
-			// border: none;
-			border-color: white;
+			border: none;
+			box-shadow: none;
+			// border-color: white;
 			color: white;
 			cursor: default;
 			font-weight: 700;
