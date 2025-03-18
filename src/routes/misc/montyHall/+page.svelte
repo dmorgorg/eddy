@@ -84,6 +84,15 @@
 		stickTotal = 0;
 		switchTotal = 0;
 	};
+	const runSimulation = (/** @type {number} */ times) => {
+		for (let i = 0; i < times; i++) {
+			placeVehice();
+			chooseDoor();
+			openDoor();
+			switchGuess();
+			isWinner();
+		}
+	};
 </script>
 
 <div class="outer">
@@ -101,13 +110,28 @@
 			<section class="simul8r">
 				<div class="dontSwitch">
 					<div id="11">
-						<img src="/montyHall/car4.png" alt="" class:show={car === 1} class:hide={car !== 1} />
+						<img
+							src="/montyHall/carTerra.png"
+							alt=""
+							class:show={car === 1}
+							class:hide={car !== 1}
+						/>
 					</div>
 					<div id="12">
-						<img src="/montyHall/car4.png" alt="" class:show={car === 2} class:hide={car !== 2} />
+						<img
+							src="/montyHall/carTerra.png"
+							alt=""
+							class:show={car === 2}
+							class:hide={car !== 2}
+						/>
 					</div>
 					<div id="13">
-						<img src="/montyHall/car4.png" alt="" class:show={car === 3} class:hide={car !== 3} />
+						<img
+							src="/montyHall/carTerra.png"
+							alt=""
+							class:show={car === 3}
+							class:hide={car !== 3}
+						/>
 					</div>
 					<div id="21" class="parent">
 						<img src="/montyHall/doorOpen.png" alt="" class="abs" />
@@ -123,8 +147,8 @@
 					</div>
 					<div id="31">
 						<img
-							src="/montyHall/up.png"
-							alt=""
+							src="/montyHall/upTerra.png"
+							alt="upArrow"
 							class="scale50 raise"
 							class:show={guess === 1}
 							class:hide={guess !== 1}
@@ -132,7 +156,7 @@
 					</div>
 					<div id="32">
 						<img
-							src="/montyHall/up.png"
+							src="/montyHall/upTerra.png"
 							alt=""
 							class="scale50 raise"
 							class:show={guess === 2}
@@ -141,7 +165,7 @@
 					</div>
 					<div id="33">
 						<img
-							src="/montyHall/up.png"
+							src="/montyHall/upTerra.png"
 							alt=""
 							class="scale50 raise"
 							class:show={guess === 3}
@@ -155,13 +179,28 @@
 
 				<div class="switch">
 					<div id="11">
-						<img src="/montyHall/car4.png" alt="" class:show={car === 1} class:hide={car !== 1} />
+						<img
+							src="/montyHall/carTerra.png"
+							alt=""
+							class:show={car === 1}
+							class:hide={car !== 1}
+						/>
 					</div>
 					<div id="s12">
-						<img src="/montyHall/car4.png" alt="" class:show={car === 2} class:hide={car !== 2} />
+						<img
+							src="/montyHall/carTerra.png"
+							alt=""
+							class:show={car === 2}
+							class:hide={car !== 2}
+						/>
 					</div>
 					<div id="s13">
-						<img src="/montyHall/car4.png" alt="" class:show={car === 3} class:hide={car !== 3} />
+						<img
+							src="/montyHall/carTerra.png"
+							alt=""
+							class:show={car === 3}
+							class:hide={car !== 3}
+						/>
 					</div>
 					<div id="s21" class="parent">
 						<img src="/montyHall/doorOpen.png" alt="" class="abs" />
@@ -177,7 +216,7 @@
 					</div>
 					<div id="s31">
 						<img
-							src="/montyHall/up.png"
+							src="/montyHall/upTerra.png"
 							alt=""
 							class="scale50 raise"
 							class:show={switchedGuess === 1}
@@ -186,7 +225,7 @@
 					</div>
 					<div id="s32">
 						<img
-							src="/montyHall/up.png"
+							src="/montyHall/upTerra.png"
 							alt=""
 							class="scale50 raise"
 							class:show={switchedGuess === 2}
@@ -195,7 +234,7 @@
 					</div>
 					<div id="s33">
 						<img
-							src="/montyHall/up.png"
+							src="/montyHall/upTerra.png"
 							alt=""
 							class="scale50 raise"
 							class:show={switchedGuess === 3}
@@ -282,7 +321,12 @@
 					class:show={buttonsIndex === 6}
 				/><button onclick={reset} disabled={buttonsIndex !== 6}>Step Through Again?</button>
 			</div>
-			<button onclick={zero} class="fifty">Reset All To 0?</button>
+			<button onclick={zero} class="fifty mr-4" disabled={totalGames === 0}>Reset All To 0?</button>
+			<div class="runSim">
+				<button onclick={() => runSimulation(100)}>Run Simulation<br />100&times; more</button>
+				<button onclick={() => runSimulation(250)}>Run Simulation<br /> 250&times; more</button>
+				<button onclick={() => runSimulation(1000)}>Run Simulation<br /> 1000&times; more</button>
+			</div>
 		</section>
 	</div>
 </div>
@@ -412,11 +456,13 @@
 			display: flex;
 			align-items: center;
 			img {
-				width: 10%;
+				width: 6%;
+				margin-left: 1rem;
 			}
 			button {
 				text-align: center;
-				width: 89.9%;
+				// width: 89.9%;
+				margin-right: 1rem;
 			}
 		}
 	}
@@ -425,6 +471,7 @@
 		font-family: 'awesome';
 		font-weight: bold;
 		letter-spacing: 0.4rem;
+		margin-top: 0.5rem;
 		text-shadow: 0.1vw 0.1vw 0.2vw var(--mutedTeal-9);
 		&::before {
 			content: 'Win!';
@@ -487,7 +534,8 @@
 		padding-inline: 1rem;
 		margin-block: 0.25rem;
 		text-align: right;
-		text-shadow: none;
+		// text-shadow: none;
+		text-shadow: 0.07vw 0.07vw 0.1vw var(--mutedTeal-9);
 		width: 100%;
 
 		&:hover:enabled {
@@ -508,9 +556,25 @@
 			// font-weight: normal;
 		}
 		&.fifty {
-			margin-top: 1rem;
+			margin-block: 1rem;
 			width: 50%;
 			float: right;
+			clear: both;
+		}
+	}
+
+	.runSim {
+		clear: both;
+		display: flex;
+		margin-inline-start: 1rem;
+
+		// margin-block-start: 1rem;
+		justify-content: space-between;
+		button {
+			width: 30%;
+			padding-inline: 0;
+			margin-bottom: 0;
+			margin-top: 1rem;
 		}
 	}
 
