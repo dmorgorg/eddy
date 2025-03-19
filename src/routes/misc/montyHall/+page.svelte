@@ -1,5 +1,6 @@
 <script>
 	import HomeLink from '$lib/components/HomeLink.svelte';
+	import { tick } from 'svelte';
 
 	let car = $state(0);
 	let guess = $state(0);
@@ -113,7 +114,7 @@
 			isWinner();
 
 			if (!prefersReducedMotion) {
-				let delay = 10;
+				let delay = 5;
 				// if (i < times * 0.05) {
 				// 	delay = 100 - easeInOutQuad(i / (times * 0.05)) * 90; // smooth acceleration
 				// } else if (i > times * 0.95) {
@@ -124,13 +125,16 @@
 				await new Promise((resolve) => setTimeout(resolve, delay));
 			}
 		}
+		await new Promise((resolve) => setTimeout(resolve, 250));
+		// tick().then(() => {
 		runningSim = false;
+		// });
 	};
 </script>
 
 <div class="outer">
 	<HomeLink color="#A7BEAE" shadow="black" />
-	<div class="title">Monty Hall Paradox &ndash; A Simul8r</div>
+	<header class="title">Monty Hall Paradox &ndash; A Simul8r</header>
 	<div class="wrapper">
 		<button>What is the Monty Hall Paradox?</button>
 
@@ -146,45 +150,74 @@
 						<img
 							src="/montyHall/carTerra.png"
 							alt=""
-							class:show={car === 1}
-							class:hide={car !== 1}
+							class:show={car === 1 && runningSim}
+							class:hide={car !== 1 && runningSim}
+							class:showTrans={car === 1 && !runningSim}
+							class:hideTrans={car !== 1 && !runningSim}
 						/>
 					</div>
 					<div id="12">
 						<img
 							src="/montyHall/carTerra.png"
 							alt=""
-							class:show={car === 2}
-							class:hide={car !== 2}
+							class:show={car === 2 && runningSim}
+							class:hide={car !== 2 && runningSim}
+							class:showTrans={car === 2 && !runningSim}
+							class:hideTrans={car !== 2 && !runningSim}
 						/>
 					</div>
 					<div id="13">
 						<img
 							src="/montyHall/carTerra.png"
 							alt=""
-							class:show={car === 3}
-							class:hide={car !== 3}
+							class:show={car === 3 && runningSim}
+							class:hide={car !== 3 && runningSim}
+							class:showTrans={car === 3 && !runningSim}
+							class:hideTrans={car !== 3 && !runningSim}
 						/>
 					</div>
 					<div id="21" class="parent">
 						<img src="/montyHall/doorOpen.png" alt="" class="abs" />
-						<img src="/montyHall/door.png" alt="" class:hide={open === 1} class:show={open !== 1} />
+						<img
+							src="/montyHall/door.png"
+							alt=""
+							class:hide={open === 1 && runningSim}
+							class:show={open !== 1 && runningSim}
+							class:hideTrans={open === 1 && !runningSim}
+							class:showTrans={open !== 1 && !runningSim}
+						/>
 					</div>
 					<div id="22" class="parent">
 						<img src="/montyHall/doorOpen.png" alt="" class="abs" />
-						<img src="/montyHall/door.png" alt="" class:hide={open === 2} class:show={open !== 2} />
+						<img
+							src="/montyHall/door.png"
+							alt=""
+							class:hide={open === 2 && runningSim}
+							class:show={open !== 2 && runningSim}
+							class:hideTrans={open === 2 && !runningSim}
+							class:showTrans={open !== 2 && !runningSim}
+						/>
 					</div>
 					<div id="23" class="parent">
 						<img src="/montyHall/doorOpen.png" alt="" class="abs" />
-						<img src="/montyHall/door.png" alt="" class:hide={open === 3} class:show={open !== 3} />
+						<img
+							src="/montyHall/door.png"
+							alt=""
+							class:hide={open === 3 && runningSim}
+							class:show={open !== 3 && runningSim}
+							class:hideTrans={open === 3 && !runningSim}
+							class:showTrans={open !== 3 && !runningSim}
+						/>
 					</div>
 					<div id="31">
 						<img
 							src="/montyHall/upTerra.png"
 							alt="upArrow"
 							class="scale50 raise"
-							class:show={guess === 1}
-							class:hide={guess !== 1}
+							class:show={guess === 1 && runningSim}
+							class:hide={guess !== 1 && runningSim}
+							class:showTrans={guess === 1 && !runningSim}
+							class:hideTrans={guess !== 1 && !runningSim}
 						/>
 					</div>
 					<div id="32">
@@ -192,8 +225,10 @@
 							src="/montyHall/upTerra.png"
 							alt=""
 							class="scale50 raise"
-							class:show={guess === 2}
-							class:hide={guess !== 2}
+							class:show={guess === 2 && runningSim}
+							class:hide={guess !== 2 && runningSim}
+							class:showTrans={guess === 2 && !runningSim}
+							class:hideTrans={guess !== 2 && !runningSim}
 						/>
 					</div>
 					<div id="33">
@@ -201,8 +236,10 @@
 							src="/montyHall/upTerra.png"
 							alt=""
 							class="scale50 raise"
-							class:show={guess === 3}
-							class:hide={guess !== 3}
+							class:show={guess === 3 && runningSim}
+							class:hide={guess !== 3 && runningSim}
+							class:showTrans={guess === 3 && !runningSim}
+							class:hideTrans={guess !== 3 && !runningSim}
 						/>
 					</div>
 					<div id="41"></div>
@@ -215,45 +252,74 @@
 						<img
 							src="/montyHall/carTerra.png"
 							alt=""
-							class:show={car === 1}
-							class:hide={car !== 1}
+							class:show={car === 1 && runningSim}
+							class:hide={car !== 1 && runningSim}
+							class:showTrans={car === 1 && !runningSim}
+							class:hideTrans={car !== 1 && !runningSim}
 						/>
 					</div>
 					<div id="s12">
 						<img
 							src="/montyHall/carTerra.png"
 							alt=""
-							class:show={car === 2}
-							class:hide={car !== 2}
+							class:show={car === 2 && runningSim}
+							class:hide={car !== 2 && runningSim}
+							class:showTrans={car === 2 && !runningSim}
+							class:hideTrans={car !== 2 && !runningSim}
 						/>
 					</div>
 					<div id="s13">
 						<img
 							src="/montyHall/carTerra.png"
 							alt=""
-							class:show={car === 3}
-							class:hide={car !== 3}
+							class:show={car === 3 && runningSim}
+							class:hide={car !== 3 && runningSim}
+							class:showTrans={car === 3 && !runningSim}
+							class:hideTrans={car !== 3 && !runningSim}
 						/>
 					</div>
 					<div id="s21" class="parent">
 						<img src="/montyHall/doorOpen.png" alt="" class="abs" />
-						<img src="/montyHall/door.png" alt="" class:hide={open === 1} class:show={open !== 1} />
+						<img
+							src="/montyHall/door.png"
+							alt=""
+							class:hide={open === 1 && runningSim}
+							class:show={open !== 1 && runningSim}
+							class:hideTrans={open === 1 && !runningSim}
+							class:showTrans={open !== 1 && !runningSim}
+						/>
 					</div>
 					<div id="s22" class="parent">
 						<img src="/montyHall/doorOpen.png" alt="" class="abs" />
-						<img src="/montyHall/door.png" alt="" class:hide={open === 2} class:show={open !== 2} />
+						<img
+							src="/montyHall/door.png"
+							alt=""
+							class:hide={open === 2 && runningSim}
+							class:show={open !== 2 && runningSim}
+							class:hideTrans={open === 2 && !runningSim}
+							class:showTrans={open !== 2 && !runningSim}
+						/>
 					</div>
 					<div id="s23" class="parent">
 						<img src="/montyHall/doorOpen.png" alt="" class="abs" />
-						<img src="/montyHall/door.png" alt="" class:hide={open === 3} class:show={open !== 3} />
+						<img
+							src="/montyHall/door.png"
+							alt=""
+							class:hide={open === 3 && runningSim}
+							class:show={open !== 3 && runningSim}
+							class:hideTrans={open === 3 && !runningSim}
+							class:showTrans={open !== 3 && !runningSim}
+						/>
 					</div>
 					<div id="s31">
 						<img
 							src="/montyHall/upTerra.png"
 							alt=""
 							class="scale50 raise"
-							class:show={switchedGuess === 1}
-							class:hide={switchedGuess !== 1}
+							class:show={switchedGuess === 1 && runningSim}
+							class:hide={switchedGuess !== 1 && runningSim}
+							class:showTrans={switchedGuess === 1 && !runningSim}
+							class:hideTrans={switchedGuess !== 1 && !runningSim}
 						/>
 					</div>
 					<div id="s32">
@@ -261,8 +327,10 @@
 							src="/montyHall/upTerra.png"
 							alt=""
 							class="scale50 raise"
-							class:show={switchedGuess === 2}
-							class:hide={switchedGuess !== 2}
+							class:show={switchedGuess === 2 && runningSim}
+							class:hide={switchedGuess !== 2 && runningSim}
+							class:showTrans={switchedGuess === 2 && !runningSim}
+							class:hideTrans={switchedGuess !== 2 && !runningSim}
 						/>
 					</div>
 					<div id="s33">
@@ -270,8 +338,10 @@
 							src="/montyHall/upTerra.png"
 							alt=""
 							class="scale50 raise"
-							class:show={switchedGuess === 3}
-							class:hide={switchedGuess !== 3}
+							class:show={switchedGuess === 3 && runningSim}
+							class:hide={switchedGuess !== 3 && runningSim}
+							class:showTrans={switchedGuess === 3 && !runningSim}
+							class:hideTrans={switchedGuess !== 3 && !runningSim}
 						/>
 					</div>
 					<div id="s41"></div>
@@ -398,6 +468,7 @@
 		max-width: 100%;
 		overflow-x: hidden; // disable overflow-x scrollbar
 		overflow-y: auto; // ensure vertical scrolling is still enabled
+		padding-bottom: 1rem;
 
 		.title {
 			color: var(--mutedTeal-6);
@@ -531,6 +602,7 @@
 	.win {
 		color: var(--lightBeige-6);
 		font-family: 'awesome';
+		// font-size: ;
 		font-weight: bold;
 		letter-spacing: 0.4rem;
 		margin-top: 0.5rem;
@@ -568,7 +640,7 @@
 		height: 100%;
 		width: 100%;
 		&.raise {
-			margin-top: -1vw;
+			margin-top: -3vw;
 		}
 
 		&.scale50 {
@@ -654,6 +726,35 @@
 				position: absolute;
 				top: 0;
 				left: 0;
+			}
+		}
+	}
+	@media (max-width: 600px) {
+		.outer {
+			background-color: var(--lightBeige-3);
+
+			header {
+				margin-top: 0.5rem;
+			}
+
+			.wrapper {
+				border: none;
+				width: 100%;
+			}
+		}
+		.win {
+			margin-top: -1rem;
+
+			padding-top: 2rem;
+			font-size: 7vw;
+			// border: 1px solid black;
+		}
+
+		.buttonList {
+			div {
+				button {
+					width: 100%;
+				}
 			}
 		}
 	}
