@@ -506,7 +506,7 @@
 					color: var(--mutedTeal-7);
 					display: flex;
 					font-family: var(--font-sans);
-					font-size: clamp(12px, 1.75vw, 24px);
+					font-size: clamp(16px, 1.75vw, 24px);
 					font-weight: 700;
 					line-height: 1;
 					margin: 0;
@@ -594,7 +594,7 @@
 			}
 			button {
 				text-align: center;
-				// width: 89.9%;
+
 				margin-right: 1rem;
 			}
 		}
@@ -670,7 +670,7 @@
 		box-shadow: var(--shadow-4);
 		font-weight: 700;
 		// font-weight: bold;
-		font-size: clamp(12px, 1.75vw, 24px);
+		font-size: clamp(16px, 1.75vw, 24px);
 		color: var(--mutedTeal-7);
 		padding: 0.125rem;
 		padding-inline: 1rem;
