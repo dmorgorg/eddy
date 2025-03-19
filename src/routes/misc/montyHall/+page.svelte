@@ -12,11 +12,19 @@
 	let stickTotal = $state(0);
 	let switchTotal = $state(0);
 	let totalGames = $derived(stickTotal + switchTotal);
+	let runningSim = $state(false);
 
 	let prefersReducedMotion = $state(false);
 
+	if (typeof localStorage !== 'undefined') {
+		prefersReducedMotion = localStorage.getItem('prefersReducedMotion') === 'true';
+	}
+
 	const toggleReducedMotion = () => {
 		prefersReducedMotion = !prefersReducedMotion;
+		if (typeof localStorage !== 'undefined') {
+			localStorage.setItem('prefersReducedMotion', prefersReducedMotion.toString());
+		}
 	};
 
 	const placeVehice = () => {
@@ -96,6 +104,7 @@
 	};
 
 	const runSimulation = async (/** @type {number} */ times) => {
+		runningSim = true;
 		for (let i = 0; i < times; i++) {
 			placeVehice();
 			chooseDoor();
@@ -104,17 +113,18 @@
 			isWinner();
 
 			if (!prefersReducedMotion) {
-				let delay = 0;
-				if (i < times * 0.1) {
-					delay = 100 - easeInOutQuad(i / (times * 0.1)) * 90; // smooth acceleration
-				} else if (i > times * 0.9) {
-					delay = 10 + easeInOutQuad((i - times * 0.9) / (times * 0.1)) * 90; // smooth deceleration
-				} else {
-					delay = 10; // fast middle
-				}
+				let delay = 10;
+				// if (i < times * 0.05) {
+				// 	delay = 100 - easeInOutQuad(i / (times * 0.05)) * 90; // smooth acceleration
+				// } else if (i > times * 0.95) {
+				// 	delay = 10 + easeInOutQuad((i - times * 0.95) / (times * 0.05)) * 95; // smooth deceleration
+				// } else {
+				// 	delay = 10; // fast middle
+				// }
 				await new Promise((resolve) => setTimeout(resolve, delay));
 			}
 		}
+		runningSim = false;
 	};
 </script>
 
@@ -362,10 +372,32 @@
 </div>
 
 <style lang="scss">
+	:root {
+		::-webkit-scrollbar-thumb {
+			background: yellow;
+			border-radius: 10px;
+			border: 4px solid #f8f9fa;
+		}
+		::-webkit-scrollbar-thumb:hover {
+			background: blue;
+			// border-radius: 10px;
+			// border: 4px solid var(--main-bg-color);
+		}
+		::-webkit-scrollbar {
+			width: 150px;
+		}
+		::-webkit-scrollbar-track {
+			// background-color: var(--scrollbar-track);
+			background-color: inherit;
+		}
+		scrollbar-color: unset;
+	}
 	.outer {
 		background-color: var(--terracotta);
 		min-height: 100vh;
-		overflow-x: none;
+		max-width: 100%;
+		overflow-x: hidden; // disable overflow-x scrollbar
+		overflow-y: auto; // ensure vertical scrolling is still enabled
 
 		.title {
 			color: var(--mutedTeal-6);
@@ -544,6 +576,14 @@
 		}
 	}
 
+	.hideTrans {
+		opacity: 0;
+		transition: opacity 0.5s;
+	}
+	.showTrans {
+		opacity: 1;
+		transition: opacity 0.5s;
+	}
 	.hide {
 		opacity: 0;
 	}
@@ -584,13 +624,6 @@
 			cursor: default;
 			font-weight: 700;
 			text-shadow: 0.1vw 0.1vw 0.2vw var(--mutedTeal-9);
-			// font-weight: normal;
-		}
-		&.fifty {
-			margin-block: 1rem;
-			width: 50%;
-			float: right;
-			clear: both;
 		}
 	}
 
