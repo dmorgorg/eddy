@@ -54,9 +54,9 @@
 		</blockquote>
 		<p>
 			Wow! These Ph.D.s (all male, as it happens!) seem pretty sure of themselves. But they, and
-			another thousand or so, Ph.D.s are wrong.
+			another thousand or so, Ph.D.s were wrong.
 		</p>
-		<h3>Justification</h3>
+		<h2>Justification</h2>
 		<p>
 			I have a degree in mathematics but that is far below the giddy heights where doctoral
 			academics reside. Yet I will try my best to explain.
@@ -85,7 +85,7 @@
 			faces!
 		</p>
 		<button>
-			<a href="../montyHall">Go back to the simulation!</a>
+			<a href="../montyHall">Go and play with the simulation!</a>
 		</button>
 	</div>
 </div>
@@ -97,7 +97,7 @@
 		display: flex;
 		flex-direction: column;
 		font-size: clamp(0.875rem, 1.125vw, 1.5rem);
-		height: 100%;
+		height: auto;
 		padding-bottom: 10rem;
 
 		.container {
@@ -115,6 +115,8 @@
 			}
 
 			blockquote {
+				background-color: var(--lightBeige-3);
+				border-color: var(--terracotta);
 				font-size: 1.25em;
 				font-style: italic;
 				margin-inline: auto;
@@ -123,8 +125,36 @@
 				padding-left: 1rem;
 			}
 
-			button a:link {
-				margin-bottom: 2rem;
+			h2 {
+				color: var(--terracotta);
+			}
+
+			button {
+				border: 0.2vw solid var(--mutedTeal-7);
+				background-color: var(--lightBeige-3);
+				box-shadow: var(--shadow-4);
+				font-weight: 600;
+				font-size: clamp(16px, 1.75vw, 24px);
+				color: var(--mutedTeal-7);
+				padding: 0.125rem;
+				padding-inline: 1rem;
+
+				text-align: right;
+
+				&:hover {
+					// text-shadow: 0.025vw 0.025vw 0.05vw purple;
+					color: white;
+					background-color: var(--mutedTeal-7);
+					border-color: var(--mutedTeal-8);
+				}
+
+				& a:link,
+				& a:visited {
+					color: inherit;
+					background-color: inherit;
+					text-decoration: none;
+					text-shadow: none;
+				}
 			}
 		}
 	}
