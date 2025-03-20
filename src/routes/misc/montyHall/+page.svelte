@@ -136,7 +136,7 @@
 	<HomeLink color="#A7BEAE" shadow="black" />
 	<header class="title">Monty Hall Paradox &ndash; A Simul8r</header>
 	<div class="wrapper">
-		<button>What is the Monty Hall Paradox?</button>
+		<a href="/misc/montyHall/intro"><button>What is the Monty Hall Paradox?</button></a>
 
 		<div class="simWrap">
 			<div class="title">
@@ -443,24 +443,26 @@
 
 <style lang="scss">
 	:root {
+		scrollbar-color: unset;
+
+		/* Handle */
 		::-webkit-scrollbar-thumb {
-			background: yellow;
+			background: purple;
 			border-radius: 10px;
 			border: 4px solid #f8f9fa;
 		}
 		::-webkit-scrollbar-thumb:hover {
 			background: blue;
-			// border-radius: 10px;
-			// border: 4px solid var(--main-bg-color);
+			/* border-radius: 10px; */
+			/* border: 4px solid var(--main-bg-color); */
 		}
 		::-webkit-scrollbar {
-			width: 150px;
+			width: 15px;
 		}
 		::-webkit-scrollbar-track {
-			// background-color: var(--scrollbar-track);
+			/* background-color: var(--scrollbar-track); */
 			background-color: inherit;
 		}
-		scrollbar-color: unset;
 	}
 	.outer {
 		background-color: var(--terracotta);
@@ -731,7 +733,7 @@
 	}
 	@media (max-width: 600px) {
 		.outer {
-			background-color: var(--lightBeige-3);
+			background-color: var(--lightBeige-1);
 
 			header {
 				margin-top: 0.5rem;
@@ -740,6 +742,7 @@
 			.wrapper {
 				border: none;
 				width: 100%;
+				background-color: inherit;
 			}
 		}
 		.win {
