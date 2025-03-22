@@ -105,7 +105,7 @@
 			flex-direction: column;
 			gap: 0.5rem;
 			height: 100%;
-			max-width: min(40rem, 95%);
+			max-width: min(40rem, 35%);
 			padding-bottom: 10rem;
 
 			h2 {

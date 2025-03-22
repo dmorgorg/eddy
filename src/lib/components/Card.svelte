@@ -2,16 +2,16 @@
 	/**
 	 * @typedef {Object} Props
 	 * @property {string} [header]
-	 * @property {string} [color]
+	 * @property {string} [theme]
 	 * @property {import('svelte').Snippet} [children]
 	 */
 
 	/** @type {Props} */
-	let { header = '', color = 'grey', children } = $props();
+	let { header = '', theme = 'grey', children } = $props();
 </script>
 
 <div class="card">
-	<header style:background-color={color}>{header}</header>
+	<header style:background-color={theme}>{header}</header>
 	<div class="mt-4 pb-4">
 		{@render children?.()}
 	</div>
@@ -22,14 +22,12 @@
 		background: white;
 		box-shadow: var(--shadow-6);
 		flex-direction: column;
+		/* font-family: 'AlkesLightIt'; */
 		margin-inline: auto;
 		margin-top: 1rem;
-		border: 1px solid #a00;
-		width: min(95%, 50rem);
+		/* width: min(95%, 50rem); */
 
 		header {
-			background-color: #a00;
-			color: white;
 			font-size: 200%;
 			font-weight: bold;
 			padding-block: 0.5rem;

@@ -1,24 +1,26 @@
+<!-- xai-rsdbhGsjVvSdopT1HsHyR41rMUksgUhrpkxI5HgooMOOclRUKeHW5niGP30NeTbDmyiVuzVhuzzuOEsk -->
+
 <script>
 	import Card from '$lib/components/Card.svelte';
 </script>
 
 <div class="container pt-4">
-	<Card header="Calcul8rs" color="yellow">
-		<div class="mt-4 pb-4">
-			<a href="/misc/calcs/alcohol">UK Alcohol Units Calcul8r</a>
-			<a href="/misc/calcs/vaccine">Vaccine Efficacy Calcul8r</a>
-			<a href="/misc/calcs/fuelConverter">Metric/Imperial Fuel Converter</a>
-		</div>
+	<Card header="Calcul8rs" theme="var(--lightBeige-7)">
+		<!-- <div class="mt-4 pb-4"> -->
+		<a href="/misc/calcs/alcohol">UK Alcohol Units Calcul8r</a>
+		<a href="/misc/calcs/vaccine">Vaccine Efficacy Calcul8r</a>
+		<a href="/misc/calcs/fuelConverter">Metric/Imperial Fuel Converter</a>
+		<!-- </div> -->
 	</Card>
 	<div class="card">
 		<header>Calculators</header>
-		<div class="mt-4 pb-4">
-			<a href="/misc/calcs/alcohol">UK Alcohol Units Calcul8r</a>
-			<a href="/misc/calcs/vaccine">Vaccine Efficacy Calcul8r</a>
-			<a href="/misc/calcs/fuelConverter">Metric/Imperial Fuel Converter</a>
-			<a href="/misc/wordle8r">Wordle8r</a>
-			<a href="/misc/montyHall">Monty Hall Simul8r</a>
-		</div>
+		<!-- <div class="mt-4 pb-4"> -->
+		<a href="/misc/calcs/alcohol">UK Alcohol Units Calcul8r</a>
+		<a href="/misc/calcs/vaccine">Vaccine Efficacy Calcul8r</a>
+		<a href="/misc/calcs/fuelConverter">Metric/Imperial Fuel Converter</a>
+		<!-- <a href="/misc/wordle8r">Wordle8r</a>
+			<a href="/misc/montyHall">Monty Hall Simul8r</a> -->
+		<!-- </div> -->
 	</div>
 </div>
 
@@ -45,7 +47,8 @@
 			width: 100%;
 		}
 
-		a {
+		a:link,
+		a:visited {
 			display: block;
 			font-size: 1.25rem;
 			color: #a00;
