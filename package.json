@@ -34,6 +34,7 @@
 		"vite": "^6.0.0"
 	},
 	"dependencies": {
+		"katex": "^0.16.21",
 		"open-props": "^1.7.13"
 	}
 }

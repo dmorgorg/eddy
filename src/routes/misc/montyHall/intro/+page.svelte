@@ -1,7 +1,20 @@
+<script>
+	import { ki, kd } from '$lib/utils';
+</script>
+
+<svelte:head>
+	<link
+		rel="stylesheet"
+		href="https://cdn.jsdelivr.net/npm/katex@0.16.21/dist/katex.min.css"
+		integrity="sha384-zh0CIslj+VczCZtlzBcjt5ppRcsAmDnRem7ESsYwWwg3m/OaJ2l4x7YBZl9Kxxib"
+		crossorigin="anonymous"
+	/>
+</svelte:head>
+
 <div class="outer">
 	<div class="container pt-4">
-		<button><a href="../montyHall">Go back to the simulation!</a></button>
-		<h2>The Monty Hall Paradox</h2>
+		<button><a href="../montyHall">Go back to the simulation</a></button>
+		<h2 class="mt-8">The Monty Hall Paradox</h2>
 		<p>
 			The Monty Hall 'problem' (dilemma? paradox?) is a probability puzzle, originally posed in 1975
 			by Steve Selvin in a letter to the American Statistician. The puzzle is based on the American
@@ -84,9 +97,40 @@
 			When you see it, you'll wonder how so many of these brainiacs ended up with egg on their
 			faces!
 		</p>
-		<button>
-			<a href="../montyHall">Go and play with the simulation!</a>
+		<button class="mt-8">
+			<a href="../montyHall">Go back and have fun with the simulation!</a>
 		</button>
+		<h2 class="mt-8">Some Probability</h2>
+		<p class="mt-8">
+			There is a concept in probability theory called the <strong>expected value</strong> of a random
+			variable. It is the sum of the probabilities of each possible outcome of the variable multiplied
+			by the value of the outcome.
+		</p>
+		<p>
+			If {@html ki(`X`)} represents a random variable (such as, in this case, the contestant winnings),
+			then the expected value of {@html ki(`X`)} is
+			{@html kd(`			
+				E[X] = \\sum x_k\\cdot P_{x_k}
+		`)}
+			where {@html ki(`x_k`)} is the value of the {@html ki(`k`)}th outcome (winning) and {@html ki(
+				`P_{x_k}`
+			)} is the probability of that outcome (or winning that prize). Then the expected winnings adopting
+			the 'don't switch' strategy is
+			{@html kd(`
+				\\begin{aligned}
+					E[X] &= \\text{Car}\\cdot P_{\\text{guessing correctly}} + \\text{Goat}\\cdot P_{\\text{guessing incorrectly}} \\\\
+					&= \\text{Car}\\cdot\\frac 13 + \\text{Goat}\\cdot\\frac 23 \\\\
+					&= \\frac{\\text{Car}}{3} + \\frac{2\\cdot\\text{Goat}}{3}
+				\\end{aligned}
+			`)}
+			In other words, for each game you'd expect to win one-third of a car (or you'd expect to win a
+			car with probability one-third) when you adopt the 'don't switch' strategy.
+			{@html kd(`
+				\\begin{aligned}
+					E[X] &= 
+				\\end{aligned}
+			`)}
+		</p>
 	</div>
 </div>
 

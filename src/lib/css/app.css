@@ -42,6 +42,10 @@ body {
 	box-sizing: border-box;
 }
 
+.katex {
+	color: var(--terracotta);
+}
+
 ::-webkit-scrollbar-thumb {
 	background: #bbb;
 	border-radius: 8px;
