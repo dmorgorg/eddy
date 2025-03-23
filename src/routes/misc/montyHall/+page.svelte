@@ -508,13 +508,14 @@
 					color: var(--mutedTeal-7);
 					display: flex;
 					font-family: var(--font-sans);
-					font-size: clamp(16px, 1.75vw, 24px);
+					font-size: clamp(16px, 1.75vw, 20px);
 					font-weight: 700;
 					line-height: 1;
 					margin: 0;
 					margin-top: 1.5rem;
 					margin-bottom: -0.5rem;
 					padding: 0;
+					text-align: center;
 					text-shadow: none;
 					width: 100%;
 
@@ -529,7 +530,7 @@
 				}
 
 				.totals {
-					height: 1.75rem;
+					min-height: 1.75rem;
 					margin-top: -3rem;
 					margin-bottom: 0.5rem;
 					text-align: center;

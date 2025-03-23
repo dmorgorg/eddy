@@ -145,6 +145,8 @@
 			`)}
 			You should expect (on average) to <strong>win the car two times in three</strong>.
 		</p>
+
+		<button class="mt-8"><a href="../montyHall">To the simulation!</a></button>
 	</div>
 </div>
 
@@ -212,8 +214,11 @@
 
 				& a:link,
 				& a:visited {
+					width: 100%;
 					color: inherit;
 					background-color: inherit;
+					display: block;
+					text-align: center;
 					text-decoration: none;
 					text-shadow: none;
 				}
