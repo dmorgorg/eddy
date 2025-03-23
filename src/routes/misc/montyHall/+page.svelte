@@ -213,7 +213,7 @@
 						<img
 							src="/montyHall/upTerra.png"
 							alt="upArrow"
-							class="scale50 raise"
+							class="scale50"
 							class:show={guess === 1 && runningSim}
 							class:hide={guess !== 1 && runningSim}
 							class:showTrans={guess === 1 && !runningSim}
@@ -224,7 +224,7 @@
 						<img
 							src="/montyHall/upTerra.png"
 							alt=""
-							class="scale50 raise"
+							class="scale50"
 							class:show={guess === 2 && runningSim}
 							class:hide={guess !== 2 && runningSim}
 							class:showTrans={guess === 2 && !runningSim}
@@ -235,7 +235,7 @@
 						<img
 							src="/montyHall/upTerra.png"
 							alt=""
-							class="scale50 raise"
+							class="scale50"
 							class:show={guess === 3 && runningSim}
 							class:hide={guess !== 3 && runningSim}
 							class:showTrans={guess === 3 && !runningSim}
@@ -243,7 +243,7 @@
 						/>
 					</div>
 					<div id="41"></div>
-					<div id="42"><img src="/montyHall/user2.png" alt="" class="raise" /></div>
+					<div id="42"><img src="/montyHall/user2.png" alt="" /></div>
 					<div id="43"></div>
 				</div>
 
@@ -315,7 +315,7 @@
 						<img
 							src="/montyHall/upTerra.png"
 							alt=""
-							class="scale50 raise"
+							class="scale50"
 							class:show={switchedGuess === 1 && runningSim}
 							class:hide={switchedGuess !== 1 && runningSim}
 							class:showTrans={switchedGuess === 1 && !runningSim}
@@ -326,7 +326,7 @@
 						<img
 							src="/montyHall/upTerra.png"
 							alt=""
-							class="scale50 raise"
+							class="scale50"
 							class:show={switchedGuess === 2 && runningSim}
 							class:hide={switchedGuess !== 2 && runningSim}
 							class:showTrans={switchedGuess === 2 && !runningSim}
@@ -337,7 +337,7 @@
 						<img
 							src="/montyHall/upTerra.png"
 							alt=""
-							class="scale50 raise"
+							class="scale50"
 							class:show={switchedGuess === 3 && runningSim}
 							class:hide={switchedGuess !== 3 && runningSim}
 							class:showTrans={switchedGuess === 3 && !runningSim}
@@ -345,7 +345,7 @@
 						/>
 					</div>
 					<div id="s41"></div>
-					<div id="s42"><img src="/montyHall/user2.png" alt="" class="raise" /></div>
+					<div id="s42"><img src="/montyHall/user2.png" alt="" /></div>
 					<div id="s43"></div>
 				</div>
 			</section>
@@ -571,7 +571,7 @@
 						column-gap: calc(0.75vw + 0.125rem);
 						display: grid;
 						grid-template-columns: 1fr 1fr 1fr;
-						grid-template-rows: repeat(4, min-content);
+						grid-template-rows: 20% 30% 25% 25%;
 						margin-block-start: 1rem;
 						padding-inline: 0.2vw;
 						padding-block-start: 0.5vw;
@@ -585,6 +585,7 @@
 			}
 		}
 	}
+
 	.buttonList {
 		width: 100%;
 		div {
