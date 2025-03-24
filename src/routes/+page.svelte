@@ -3,53 +3,52 @@
 </script>
 
 <div class="container pt-4">
-	<!-- <Card header="Calcul8rs" theme="orange">
-		<div class="mt-4">
+	<Card header="Calcul8rs" theme="orange" secondary="#CB6015">
+		<div class="flex">
 			<a href="/misc/calcs/alcohol">UK Alcohol Units Calcul8r</a>
 			<a href="/misc/calcs/vaccine">Vaccine Efficacy Calcul8r</a>
 			<a href="/misc/calcs/fuelConverter">Metric/Imperial Fuel Converter</a>
 		</div>
-	</Card> -->
-	<div class="card">
-		<header>What are you looking for?</header>
-		<div class="mt-4 pb-4">
-			<a href="/misc/calcs/alcohol">UK Alcohol Units Calcul8r</a>
-			<a href="/misc/calcs/vaccine">Vaccine Efficacy Calcul8r</a>
-			<a href="/misc/calcs/fuelConverter">Metric/Imperial Fuel Converter</a>
+	</Card>
+	<Card header="Just for fun" theme="#bada55" secondary="#87a744">
+		<div class="flex">
 			<a href="/misc/wordle8r">Wordle8r</a>
+		</div>
+	</Card>
+	<Card header="Head Scratchers" theme="var(--terracotta)" secondary="#70393f">
+		<div class="flex">
 			<a href="/misc/montyHall">Monty Hall Simul8r</a>
 		</div>
-	</div>
+	</Card>
+	<Card header="Utilities" theme="var(--terracotta)" secondary="#70393f">
+		<div class="flex">
+			<a href="/utils/colorCodeStepper">Color codes and stepper</a>
+		</div>
+	</Card>
 </div>
 
 <style lang="scss">
 	.container {
 		display: flex;
+		flex-wrap: wrap;
+		gap: 1rem;
+		padding: 1rem;
 	}
-	.card {
-		background: white;
-		box-shadow: var(--shadow-6);
+	.flex {
+		display: flex;
 		flex-direction: column;
-		margin-inline: auto;
-		margin-top: 1rem;
-		border: 1px solid #a00;
-		width: min(95%, 50rem);
+		gap: 0.5rem;
+	}
 
-		header {
-			background-color: #a00;
-			color: white;
-			font-size: 200%;
-			font-weight: bold;
-			padding-block: 0.5rem;
-			text-align: center;
-			width: 100%;
-		}
+	a {
+		display: block;
+		font-size: 1.25rem;
+		color: inherit;
+		text-align: center;
 
-		a {
-			display: block;
-			font-size: 1.25rem;
-			color: #a00;
-			text-align: center;
+		&:hover {
+			text-decoration: none;
+			text-shadow: 0.05vw 0.05vw 0.05vw black;
 		}
 	}
 </style>
