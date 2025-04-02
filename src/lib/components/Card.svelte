@@ -23,15 +23,15 @@
 		background: white;
 		box-shadow: var(--shadow-6);
 		/* border: 0.1vw solid black; */
-		border-radius: 0.5rem;
+		border-radius: 0.25rem;
 		flex-direction: column;
 		/* font-family: 'AlkesLightIt'; */
 		margin-inline: auto;
 		margin-top: 1rem;
 
 		header {
-			border-top-left-radius: 0.5rem;
-			border-top-right-radius: 0.5rem;
+			border-top-left-radius: 0.25rem;
+			border-top-right-radius: 0.25rem;
 			font-size: 150%;
 			font-weight: bold;
 			padding-block: 0.5rem;

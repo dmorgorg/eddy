@@ -20,9 +20,14 @@
 			<a href="/misc/montyHall">Monty Hall Simul8r</a>
 		</div>
 	</Card>
-	<Card header="Utilities" theme="var(--terracotta)" secondary="#70393f">
+	<Card header="Utilities" theme="CornflowerBlue" secondary="blue">
 		<div class="flex">
 			<a href="/utils/colorCodeStepper">Color codes and stepper</a>
+		</div>
+	</Card>
+	<Card header="Under Construction" theme="DarkSalmon" secondary="DarkRed">
+		<div class="flex">
+			<a href="/utils/ccc"><strike>CCC</strike></a>
 		</div>
 	</Card>
 </div>
