@@ -378,5 +378,122 @@ export const hexToHsl = (hex) => {
 	s = Math.round(s * 100);
 	l = Math.round(l * 100);
 
-	return `hsl(${h} ${s}% ${l}%)`;
+	return `hsl(${h}deg ${s}% ${l}%)`;
 };
+
+/**
+ * Converts HSL values to RGB.
+ * @param {number} h - Hue (0-360)
+ * @param {number} s - Saturation (0-100)
+ * @param {number} l - Lightness (0-100)
+ * @returns {object} - An object containing r, g, b numeric values (0-255).
+ */
+export function hslToRgb(h, s, l) {
+	s /= 100;
+	l /= 100;
+
+	const c = (1 - Math.abs(2 * l - 1)) * s;
+	const x = c * (1 - Math.abs(((h / 60) % 2) - 1));
+	const m = l - c / 2;
+
+	let r, g, b;
+
+	if (h >= 0 && h < 60) {
+		r = c;
+		g = x;
+		b = 0;
+	} else if (h >= 60 && h < 120) {
+		r = x;
+		g = c;
+		b = 0;
+	} else if (h >= 120 && h < 180) {
+		r = 0;
+		g = c;
+		b = x;
+	} else if (h >= 180 && h < 240) {
+		r = 0;
+		g = x;
+		b = c;
+	} else if (h >= 240 && h < 300) {
+		r = x;
+		g = 0;
+		b = c;
+	} else {
+		r = c;
+		g = 0;
+		b = x;
+	}
+
+	return {
+		r: Math.round((r + m) * 255),
+		g: Math.round((g + m) * 255),
+		b: Math.round((b + m) * 255)
+	};
+}
+
+/**
+ * Extracts individual color values from an RGB string.
+ * @param {string} rgb - The RGB string (e.g., "rgb(143 188 143)" or "rgb(143, 188, 143)").
+ * @returns {object} - An object containing r, g, and b numeric values.
+ */
+export function rgbToValues(rgb) {
+	// Remove "rgb(" and ")" and split by spaces or commas
+	const cleanedStr = rgb.replace(/^rgb\(|\)$/g, '').trim();
+	const values = cleanedStr.split(/[\s,]+/);
+
+	if (values.length >= 3) {
+		return {
+			r: parseInt(values[0], 10),
+			g: parseInt(values[1], 10),
+			b: parseInt(values[2], 10)
+		};
+	}
+
+	// Return default values if parsing fails
+	return { r: 0, g: 0, b: 0 };
+}
+
+/**
+ * Calculate the lightness of a color.
+ * @param {string} hex - The hex value of the color.
+ * @returns {number} - The lightness of the color, ranging from 0 to 255.
+ */
+export function getLightness(hex) {
+	let bigint = parseInt(hex.slice(1), 16);
+	let r = (bigint >> 16) & 255;
+	let g = (bigint >> 8) & 255;
+	let b = bigint & 255;
+
+	// Calculate lightness
+	const max = Math.max(r, g, b);
+	const min = Math.min(r, g, b);
+	const lightness = (max + min) / 2;
+
+	return Math.round((lightness / 256) * 100);
+}
+
+/**
+ * Calculate the intensity of a color.
+ * @param {string} hex - The hex value of the color.
+ * @returns {number} - The intensity of the color, ranging from 0 to 255.
+ */
+export function getIntensity(hex) {
+	let bigint = parseInt(hex.slice(1), 16);
+	let r = (bigint >> 16) & 255;
+	let g = (bigint >> 8) & 255;
+	let b = bigint & 255;
+	return Math.round((r + g + b) / 3);
+}
+
+/**
+ * Calculate the brightness of a color.
+ * @param {string} hex - The hex value of the color.
+ * @returns {number} - The brightness of the color, ranging from 0 to 255.
+ */
+export function getBrightness(hex) {
+	let bigint = parseInt(hex.slice(1), 16);
+	let r = (bigint >> 16) & 255;
+	let g = (bigint >> 8) & 255;
+	let b = bigint & 255;
+	return Math.round((r * 299 + g * 587 + b * 114) / 1000);
+}
