@@ -1,4 +1,6 @@
 <script>
+	// @ts-nocheck
+
 	import { fade, fly } from 'svelte/transition';
 	import { namedColors, colorGroups } from './functions';
 	import { hexToRgb, hexToHsl, hslToRgb, rgbToValues } from './functions';
@@ -20,7 +22,7 @@
 	// @ts-ignore
 	let shades = $state([]);
 	let shadeVarName = $state('primary');
-	let shadeVarCoding = $state('hex');
+	let shadeVarCoding = $state('1');
 
 	/**
 	 * Extracts individual color values from an HSL string.
@@ -55,6 +57,35 @@
 			s: isNaN(s) ? 0 : s,
 			l: isNaN(l) ? 0 : l
 		};
+	}
+
+	/**
+	 * Converts an HSL color string to an RGB color string.
+	 * @param {string} hslString - The HSL string (e.g., "hsl(120deg 25% 65%)").
+	 * @returns {string} - The color in RGB format (e.g., "rgb(143 188 143)").
+	 */
+	function hslStringToRgbString(hslString) {
+		// Extract h, s, l values from the HSL string
+		const { h, s, l } = hslToValues(hslString);
+
+		// Convert HSL values to RGB values
+		const { r, g, b } = hslToRgb(h, s, l);
+
+		// Format as RGB string
+		return `rgb(${r} ${g} ${b})`;
+	}
+
+	/**
+	 * Converts an RGB color string to a hex color string.
+	 * @param {string} rgbString - The RGB string (e.g., "rgb(143 188 143)").
+	 * @returns {string} - The color in hex format (e.g., "#8FBC8F").
+	 */
+	function rgbStringToHexString(rgbString) {
+		// Extract r, g, b values from the RGB string
+		const { r, g, b } = rgbToValues(rgbString);
+
+		// Convert RGB values to hex string
+		return `#${((1 << 24) + (r << 16) + (g << 8) + b).toString(16).slice(1).toUpperCase()}`;
 	}
 
 	function updateFromNamedColor() {
@@ -138,6 +169,7 @@
 		} else {
 			e.target.value = rgbValue;
 		}
+		shadeMaker();
 	}
 	// @ts-ignore
 	function updateFromHsl(e) {
@@ -185,7 +217,7 @@
 		} else {
 			e.target.value = hslValue;
 		}
-		// shadeMaker();
+		shadeMaker();
 	}
 
 	function shadeMaker() {
@@ -203,8 +235,14 @@
 		let startingLightness = lightness - darker * sW;
 		for (let index = -darker; index <= brighter; index++) {
 			let arr = new Array();
+			let hsl = `hsl(${h}deg ${s}% ${Math.round(startingLightness + (index + darker) * sW)}%)`;
+			let rgb = hslStringToRgbString(hsl);
+			let hex = rgbStringToHexString(rgb);
+			// let hex = rgb(1).toUpperCase()}`;
 			arr.push(index);
-			arr.push(`hsl(${h}deg ${s}% ${Math.round(startingLightness + (index + darker) * sW)}%)`);
+			arr.push(hex);
+			arr.push(rgb);
+			arr.push(hsl);
 			shades.push(arr);
 		}
 		shades = shades.reverse();
@@ -367,13 +405,13 @@
 		{#if shaderOpen}
 			<section class="shader" transition:fly={{ y: -20, duration: 100 }}>
 				<div class="shader-controls">
-					<label for="quantity">Number of shades<br /> (between 5 and 15):</label>
+					<label for="quantity">Number of shades<br /> (between 5 and 20):</label>
 					<input
 						type="number"
 						id="quantity"
 						name="quantity"
 						min="5"
-						max="15"
+						max="20"
 						onchange={shadeMaker}
 						bind:value={shadeCount}
 						style:background-color={hexValue}
@@ -400,10 +438,10 @@
 							<input
 								type="radio"
 								bind:group={shadeVarCoding}
-								value="hex"
-								style:background-color={shadeVarCoding === 'hex' && hexValue !== '#ffffff'
+								value="1"
+								style:background-color={shadeVarCoding === '1' && hexValue !== '#ffffff'
 									? hexValue
-									: shadeVarCoding === 'hex'
+									: shadeVarCoding === '1'
 										? 'Silver'
 										: 'transparent'}
 							/>
@@ -413,10 +451,10 @@
 							<input
 								type="radio"
 								bind:group={shadeVarCoding}
-								value="rgb"
-								style:background-color={shadeVarCoding === 'rgb' && hexValue !== '#ffffff'
+								value="2"
+								style:background-color={shadeVarCoding === '2' && hexValue !== '#ffffff'
 									? hexValue
-									: shadeVarCoding === 'rgb'
+									: shadeVarCoding === '2'
 										? 'Silver'
 										: 'transparent'}
 							/>
@@ -426,10 +464,10 @@
 							<input
 								type="radio"
 								bind:group={shadeVarCoding}
-								value="hsl"
-								style:background-color={shadeVarCoding === 'hsl' && hexValue !== '#ffffff'
+								value="3"
+								style:background-color={shadeVarCoding === '3' && hexValue !== '#ffffff'
 									? hexValue
-									: shadeVarCoding === 'hsl'
+									: shadeVarCoding === '3'
 										? 'Silver'
 										: 'transparent'}
 							/>
@@ -438,11 +476,17 @@
 				</div>
 				<div class="shades">
 					{#each shades as color}
-						<div class="swatch" style:background-color={color[1]}>swatch</div>
+						<div class="shade">
+							<div class="swatch" style:background-color={color[1]}></div>
+							<div class="variable-code">
+								--{shadeVarName}{color[0] < 0
+									? color[0]
+									: color[0] === 0
+										? ''
+										: '-plus' + color[0]}: {color[Number(shadeVarCoding)]};
+							</div>
+						</div>
 					{/each}
-					<!-- {shades[0].hsl} -->
-					<!-- <div style:background-color={shades[0][1]}>{shades[0][1]}</div> -->
-					<!-- {shades[0][1]} -->
 				</div>
 			</section>
 		{/if}
@@ -528,15 +572,17 @@
 			section.shader {
 				display: flex;
 				justify-content: space-around;
-				align-items: center;
+				align-items: stretch;
 				width: 100%;
 				// background-color: #eee;
 
 				div.shader-controls {
 					display: flex;
 					flex-direction: column;
-					align-items: center;
+					align-items: flex-end;
 					gap: 0.5rem;
+					// justify-content: flex-start;
+					// justify-content: center;
 					line-height: 1.3;
 
 					.var-encoding-group {
@@ -566,9 +612,31 @@
 					}
 				}
 				div.shades {
-					.swatch {
-						margin-block: 0.25rem;
-						width: 4rem;
+					display: flex;
+					flex-direction: column;
+					// height: 100%;
+					justify-content: center;
+					.shade {
+						display: flex;
+						.swatch {
+							border-radius: 0.25rem;
+							display: inline;
+							margin-block: 0.25rem;
+							margin-right: 1rem;
+							min-width: 4rem;
+							width: 4rem;
+							height: 1.5rem;
+							transition: all 0.3s;
+						}
+						.variable-code {
+							display: inline;
+							margin-block: 0.25rem;
+							// width: 20rem;
+							font-family: 'Courier New', Courier, monospace;
+							font-size: 80%;
+							// background-color: #eee;
+							padding: 0.125rem;
+						}
 					}
 				}
 			}
