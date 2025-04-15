@@ -115,13 +115,6 @@
 
 			if (!prefersReducedMotion) {
 				let delay = 5;
-				// if (i < times * 0.05) {
-				// 	delay = 100 - easeInOutQuad(i / (times * 0.05)) * 90; // smooth acceleration
-				// } else if (i > times * 0.95) {
-				// 	delay = 10 + easeInOutQuad((i - times * 0.95) / (times * 0.05)) * 95; // smooth deceleration
-				// } else {
-				// 	delay = 10; // fast middle
-				// }
 				await new Promise((resolve) => setTimeout(resolve, delay));
 			}
 		}

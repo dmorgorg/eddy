@@ -10,12 +10,12 @@
 	a:visited {
 		font-family: 'Rocksoldier', sans-serif;
 		font-weight: bold;
-		font-size: 4vw;
+		font-size: clamp(10px, 4vw, 25px);
 		letter-spacing: 0.25rem;
-		margin-top: -1vw;
-		padding: 1rem;
-		padding-block: 0;
-		position: absolute;
+		padding-left: 1rem;
+		margin: 0;
+		// position: absolute;
 		text-decoration: none;
+		// border: 1px solid black;
 	}
 </style>

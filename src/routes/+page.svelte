@@ -20,14 +20,9 @@
 			<a href="/misc/montyHall">Monty Hall Simul8r</a>
 		</div>
 	</Card>
-	<Card header="Utilities" theme="CornflowerBlue" secondary="blue">
+	<Card header="Utilities" theme="DarkSeaGreen" secondary="DarkGreen">
 		<div class="flex">
-			<a href="/utils/colorCodeStepper">Color codes and stepper</a>
-		</div>
-	</Card>
-	<Card header="Under Construction" theme="DarkSalmon" secondary="DarkRed">
-		<div class="flex">
-			<a href="/utils/ccc"><strike>CCC</strike></a>
+			<a href="/utils/ccc">Color codes, shader and blender</a>
 		</div>
 	</Card>
 </div>
