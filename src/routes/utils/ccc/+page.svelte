@@ -1114,10 +1114,6 @@
 		header h1 {
 			font-size: 150%;
 		}
-		.text-inputs {
-			width: 100%;
-			border: 1px solid red;
-		}
 
 		input[type='text'] {
 			width: 85%;
