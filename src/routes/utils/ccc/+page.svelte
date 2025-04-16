@@ -398,7 +398,7 @@
 								? 'Silver'
 								: 'transparent'}
 					/>
-					<label for="radio1"> <strong>Select</strong> Color by Name </label>
+					<div><label for="radio1"> <strong>Select</strong> Color by Name </label></div>
 				</div>
 				<div>
 					<input
@@ -461,7 +461,7 @@
 			{/if}
 		</div>
 		<div class="text-inputs">
-			<div>
+			<div class="hex">
 				<div class="encoding-name">Hex</div>
 				<div class="units">(#RRGGBB)</div>
 				<input
@@ -474,7 +474,7 @@
 					style:color={headerText}
 				/>
 			</div>
-			<div>
+			<div class="rgb">
 				<div class="encoding-name">RGB</div>
 				<div class="units">(0-255 &nbsp;0-255 &nbsp;0-255)</div>
 				<input
@@ -487,7 +487,7 @@
 					style:color={headerText}
 				/>
 			</div>
-			<div>
+			<div class="hsl">
 				<div class="encoding-name">HSL</div>
 				<div class="units">(0-360deg &nbsp;0-100% &nbsp;0-100%)</div>
 				<input
@@ -935,10 +935,11 @@
 	}
 
 	.separator {
-		border-radius: 0.25rem;
+		border-radius: 0.2rem;
 		background-color: silver;
 		width: 100%;
-		height: 1rem;
+		height: 0.375rem;
+		margin-block: 0;
 	}
 	.separatorSkinny {
 		border-radius: 0.125rem;
@@ -1001,7 +1002,7 @@
 			outline: none;
 			font-family: inherit;
 			font-size: inherit;
-			cursor: inherit;
+			cursor: pointer;
 			line-height: inherit;
 			padding: 0.5rem;
 			transition:
@@ -1012,33 +1013,48 @@
 	}
 
 	.colorByName-group {
+		align-items: center;
 		display: flex;
 		justify-content: space-between;
 		position: relative;
 
 		label {
-			border-radius: 0.25rem;
+			display: inline-block;
 			font-size: 90%;
 			margin-left: 1.75rem;
 			padding-right: 1rem;
-			text-align: center;
-			&:checked {
-				color: var(--light-blue);
-			}
 		}
 	}
 
 	.text-inputs {
+		// display: inline-block;
 		display: flex;
 		justify-content: space-between;
-		align-items: center;
+		// align-items: baseline;
+		gap: 1rem;
+		flex: content;
 		width: 100%;
+		// border: 1px solid red;
 
 		div {
 			display: flex;
 			align-items: center;
-			gap: 0.25rem;
 			flex-direction: column;
+			gap: 0.25rem;
+
+			// &.hex {
+			// 	width: 20%;
+			// }
+			// &.rgb {
+			// 	width: 30%;
+			// }
+			// &.hsl {
+			// 	width: 40%;
+			// }
+
+			input {
+				width: 100%;
+			}
 
 			.encoding-name {
 				font-weight: 500;
@@ -1046,6 +1062,7 @@
 			}
 		}
 	}
+
 	input[type='number'] {
 		border: none;
 		border-radius: 4px;
@@ -1091,15 +1108,22 @@
 	@media (max-width: 700px) {
 		.container {
 			width: 100%;
+			font-size: 0.75rem;
+			padding-inline: 0.5rem;
 		}
 		header h1 {
 			font-size: 150%;
 		}
-		input[type='text'] {
+		.text-inputs {
 			width: 100%;
+			border: 1px solid red;
+		}
+
+		input[type='text'] {
+			width: 85%;
 		}
 		input[type='number'] {
-			width: 100%;
+			width: 50%;
 		}
 	}
 </style>
