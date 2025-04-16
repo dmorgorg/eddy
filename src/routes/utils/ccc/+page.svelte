@@ -1027,12 +1027,10 @@
 	}
 
 	.text-inputs {
-		// display: inline-block;
 		display: flex;
 		justify-content: space-between;
-		// align-items: baseline;
+		align-items: baseline;
 		gap: 1rem;
-		flex: content;
 		width: 100%;
 		// border: 1px solid red;
 
@@ -1042,15 +1040,15 @@
 			flex-direction: column;
 			gap: 0.25rem;
 
-			// &.hex {
-			// 	width: 20%;
-			// }
-			// &.rgb {
-			// 	width: 30%;
-			// }
-			// &.hsl {
-			// 	width: 40%;
-			// }
+			&.hex {
+				width: 10em;
+			}
+			&.rgb {
+				width: 12em;
+			}
+			&.hsl {
+				width: 16em;
+			}
 
 			input {
 				width: 100%;
@@ -1072,7 +1070,6 @@
 		font-size: inherit;
 		cursor: inherit;
 		line-height: inherit;
-		// margin-top: -0.5rem;
 		padding: 0.25rem;
 		text-align: center;
 		transition:
@@ -1096,9 +1093,9 @@
 			color 0.3s;
 		width: 11rem;
 
-		&.hsl-input {
-			width: 14rem;
-		}
+		// &.hsl-input {
+		// 	width: 14rem;
+		// }
 		&.varName-input {
 			// margin-top: -0.5rem;
 			width: 8rem;
