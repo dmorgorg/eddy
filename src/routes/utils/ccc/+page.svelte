@@ -1041,13 +1041,13 @@
 			gap: 0.25rem;
 
 			&.hex {
-				width: 10em;
+				flex-basis: 10em;
 			}
 			&.rgb {
-				width: 12em;
+				flex-basis: 12em;
 			}
 			&.hsl {
-				width: 16em;
+				flex-basis: 16em;
 			}
 
 			input {
@@ -1102,7 +1102,7 @@
 		}
 	}
 
-	@media (max-width: 700px) {
+	@media (max-width: 840px) {
 		.container {
 			width: 100%;
 			font-size: 0.75rem;
@@ -1117,6 +1117,10 @@
 		}
 		input[type='number'] {
 			width: 50%;
+		}
+		.picker {
+			// opacity: 0;
+			display: none;
 		}
 	}
 </style>
