@@ -3,7 +3,16 @@
 
 	import { fade, fly } from 'svelte/transition';
 	import { namedColors, colorGroups } from './functions';
-	import { hexToRgb, hexToHsl, hslToRgb, rgbToValues } from './functions';
+	import {
+		hexToRgb,
+		hexToHsl,
+		rgbToHex,
+		rgbToValues,
+		getAverageRgb,
+		hslStringToRgbString,
+		hslToRgb,
+		hslToValues
+	} from './functions';
 	import { getLightness, getIntensity, getBrightness } from './functions';
 	import HomeLink from '$lib/components/HomeLink.svelte';
 
@@ -29,14 +38,8 @@
 
 	let blends = $state([]);
 	let fromTo = $state('from');
-	// let fromColorNamed = $state('DarkSeaGreen');
-	// let fromColorHex = $state('#8FBC8F');
 	let fromColorRgb = $state('rgb(143 188 143)');
-	// let fromColorHsl = $state('hsl(120deg 25% 65%)');
-	// let toColorNamed = $state('Crimson');
-	// let toColorHex = $state('#8FBC8F');
 	let toColorRgb = $state('rgb(143 188 143)');
-	// let toColorHsl = $state('hsl(120deg 25% 65%)');
 	let blendVarName = $state('primary');
 	let blendEncoding = $state('1');
 	let blendAverageForBg = $derived(getAverageRgb(fromColorRgb, toColorRgb));
@@ -45,94 +48,6 @@
 		getLightness(rgbToHex(fromColorRgb ? fromColorRgb : 'red')) < 40 ? 'white' : 'black'
 	);
 	let headerTextTo = $derived(getLightness(rgbToHex(toColorRgb)) < 40 ? 'white' : 'black');
-
-	/**
-	 * Extracts individual color values from an HSL string.
-	 * @param {string} hsl - The HSL string (e.g., "hsl(120deg 25% 65%)" or "hsl(120, 25%, 65%)").
-	 * @returns {object} - An object containing h, s, and l numeric values.
-	 */
-	function hslToValues(hsl) {
-		// Remove "hsl(" and ")" and split by spaces or commas
-		const cleanedStr = hsl.replace(/^hsl\(|\)$/g, '').trim();
-		const parts = cleanedStr.split(/[\s,]+/);
-
-		let h = parseInt(parts[0]);
-		let s = parseInt(parts[1]);
-		let l = parseInt(parts[2]);
-
-		// Check if h has "deg" suffix and remove it
-		if (isNaN(h) && typeof parts[0] === 'string' && parts[0].endsWith('deg')) {
-			h = parseInt(parts[0].replace('deg', ''));
-		}
-
-		// Remove percentage symbols if present
-		if (isNaN(s) && typeof parts[1] === 'string') {
-			s = parseInt(parts[1].replace('%', ''));
-		}
-		if (isNaN(l) && typeof parts[2] === 'string') {
-			l = parseInt(parts[2].replace('%', ''));
-		}
-
-		// Return default values if parsing fails
-		return {
-			h: isNaN(h) ? 0 : h,
-			s: isNaN(s) ? 0 : s,
-			l: isNaN(l) ? 0 : l
-		};
-	}
-
-	/**
-	 * Converts an HSL color string to an RGB color string.
-	 * @param {string} hslString - The HSL string (e.g., "hsl(120deg 25% 65%)").
-	 * @returns {string} - The color in RGB format (e.g., "rgb(143 188 143)").
-	 */
-	function hslStringToRgbString(hslString) {
-		// Extract h, s, l values from the HSL string
-		const { h, s, l } = hslToValues(hslString);
-
-		// Convert HSL values to RGB values
-		const { r, g, b } = hslToRgb(h, s, l);
-
-		// Format as RGB string
-		return `rgb(${r} ${g} ${b})`;
-	}
-
-	/**
-	 * Converts an RGB color string to a hex color string.
-	 * @param {string} rgbString - The RGB string (e.g., "rgb(143 188 143)").
-	 * @returns {string} - The color in hex format (e.g., "#8FBC8F").
-	 */
-	function rgbToHex(rgbString) {
-		// Extract r, g, b values from the RGB string
-		const { r, g, b } = rgbToValues(rgbString);
-
-		// Convert RGB values to hex string
-		return `#${((1 << 24) + (r << 16) + (g << 8) + b).toString(16).slice(1).toUpperCase()}`;
-	}
-
-	/**
-	 * Calculates the average of two RGB colors.
-	 * @param {string} rgbColor1 - First RGB color string (e.g., "rgb(143 188 143)")
-	 * @param {string} rgbColor2 - Second RGB color string (e.g., "rgb(200 100 50)")
-	 * @returns {string} - The average RGB color as a string (e.g., "rgb(171 144 96)")
-	 */
-	function getAverageRgb(rgbColor1, rgbColor2) {
-		// Extract RGB values from both colors
-		const color1 = rgbToValues(rgbColor1);
-		const color2 = rgbToValues(rgbColor2);
-
-		// Calculate average values
-		const avgR = Math.round((color1.r + color2.r) / 2);
-		const avgG = Math.round((color1.g + color2.g) / 2);
-		const avgB = Math.round((color1.b + color2.b) / 2);
-
-		// Return as RGB string
-		return `rgb(${avgR} ${avgG} ${avgB})`;
-	}
-
-	// function updateFrom() {
-
-	// }
 
 	function updateFromNamedColor() {
 		if (namedColors[selectedColor]) {
@@ -260,18 +175,37 @@
 
 	function shadeMaker() {
 		shades = [];
+		let darker, brighter;
+		let swatchWidth = Math.round(10000 / shadeCount) / 100;
+		// console.log('swatchWidth', swatchWidth);
+
 		let hsl = hslToValues(hslValue);
 		let h = hsl.h;
 		let s = hsl.s;
-		let swatchWidth = Math.round(8000 / shadeCount) / 100;
-		let sW = swatchWidth;
-		let brighter = Math.ceil((100 - lightness) / sW - 2);
-		let darker = shadeCount - brighter - 1;
-		let brandIndex = darker;
-		let startingLightness = lightness - darker * sW;
+		let l = hsl.l;
+
+		if (l < swatchWidth) {
+			//  very dark, set this shade to darkest
+			darker = 0;
+			brighter = shadeCount - 1;
+		} else if (l > 100 - swatchWidth) {
+			//  very light, set this shade to brightest
+			darker = shadeCount - 1;
+			brighter = 0;
+		} else {
+			//  normal, set this shade to middle
+			brighter = Math.floor((100 - l) / swatchWidth);
+			darker = shadeCount - brighter - 1;
+		}
+
+		// console.log('l', l);
+		// let brighter = Math.ceil((100 - l) / swatchWidth - 2);
+		// darker = shadeCount - brighter - 1;
+		// let brandIndex = darker;
+		let startingLightness = l - darker * swatchWidth;
 		for (let index = -darker; index <= brighter; index++) {
 			let arr = new Array();
-			let hsl = `hsl(${h}deg ${s}% ${Math.round(startingLightness + (index + darker) * sW)}%)`;
+			let hsl = `hsl(${h}deg ${s}% ${Math.round(startingLightness + (index + darker) * swatchWidth)}%)`;
 			let rgb = hslStringToRgbString(hsl);
 			let hex = rgbToHex(rgb);
 			arr.push(index);
@@ -364,7 +298,7 @@
 		}
 		checkForNamedColor();
 		shadeMaker();
-		// blendMaker();
+		blendMaker();
 	}
 </script>
 
@@ -630,7 +564,8 @@
 		>
 			<h1
 				style="--from-color-text: {headerTextFrom}; --to-color-text: {headerTextTo};"
-				class="blender-text"
+				class:monochrome-text={headerTextFrom === headerTextTo}
+				class:blended-text={headerTextFrom !== headerTextTo}
 			>
 				Two-Color Blender
 			</h1>
@@ -646,7 +581,6 @@
 			</div>
 		</header>
 
-		<!-- {headerTextFrom}: {headerTextTo} -->
 		{#if blenderOpen}
 			<section class="blender" transition:fly={{ y: -20, duration: 100 }}>
 				<div class="blender-controls">
@@ -665,7 +599,6 @@
 						</p>
 					</div>
 					<div class="fromTo-group">
-						<!-- <div class="separatorSkinny"></div> -->
 						<p>
 							<label for="toColor"><strong>To</strong> Color:</label>
 							<input
@@ -772,7 +705,7 @@
 <style lang="scss">
 	.outer {
 		background-color: white;
-		background-color: #cccaaa;
+		// background-color: #cccaaa;
 		// font-size: 2.25vw;
 		width: 100%;
 		min-height: 100vh;
@@ -791,6 +724,13 @@
 		// border: 1px solid black;
 	}
 
+	* {
+		transition:
+			// background-image 0.3s,
+			background-color 0.1s,
+			color 0.3s;
+	}
+
 	header {
 		border-radius: 0.25rem;
 		box-shadow: var(--shadow-4);
@@ -800,9 +740,9 @@
 		padding: 0.5rem;
 		position: relative;
 		text-align: center;
-		transition:
-			background-color 0.3s,
-			color 0.3s;
+		// transition:
+		// 	background-color 3.3s,
+		// 	color 0.3s;
 		width: 100%;
 
 		h1 {
@@ -811,14 +751,26 @@
 			font-size: 200%;
 			margin-inline: auto;
 
-			&.blender-text {
-				background: linear-gradient(to right, var(--from-color-text), var(--to-color-text));
+			&.blended-text {
+				background-image: linear-gradient(
+					to right,
+					var(--from-color-text),
+					#888,
+					#888,
+					var(--to-color-text)
+				);
 				-webkit-background-clip: text;
 				-moz-background-clip: text;
 				-ms-background-clip: text;
 				-o-background-clip: text;
 				background-clip: text;
 				color: transparent;
+				filter: drop-shadow(0.075rem 0.075rem black);
+			}
+
+			&.monochrome-text {
+				color: var(--from-color-text);
+				// filter: drop-shadow(0.075rem 0.075rem black);
 			}
 		}
 
@@ -831,20 +783,21 @@
 		}
 
 		&.blender {
-			background: linear-gradient(to right, var(--from-color), var(--to-color));
+			background-image: linear-gradient(to right, var(--from-color), var(--to-color));
+			transition: background-image 10.3s;
 		}
 	}
 
 	input[type='radio'] {
 		appearance: none;
-		background-color: transparent;
+		// background-color: transparent;
 		border: 1px solid black;
 		border-radius: 50%;
 		position: absolute;
 		top: 0.2rem;
-		transition:
-			background-color 0.3s,
-			color 0.3s;
+		// transition:
+		// 	background-color 0.3s,
+		// 	color 0.3s;
 		height: 1.4rem;
 		width: 1.4rem;
 		&:checked {
@@ -969,9 +922,9 @@
 			cursor: pointer;
 			padding: 0;
 			border-radius: 4px;
-			transition:
-				background-color 0.3s,
-				color 0.3s;
+			// transition:
+			// 	background-color 0.3s,
+			// 	color 0.3s;
 			width: 5rem;
 			height: 2.25rem;
 		}
@@ -1005,9 +958,9 @@
 			cursor: pointer;
 			line-height: inherit;
 			padding: 0.5rem;
-			transition:
-				background-color 0.3s,
-				color 0.3s;
+			// transition:
+			// 	background-color 0.3s,
+			// 	color 0.3s;
 			width: 14rem;
 		}
 	}
@@ -1072,9 +1025,9 @@
 		line-height: inherit;
 		padding: 0.25rem;
 		text-align: center;
-		transition:
-			background-color 0.3s,
-			color 0.3s;
+		// transition:
+		// 	background-color 0.3s,
+		// 	color 0.3s;
 		width: 5rem;
 	}
 	input[type='text'] {
@@ -1088,9 +1041,9 @@
 		line-height: inherit;
 		padding: 0.5rem;
 		text-align: center;
-		transition:
-			background-color 0.3s,
-			color 0.3s;
+		// transition:
+		// 	background-color 0.3s,
+		// 	color 0.3s;
 		width: 11rem;
 
 		// &.hsl-input {
@@ -1119,8 +1072,10 @@
 			width: 50%;
 		}
 		.picker {
-			// opacity: 0;
 			display: none;
+		}
+		.triangle {
+			margin-top: -0.5rem;
 		}
 	}
 </style>

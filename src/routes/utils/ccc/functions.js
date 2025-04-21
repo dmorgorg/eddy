@@ -1,3 +1,4 @@
+// @ts-nocheck
 /** @type {{ [key: string]: string }} */
 export const namedColors = {
 	AliceBlue: '#F0F8FF',
@@ -451,6 +452,91 @@ export function rgbToValues(rgb) {
 
 	// Return default values if parsing fails
 	return { r: 0, g: 0, b: 0 };
+}
+
+/**
+ * Converts an RGB color string to a hex color string.
+ * @param {string} rgbString - The RGB string (e.g., "rgb(143 188 143)").
+ * @returns {string} - The color in hex format (e.g., "#8FBC8F").
+ */
+export function rgbToHex(rgbString) {
+	// Extract r, g, b values from the RGB string
+	const { r, g, b } = rgbToValues(rgbString);
+
+	// Convert RGB values to hex string
+	return `#${((1 << 24) + (r << 16) + (g << 8) + b).toString(16).slice(1).toUpperCase()}`;
+}
+
+/**
+ * Converts an HSL color string to an RGB color string.
+ * @param {string} hslString - The HSL string (e.g., "hsl(120deg 25% 65%)").
+ * @returns {string} - The color in RGB format (e.g., "rgb(143 188 143)").
+ */
+export function hslStringToRgbString(hslString) {
+	// Extract h, s, l values from the HSL string
+	// @ts-ignore
+	const { h, s, l } = hslToValues(hslString);
+
+	// Convert HSL values to RGB values
+	const { r, g, b } = hslToRgb(h, s, l);
+
+	// Format as RGB string
+	return `rgb(${r} ${g} ${b})`;
+}
+
+/**
+ * Extracts individual color values from an HSL string.
+ * @param {string} hsl - The HSL string (e.g., "hsl(120deg 25% 65%)" or "hsl(120, 25%, 65%)").
+ * @returns {object} - An object containing h, s, and l numeric values.
+ */
+export function hslToValues(hsl) {
+	// Remove "hsl(" and ")" and split by spaces or commas
+	const cleanedStr = hsl.replace(/^hsl\(|\)$/g, '').trim();
+	const parts = cleanedStr.split(/[\s,]+/);
+
+	let h = parseInt(parts[0]);
+	let s = parseInt(parts[1]);
+	let l = parseInt(parts[2]);
+
+	// Check if h has "deg" suffix and remove it
+	if (isNaN(h) && typeof parts[0] === 'string' && parts[0].endsWith('deg')) {
+		h = parseInt(parts[0].replace('deg', ''));
+	}
+
+	// Remove percentage symbols if present
+	if (isNaN(s) && typeof parts[1] === 'string') {
+		s = parseInt(parts[1].replace('%', ''));
+	}
+	if (isNaN(l) && typeof parts[2] === 'string') {
+		l = parseInt(parts[2].replace('%', ''));
+	}
+
+	// Return default values if parsing fails
+	return {
+		h: isNaN(h) ? 0 : h,
+		s: isNaN(s) ? 0 : s,
+		l: isNaN(l) ? 0 : l
+	};
+}
+
+/**
+ * Calculates the average of two RGB colors.
+ * @param {string} rgbColor1 - First RGB color string (e.g., "rgb(143 188 143)")
+ * @param {string} rgbColor2 - Second RGB color string (e.g., "rgb(200 100 50)")
+ * @returns {string} - The average RGB color as a string (e.g., "rgb(171 144 96)")
+ */
+export function getAverageRgb(rgbColor1, rgbColor2) {
+	// Extract RGB values from both colors
+	const color1 = rgbToValues(rgbColor1);
+	const color2 = rgbToValues(rgbColor2);
+
+	// Calculate average values
+	const avgR = Math.round((color1.r + color2.r) / 2);
+	const avgG = Math.round((color1.g + color2.g) / 2);
+	const avgB = Math.round((color1.b + color2.b) / 2);
+
+	// Return as RGB string
+	return `rgb(${avgR} ${avgG} ${avgB})`;
 }
 
 /**
