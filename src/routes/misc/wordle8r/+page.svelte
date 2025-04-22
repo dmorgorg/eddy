@@ -1,11 +1,12 @@
 <script>
+	// @ts-nocheck
+
 	import { fade } from 'svelte/transition';
 	import { tick } from 'svelte';
 	import { words, select } from './words.js';
 	import { onMount } from 'svelte';
 
 	import {
-		handleKeyDown,
 		handleInput,
 		isRowComplete,
 		isRowEmpty,
@@ -22,9 +23,41 @@
 	let currentRow = $state(0);
 	let grid = $state(Array.from({ length: 6 }, () => Array(5).fill('')));
 	let statuses = $state(Array.from({ length: 6 }, () => Array(5).fill('')));
-	let possibles = { 0: Array.from(words), 1: [], 2: [], 3: [], 4: [], 5: [], 6: [] };
+	let possibles = $state({ 0: Array.from(words), 1: [], 2: [], 3: [], 4: [], 5: [], 6: [] });
 	let filteredPossibles = $state([]);
 	let showPossibles = $state(false);
+	let fatal = $state(currentRow > 0 && filteredPossibles.length === 0);
+	let disabled = $state(false);
+
+	// restrict inputs to only allow letters and backspace
+	function handleKeyDown(event, grid, row, col, statuses) {
+		const key = event.key;
+
+		if (!/^[a-zA-Z]$/.test(key) && key !== 'Backspace') {
+			event.preventDefault();
+		}
+
+		if (key === 'Backspace') {
+			if (grid[row][col] === '') {
+				// Move focus to the previous input if backspace is pressed and the current input is empty
+				if (col > 0) {
+					let prevInput = document.querySelector(`input[name="${row}${col - 1}"]`);
+					prevInput.focus();
+				} else if (!isRowEmpty(grid, row)) {
+					for (let i = 4; i >= 0; i--) {
+						if (grid[row][i] !== '') {
+							let prevInput = document.querySelector(`input[name="${row}${i}"]`);
+							prevInput.focus();
+							break;
+						}
+					}
+				}
+			}
+			// when backspacing, clear all the status entries for the row
+			statuses[row].fill('');
+			// showPossibles = false;
+		}
+	}
 
 	onMount(() => {
 		setFocus(0, 0);
@@ -36,6 +69,7 @@
 
 	// has to be in this file for the tick to work?
 	function advanceRow() {
+		disabled = false;
 		currentRow++;
 		tick().then(() => {
 			setFocus(currentRow, 0);
@@ -47,6 +81,7 @@
 		possibles = { 0: Array.from(words), 1: [], 2: [], 3: [], 4: [], 5: [], 6: [] };
 		filteredPossibles = [];
 		showPossibles = false;
+		fatal = false;
 		for (let i = 0; i < 6; i++) {
 			for (let j = 0; j < 5; j++) {
 				grid[i][j] = '';
@@ -59,18 +94,29 @@
 		}
 		const firstInput = document.querySelector(`input[name="00"]`);
 		if (firstInput) {
-			firstInput.disabled = false;
+			// firstInput.disabled = false;
 			setFocus(0, 0);
 		}
 	}
 
 	function setStatus(row, col, status) {
+		disabled = true;
 		statuses[row][col] = status;
-
 		if (areAllRowStatusesSet(statuses, row)) {
 			const g = getGuess(grid, currentRow);
 			const s = getStatusString(statuses, currentRow);
 			getPossibles(g, s);
+			if (filteredPossibles.length === 1 && s === 'xxxxx') {
+				return;
+			}
+			if (currentRow > 0 && filteredPossibles.length === 0) {
+				fatal = true;
+				return;
+			}
+			if (row < 5) {
+				advanceRow(row);
+			}
+			showPossibles = false;
 		}
 	}
 
@@ -89,7 +135,7 @@
 
 <div class="outer">
 	<div>
-		<a class="how-to-play mt-4" href="/how-to-use"
+		<a class="how-to-play mt-4" href="/misc/wordle8r/how-to-use"
 			><img src="/information-button.png" alt="information button" />How to use...</a
 		>
 	</div>
@@ -110,7 +156,7 @@
 									id={`${row}${col}`}
 									name={`${row}${col}`}
 									type="text"
-									disabled={row < currentRow}
+									disabled={row < currentRow || disabled}
 									maxlength="1"
 									onkeydown={(event) => handleKeyDown(event, grid, row, col, statuses)}
 									oninput={(event) => handleInput(event, grid, row, col)}
@@ -140,39 +186,48 @@
 						</div>
 					{/each}
 				</div>
+				<!-- row: {row}, currentRow: {currentRow}, disabled: {disabled} -->
 			{/if}
 		{/each}
 
+		<!-- show warning if row is complete and the word does not exist -->
 		{#if isRowComplete(grid, currentRow) && !doesWordExist(grid, currentRow, words)}
-			<h4 class="wordDoesNotExist error center">Not a valid word!</h4>
+			<h4 class="wiggleMe error center">Not a valid word!</h4>
 		{/if}
 
-		{#if doesWordExist(grid, currentRow, words) && filteredPossibles.length === 0 && areAllRowStatusesSet(statuses, currentRow)}
-			<h4 class="wordDoesNotExist error center ht-4">No possible words</h4>
+		<!-- if the word does exist, all statuses are set, and there are no possible words, 
+		 show a warning -->
+		{#if doesWordExist(grid, currentRow, words) && possibles[currentRow].length === 0 && areAllRowStatusesSet(statuses, currentRow)}
+			<h4 class="wiggleMe error center ht-4">No possible words</h4>
 		{/if}
 
-		{#if (currentRow > 0 && areAllRowStatusesSet(statuses, currentRow - 1) && filteredPossibles.length > 0) || (doesWordExist(grid, currentRow, words) && filteredPossibles.length > 0)}
-			<div class="center fs-120">
-				{filteredPossibles.length} possible {filteredPossibles.length > 1 ? 'words' : 'word'}
-			</div>
-			<button class="wide" onclick={() => (showPossibles = !showPossibles)}>
-				{showPossibles ? 'Hide' : 'Show'}...
-			</button>
-			<!-- showPossibles: {showPossibles} -->
-		{/if}
-		{#if showPossibles && filteredPossibles.length > 0}
-			<div class="scrollable-list">
-				{#each filteredPossibles as possible}
-					<div class:bold={select.has(possible)} class="fs-120">{possible}</div>
-				{/each}
-			</div>
+		{#if fatal}
+			<h4 class="wiggleMe error center ht-4">
+				Inconsistent input! <br />Reset to start over?
+			</h4>
 		{/if}
 
-		{#if currentRow < 5 && areAllRowStatusesSet(statuses, currentRow) && filteredPossibles.length > 1}
-			<button class="wide" onclick={advanceRow}> Next Guess... </button>
+		{#if filteredPossibles.length > 0}
+			{#if areAllRowStatusesSet(statuses, currentRow) || (currentRow > 0 && areAllRowStatusesSet(statuses, currentRow - 1))}
+				<div class="center fs-120">
+					{filteredPossibles.length} possible {filteredPossibles.length > 1 ? 'words' : 'word'}
+				</div>
+				<button class="wide" onclick={() => (showPossibles = !showPossibles)}>
+					{showPossibles ? 'Hide' : 'Show'}...
+				</button>
+				{#if showPossibles && filteredPossibles.length > 0}
+					<div class="scrollable-list">
+						{#each filteredPossibles as possible}
+							<div class:bold={select.has(possible)} class="fs-120">{possible}</div>
+						{/each}
+					</div>
+				{/if}
+			{/if}
+			<!-- {:else if currentRow > 0 && filteredPossibles.length === 0}
+			screwed -->
 		{/if}
 
-		{#if currentRow > 0 || filteredPossibles.length === 1}
+		{#if areAllRowStatusesSet(statuses, currentRow) || currentRow > 0}
 			<button class="wide" onclick={reset}>Reset...</button>
 		{/if}
 	</div>
@@ -277,6 +332,7 @@
 	.center {
 		display: flex;
 		justify-content: center;
+		text-align: center;
 	}
 
 	button.status {
@@ -289,17 +345,19 @@
 		border: 0.125rem solid black;
 		font-size: 110%;
 		font-weight: 500;
-		// outline: none;
 		box-shadow: none;
 		padding: 0.25rem;
 		width: 100%;
-		background-color: #ccc;
+		background-color: #d8d8d8;
 	}
 
 	.error {
-		color: red;
+		background-color: #a00;
+		color: black;
+		color: white;
 		font-size: 1.25rem;
 		font-weight: 500;
+		padding-block: 0.75rem;
 	}
 
 	.scrollable-list {
@@ -314,13 +372,8 @@
 	}
 
 	@media (prefers-reduced-motion: no-preference) {
-		.wordDoesNotExist {
+		.wiggleMe {
 			animation: wiggle 0.5s;
-		}
-		.wordDoesNotExistDelay {
-			animation: wiggleDelay 0.5s;
-			// background: yellow;
-			transition-delay: 1s;
 		}
 	}
 
