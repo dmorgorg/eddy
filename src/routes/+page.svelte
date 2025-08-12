@@ -3,6 +3,11 @@
 </script>
 
 <div class="container pt-4">
+	<Card header="Statics" theme="#800" secondary="#c00">
+		<div class="flex">
+			<a href="statics/sxs/">Step-through Statics Examples</a>
+		</div>
+	</Card>
 	<Card header="Calcul8rs" theme="orange" secondary="#CB6015">
 		<div class="flex">
 			<a href="/misc/calcs/alcohol">UK Alcohol Units Calcul8r</a>
@@ -15,12 +20,12 @@
 			<a href="/misc/wordle8r">Wordle8r</a>
 		</div>
 	</Card>
-	<Card header="Head Scratchers" theme="var(--terracotta)" secondary="#70393f">
+	<Card header="Head Scratchers" theme="Khaki" secondary="DarkKhaki">
 		<div class="flex">
 			<a href="/misc/montyHall">Monty Hall Simul8r</a>
 		</div>
 	</Card>
-	<Card header="Utilities" theme="DarkSeaGreen" secondary="DarkGreen">
+	<Card header="Utilities" theme="CornflowerBlue" secondary="SteelBlue">
 		<div class="flex">
 			<a href="/utils/ccc">Color codes, shader and blender</a>
 		</div>

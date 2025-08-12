@@ -1,4 +1,4 @@
-<div class="container pt-4">
+<div class="container">
 	<p>
 		If you've made it this far, you're probably familiar with the semi-addictive word game <strong
 			>Wordle</strong
@@ -41,11 +41,12 @@
 		part, it still represents the set of possible answers. "squid" and an unknown number of other
 		words notwithstanding.
 	</p>
-	<p><a href="/"><strong>Let's Play</strong> </a></p>
+	<p><a href="/misc/wordle8r"><strong>Let's Play</strong> </a></p>
 </div>
 
 <style>
 	.container {
+		background-color: white;
 		max-width: min(100vw, 40rem);
 		display: flex;
 		flex-direction: column;
@@ -53,7 +54,7 @@
 		gap: 1rem;
 		margin-inline: auto;
 		overflow-y: auto;
-		padding-inline: 1rem;
+		padding: 2rem;
 	}
 	a {
 		display: flex;

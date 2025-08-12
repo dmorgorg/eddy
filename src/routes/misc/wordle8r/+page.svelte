@@ -239,6 +239,7 @@
 		display: flex;
 		flex-direction: column;
 		font-size: clamp(0.875rem, 1.125vw, 1.5rem);
+		padding-block: 1em;
 	}
 
 	a.how-to-play {

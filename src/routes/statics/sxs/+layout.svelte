@@ -1,10 +1,7 @@
 <script>
 	import '$lib/css/app.css';
-	import Header from '$lib/components/Header.svelte';
-	// import '$lib/css/fonts.css'
+	import '$lib/css/fonts.css';
 	let { children } = $props();
 </script>
-
-<Header />
 
 {@render children()}
