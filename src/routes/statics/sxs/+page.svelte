@@ -8,14 +8,15 @@
 	<h3>Step-through worked examples</h3>
 	<div>
 		Here you can find a collection of worked 'step-through' examples for Statics, formatted as .pdf
-		presentations, for download. They are better stepped through in a standalone pdf reader (like
-		Sumatra or Adobe Reader or ...) than scrolled through in a browser.
+		presentations, for download. They are better stepped-through in a standalone pdf reader (like
+		Sumatra or Adobe Reader or ...) than viewed continuously scrolling through in a browser.
 	</div>
 	<div>Check back every week or two, as more will be posted.</div>
 
 	<ul>
 		<li>
-			<a href="/statics/sxs/07MoJSxS.pdf" download>07 Method of Joints</a> (Added 11th August, 2025)
+			<a href="/statics/sxs/07MoJSxS.pdf" download>07 Method of Joints (Download)</a>
+			<a href="/statics/sxs/07MoJSxS.pdf">(View Online)</a><br />(Added 11th August, 2025)
 		</li>
 	</ul>
 </div>
