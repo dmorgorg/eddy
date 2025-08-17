@@ -6,6 +6,7 @@
 	<Card header="Statics" theme="#800" secondary="#c00">
 		<div class="flex">
 			<a href="statics/sxs/">Step-through Statics Examples</a>
+			<a href="statics/lectures/">Lectures and Handouts</a>
 		</div>
 	</Card>
 	<Card header="Calcul8rs" theme="orange" secondary="#CB6015">
