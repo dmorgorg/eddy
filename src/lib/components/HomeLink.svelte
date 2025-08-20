@@ -16,6 +16,7 @@
 		letter-spacing: 0.25rem;
 		padding-left: 1rem;
 		margin: 0;
+		margin-top: -0.25em;
 		// position: absolute;
 		text-decoration: none;
 		position: absolute;
