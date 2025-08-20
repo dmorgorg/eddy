@@ -19,6 +19,11 @@
 			<a href="/statics/sxs/07MoJSxS.pdf">(View Online)</a><br />(Added 11th August, 2025)
 		</li>
 	</ul>
+
+	<div class="feedback eighty">
+		Please send feedback and notification of typos or errors, etc., to
+		<a href="mailto:bugs.eduk8r@gmail.com?subject=Step by Step Feedback">bugs.eduk8r@gmail.com</a>
+	</div>
 </div>
 
 <style lang="scss">

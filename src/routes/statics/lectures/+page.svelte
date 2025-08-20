@@ -16,11 +16,18 @@
 		<li>
 			<a href="/statics/lectures/01MathReview.pdf">01 Math Review </a>
 			<a href="/statics/lectures/01MathReview.pdf" download>(Download)</a>
-			<a href="/statics/handouts/01MathReviewStudentHandout.pdf">(Handout)</a>
-			<!-- <a href="/statics/handouts/01MathReviewStudentHandout.pdf" download>(Handout Download)</a> -->
+			<a href="/statics/handouts/01MathReviewStudentHandout.pdf">(Handout)</a> &nbsp;
+			<span class="eighty"> (Uploaded 19th August, 2025) </span>
 		</li>
 	</ul>
+
+	<div class="feedback eighty0">
+		Please send feedback and notification of typos or errors, etc., to
+		<a href="mailto:bugs.eduk8r@gmail.com?subject=Lectures and Handouts">bugs.eduk8r@gmail.com</a>
+	</div>
 </div>
+
+<!-- <div class="feedback">test</div> -->
 
 <style lang="scss">
 	.container {

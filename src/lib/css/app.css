@@ -59,8 +59,28 @@ body {
 	color: var(--terracotta);
 }
 
+.feedback {
+	position: absolute;
+	bottom: 1rem;
+	/* margin-block-start: 10rem; */
+}
+
 .fright {
 	float: right;
+}
+
+.eighty {
+	font-size: 80%;
+}
+
+/* .center {
+	display: block;
+	margin: 0 auto;
+	text-align: center;
+} */
+
+.maroon {
+	color: maroon;
 }
 
 .triangle-up {
