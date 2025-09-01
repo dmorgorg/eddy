@@ -15,9 +15,18 @@
 	<ul>
 		<li>
 			<a href="/statics/lectures/01MathReview.pdf">01 Math Review </a>
-			<a href="/statics/lectures/01MathReview.pdf" download>(Download)</a>
-			<a href="/statics/handouts/01MathReviewStudentHandout.pdf">(Handout)</a> &nbsp;
+			<a href="/statics/lectures/01MathReview.pdf" download>(Download)</a>&nbsp;
+			<a href="/statics/handouts/01MathReviewStudentHandout.pdf">Handout</a>
+			<a href="/statics/handouts/01MathReviewStudentHandout.pdf" download>(Download)</a> &nbsp;
 			<span class="eighty"> (Uploaded 19th August, 2025) </span>
+		</li>
+		<br />
+		<li>
+			<a href="/statics/lectures/02ForceVectors.pdf">02 Force Vectors </a>
+			<a href="/statics/lectures/02ForceVectors.pdf" download>(Download)</a>&nbsp;
+			<a href="/statics/handouts/02ForceVectorsStudentHandout.pdf">Handout</a>
+			<a href="/statics/handouts/02ForceVectorsStudentHandout.pdf" download>(Download)</a>
+			<span class="eighty"> (Uploaded 1st September, 2025) </span>
 		</li>
 	</ul>
 
