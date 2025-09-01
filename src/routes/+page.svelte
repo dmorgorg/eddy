@@ -7,6 +7,7 @@
 		<div class="flex">
 			<a href="statics/sxs/">Step-through Statics Examples</a>
 			<a href="statics/lectures/">Lectures and Handouts</a>
+			<a href="bridge/index.html">Bridge Simulation</a>
 		</div>
 	</Card>
 	<Card header="Calcul8rs" theme="orange" secondary="#CB6015">
