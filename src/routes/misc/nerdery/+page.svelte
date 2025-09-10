@@ -21,8 +21,8 @@
 
 	<ul>
 		<li>
-			<a href="/nerdery/Nerdery.pdf">Belt length</a>
-			<a href="/nerdery/Nerdery.pdf" download>(Download .pdf)</a>
+			<a href="/nerdery/BeltLength.pdf">Belt length</a>
+			<a href="/nerdery/BeltLength.pdf" download>(Download .pdf)</a>
 		</li>
 	</ul>
 
