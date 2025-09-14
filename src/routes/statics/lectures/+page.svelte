@@ -28,6 +28,16 @@
 			<a href="/statics/handouts/02ForceVectorsStudentHandout.pdf" download>(Download)</a>
 			<span class="eighty"> (Uploaded 1st September, 2025) </span>
 		</li>
+		<br />
+		<li>
+			<a href="/statics/lectures/03EquiConcurrent.pdf">
+				03 Equilibrium of a Particle / Concurrent Forces
+			</a>
+			<a href="/statics/lectures/03EquiConcurrent.pdf" download>(Download)</a>&nbsp;
+			<a href="/statics/handouts/03EquiConcStudentHandout.pdf">Handout</a>
+			<a href="/statics/handouts/03EquiConcStudentHandout.pdf" download>(Download)</a>
+			<span class="eighty"> (Uploaded 14th September, 2025) </span>
+		</li>
 	</ul>
 
 	<div class="feedback eighty0">
