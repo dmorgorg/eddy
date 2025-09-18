@@ -38,6 +38,14 @@
 			<a href="/statics/handouts/03EquiConcStudentHandout.pdf" download>(Download)</a>
 			<span class="eighty"> (Uploaded 14th September, 2025) </span>
 		</li>
+		<br />
+		<li>
+			<a href="/statics/lectures/04Centroids.pdf">04 Centroids </a>
+			<a href="/statics/lectures/04Centroids.pdf" download>(Download)</a>&nbsp;
+			<a href="/statics/handouts/04CentroidsStudentHandout.pdf">Handout</a>
+			<a href="/statics/handouts/04CentroidsStudentHandout.pdf" download>(Download)</a>
+			<span class="eighty"> (Uploaded 17th September, 2025) </span>
+		</li>
 	</ul>
 
 	<div class="feedback eighty0">
