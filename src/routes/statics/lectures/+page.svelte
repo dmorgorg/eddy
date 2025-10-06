@@ -54,6 +54,14 @@
 			<a href="/statics/handouts/05MomentsStudentHandout.pdf" download>(Download)</a>
 			<span class="eighty"> (Uploaded 23rd September, 2025) </span>
 		</li>
+		<br />
+		<li>
+			<a href="/statics/lectures/06ERB.pdf">06 Equilibrium of Rigid Bodies </a>
+			<a href="/statics/lectures/06ERB.pdf" download>(Download)</a>&nbsp;
+			<!-- <a href="/statics/handouts/05MomentsStudentHandout.pdf">Handout</a>
+			<a href="/statics/handouts/05MomentsStudentHandout.pdf" download>(Download)</a> -->
+			<span class="eighty"> (Uploaded 5th October, 2025) </span>
+		</li>
 	</ul>
 
 	<div class="feedback eighty0">
