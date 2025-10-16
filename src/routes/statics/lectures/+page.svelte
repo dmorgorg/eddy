@@ -7,8 +7,8 @@
 <div class="container">
 	<h3>Lectures and Handouts</h3>
 	<div>
-		Here you can find a collection of 'refreshed' versions of old Statics presentations, formatted
-		as .pdf presentations. There are also associated handouts for each lecture topic.
+		Here you can find a collection of 'refreshed' versions of my old Statics presentations,
+		formatted as .pdf presentations. There are also associated handouts for each lecture topic.
 	</div>
 	<div>Check back every week or two, as more will be posted.</div>
 
@@ -18,7 +18,7 @@
 			<a href="/statics/lectures/01MathReview.pdf" download>(Download)</a>&nbsp;
 			<a href="/statics/handouts/01MathReviewStudentHandout.pdf">Handout</a>
 			<a href="/statics/handouts/01MathReviewStudentHandout.pdf" download>(Download)</a> &nbsp;
-			<span class="eighty"> (Uploaded 19th August, 2025) </span>
+			<span class="eighty"> <br />(Uploaded 19th August, 2025) </span>
 		</li>
 		<br />
 		<li>
@@ -26,7 +26,7 @@
 			<a href="/statics/lectures/02ForceVectors.pdf" download>(Download)</a>&nbsp;
 			<a href="/statics/handouts/02ForceVectorsStudentHandout.pdf">Handout</a>
 			<a href="/statics/handouts/02ForceVectorsStudentHandout.pdf" download>(Download)</a>
-			<span class="eighty"> (Uploaded 1st September, 2025) </span>
+			<span class="eighty"> <br />(Uploaded 1st September, 2025) </span>
 		</li>
 		<br />
 		<li>
@@ -36,7 +36,7 @@
 			<a href="/statics/lectures/03EquiConcurrent.pdf" download>(Download)</a>&nbsp;
 			<a href="/statics/handouts/03EquiConcStudentHandout.pdf">Handout</a>
 			<a href="/statics/handouts/03EquiConcStudentHandout.pdf" download>(Download)</a>
-			<span class="eighty"> (Uploaded 14th September, 2025) </span>
+			<span class="eighty"> <br />(Uploaded 14th September, 2025) </span>
 		</li>
 		<br />
 		<li>
@@ -44,7 +44,7 @@
 			<a href="/statics/lectures/04Centroids.pdf" download>(Download)</a>&nbsp;
 			<a href="/statics/handouts/04CentroidsStudentHandout.pdf">Handout</a>
 			<a href="/statics/handouts/04CentroidsStudentHandout.pdf" download>(Download)</a>
-			<span class="eighty"> (Uploaded 17th September, 2025) </span>
+			<span class="eighty"> <br />(Uploaded 17th September, 2025) </span>
 		</li>
 		<br />
 		<li>
@@ -52,7 +52,7 @@
 			<a href="/statics/lectures/05Moments.pdf" download>(Download)</a>&nbsp;
 			<a href="/statics/handouts/05MomentsStudentHandout.pdf">Handout</a>
 			<a href="/statics/handouts/05MomentsStudentHandout.pdf" download>(Download)</a>
-			<span class="eighty"> (Uploaded 23rd September, 2025) </span>
+			<span class="eighty"> <br />(Uploaded 23rd September, 2025) </span>
 		</li>
 		<br />
 		<li>
@@ -60,7 +60,16 @@
 			<a href="/statics/lectures/06ERB.pdf" download>(Download)</a>&nbsp;
 			<a href="/statics/handouts/06ERBStudentHandout.pdf">Handout</a>
 			<a href="/statics/handouts/06ERBStudentHandout.pdf" download>(Download)</a>
-			<span class="eighty"> (Uploaded 6th October, 2025) </span>
+			<span class="eighty"> <br />(Uploaded 6th October, 2025) </span>
+		</li>
+
+		<br />
+		<li>
+			<a href="/statics/lectures/07MoJ.pdf">07 Method of Joints </a>
+			<a href="/statics/lectures/07MoJ.pdf" download>(Download)</a>&nbsp;
+			<a href="/statics/handouts/07MoJStudentHandout.pdf">Handout</a>
+			<a href="/statics/handouts/07MoJStudentHandout.pdf" download>(Download)</a>
+			<span class="eighty"> <br />(Uploaded 16th October, 2025) </span>
 		</li>
 	</ul>
 
@@ -69,8 +78,6 @@
 		<a href="mailto:bugs.eduk8r@gmail.com?subject=Lectures and Handouts">bugs.eduk8r@gmail.com</a>
 	</div>
 </div>
-
-<!-- <div class="feedback">test</div> -->
 
 <style lang="scss">
 	.container {
@@ -100,9 +107,6 @@
 	}
 	ul {
 		list-style-type: none;
-		// display: flex;
-		// background-color: gray;
-		// justify-content: center;
 		padding: 0;
 		margin: 0;
 		margin-top: 3rem;

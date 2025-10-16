@@ -9,6 +9,6 @@
 	div {
 		padding-bottom: 1rem;
 		/* background-color: pink; */
-		background: transparent;
+		/* background: transparent; */
 	}
 </style>

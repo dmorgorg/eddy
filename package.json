@@ -35,6 +35,7 @@
 	},
 	"dependencies": {
 		"katex": "^0.16.21",
-		"open-props": "^1.7.13"
+		"open-props": "^1.7.13",
+		"svelte-canvas": "^2.0.2"
 	}
 }

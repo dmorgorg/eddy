@@ -39,3 +39,15 @@
 	font-family: 'domestic';
 	src: url($lib/fonts/Domestic_Manners.ttf) format('truetype');
 }
+@font-face {
+	font-family: 'bastian';
+	src: url($lib/fonts/bastian-script.otf) format('truetype');
+}
+@font-face {
+	font-family: 'okaluera';
+	src: url($lib/fonts/Okaluera.ttf) format('truetype');
+}
+@font-face {
+	font-family: 'truculenta';
+	src: url($lib/fonts/Truculenta.ttf) format('truetype');
+}

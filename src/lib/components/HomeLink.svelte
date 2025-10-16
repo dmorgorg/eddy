@@ -4,15 +4,15 @@
 	// var
 </script>
 
-<a href="/" style="color: {color}; ">eduk8r.org</a>
+<a class="homelink" href="/" style="color: {color}; ">eduk8r.org</a>
 
 <style lang="scss">
-	a:link,
-	a:visited {
+	a.homelink:link,
+	a.homelink:visited {
 		font-family: 'Rocksoldier', sans-serif;
 		font-weight: bold;
-		font-size: 3.5vw;
-		// font-size: clamp(20px, 6vw, 25px);
+		font-size: 3vw;
+		// font-size: clamp(1em, 3vw, 5em);
 		letter-spacing: 0.25rem;
 		padding-left: 1rem;
 		margin: 0;
@@ -21,12 +21,8 @@
 		text-decoration: none;
 		position: absolute;
 		top: 0;
-
-		&:hover {
-			// text-decoration: none;
-			// text-shadow: 5px 5px var(shadow);
-			// font-size: 300%;
-			color: red;
-		}
+	}
+	a:hover {
+		color: yellow;
 	}
 </style>

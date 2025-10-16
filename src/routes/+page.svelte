@@ -17,11 +17,7 @@
 			<a href="/misc/calcs/fuelConverter">Metric/Imperial Fuel Converter</a>
 		</div>
 	</Card>
-	<Card header="Geometry" theme="#BC8F8F" secondary="#8F5656">
-		<div class="flex">
-			<a href="/misc/nerdery">Belt-Length Calculation</a>
-		</div>
-	</Card>
+
 	<Card header="Head Scratchers" theme="Khaki" secondary="DarkKhaki">
 		<div class="flex">
 			<a href="/misc/montyHall">Monty Hall Simul8r</a>
@@ -36,6 +32,15 @@
 	<Card header="Utilities" theme="CornflowerBlue" secondary="SteelBlue">
 		<div class="flex">
 			<a href="/utils/ccc">Color codes, shader and blender</a>
+		</div>
+		<div class="flex">
+			<a href="/utils/forceCalculator"><s>Truss Joint Calculator - Under construction</s></a>
+		</div>
+	</Card>
+
+	<Card header="Geometry" theme="#BC8F8F" secondary="#8F5656">
+		<div class="flex">
+			<a href="/misc/nerdery">Belt-Length Calculation</a>
 		</div>
 	</Card>
 </div>
