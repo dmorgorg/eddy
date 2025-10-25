@@ -20,7 +20,7 @@
 		</li>
 		<br />
 		<li>
-			<a href="/statics/sxs/08MoSSxS.pdf" download>07 Method of Sections (Download)</a>
+			<a href="/statics/sxs/08MoSSxS.pdf" download>08 Method of Sections (Download)</a>
 			<a href="/statics/sxs/08MoSSxS.pdf">(View Online)</a> (Added 24th October, 2025)
 		</li>
 	</ul>
