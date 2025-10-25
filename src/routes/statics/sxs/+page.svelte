@@ -11,12 +11,17 @@
 		presentations, for download. They are better stepped-through in a standalone pdf reader (like
 		Sumatra or Adobe Reader or ...) than viewed continuously scrolling through in a browser.
 	</div>
-	<div>Check back every week or two, as more will be posted.</div>
+	<div>Check back every now and again, as more will be posted.</div>
 
 	<ul>
 		<li>
 			<a href="/statics/sxs/07MoJSxS.pdf" download>07 Method of Joints (Download)</a>
-			<a href="/statics/sxs/07MoJSxS.pdf">(View Online)</a><br />(Added 11th August, 2025)
+			<a href="/statics/sxs/07MoJSxS.pdf">(View Online)</a> (Added 11th August, 2025)
+		</li>
+		<br />
+		<li>
+			<a href="/statics/sxs/08MoSSxS.pdf" download>07 Method of Sections (Download)</a>
+			<a href="/statics/sxs/08MoSSxS.pdf">(View Online)</a> (Added 24th October, 2025)
 		</li>
 	</ul>
 
@@ -53,15 +58,18 @@
 	}
 	ul {
 		list-style-type: none;
-		display: flex;
+		// display: flex;
 		// background-color: gray;
 		padding: 0;
 		margin: 0;
 		margin-top: 3rem;
+		width: 100%;
 	}
 	div,
 	ul,
 	li {
+		display: inline;
 		text-align: center;
+		padding-inline: 0;
 	}
 </style>
