@@ -73,7 +73,7 @@
 		</li>
 		<br />
 		<li>
-			<a href="/statics/lectures/08MoS.pdf">08 Method of sections </a>
+			<a href="/statics/lectures/08MoS.pdf">08 Method of Sections </a>
 			<a href="/statics/lectures/08MoS.pdf" download>(Download)</a>&nbsp;
 			<!-- <a href="/statics/handouts/07MoJStudentHandout.pdf">Handout</a>
 			<a href="/statics/handouts/07MoJStudentHandout.pdf" download>(Download)</a> -->
