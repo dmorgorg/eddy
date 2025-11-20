@@ -79,6 +79,14 @@
 			<a href="/statics/handouts/07MoJStudentHandout.pdf" download>(Download)</a> -->
 			<span class="eighty"> <br />(Uploaded 26th October, 2025) </span>
 		</li>
+		<br />
+		<li>
+			<a href="/statics/lectures/09CF.pdf">09 Complex Frames </a>
+			<a href="/statics/lectures/09CF.pdf" download>(Download)</a>&nbsp;
+			<!-- <a href="/statics/handouts/07MoJStudentHandout.pdf">Handout</a>
+			<a href="/statics/handouts/07MoJStudentHandout.pdf" download>(Download)</a> -->
+			<span class="eighty"> <br />(Uploaded 20th November, 2025) </span>
+		</li>
 	</ul>
 
 	<div class="feedback eighty0">
