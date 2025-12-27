@@ -76,11 +76,28 @@
 				</div>
 			</section>
 		</div>
-		<button onclick={reset}>Clear</button>
+		<button class="card" onclick={reset}>Clear</button>
 	</div>
 </div>
 
-<style>
+<style lang="scss">
+	.outer {
+		background-color: yellow;
+		// background: #ddd;
+		margin: 0;
+		// padding: 1rem;
+		min-height: 100vh;
+
+		.wrapper {
+			display: flex;
+			justify-content: start;
+			align-items: center;
+			flex-direction: column;
+			// margin-inline: auto;
+			// padding: var(--size-3);
+		}
+	}
+
 	section.form {
 		display: grid;
 		grid-template-columns: 1.25fr 1fr;
@@ -105,11 +122,13 @@
 		border: none;
 		box-shadow: none;
 		color: black;
+		color: lime;
 		font-family: 'Kaushan', cursive;
 		font-size: var(--font-size-7);
 		font-weight: bold;
 		letter-spacing: 0.125rem;
 		padding-inline: 2rem;
+		padding-block: 0;
 		margin: 0;
 		text-align: center;
 		-webkit-text-stroke: black 0.5px;
@@ -121,20 +140,28 @@
 		flex-direction: column;
 		justify-content: center;
 		align-items: center;
-		background: white;
+		background: lime;
 		border: var(--border-size-3) solid black;
 		border-radius: var(--radius-3);
 		box-shadow: var(--shadow-6);
 		margin: 1rem;
+		// margin-top: 2rem;
 		padding: 1rem;
+		// padding: 1rem 12rem;
 		font-family: 'AlkesRgIt', sans-serif;
 		font-size: var(--font-size-3);
+		font-size: 3vw;
 		font-style: italic;
+
+		& + button {
+			margin-top: 0.5rem;
+			padding-block: 0.5rem;
+		}
 	}
 
 	button {
 		justify-self: flex-end;
-		background: white;
+		// background: white;
 		border: var(--border-size-3) solid black;
 		border-radius: 0.75rem;
 		color: black;
@@ -142,8 +169,10 @@
 		font-weight: semibold;
 		letter-spacing: 0.035rem;
 		margin: 1rem;
-		padding: 0 1rem;
-		font-family: 'AlkesRgIt', sans-serif;
+		// margin-top: 0.5rem;
+		// padding-block: 3rem;
+		// padding: 0 3rem;
+		// font-family: 'AlkesRgIt', sans-serif;
 		font-size: var(--font-size-3);
 		font-style: italic;
 	}
@@ -152,36 +181,19 @@
 		/* background-color: black; */
 
 		color: white;
-		text-align: right;
+		// text-align: right;
 	}
 
 	input[type='number'] {
 		width: 5rem;
+		background-color: yellow;
+		border: var(--border-size-2) solid black;
 	}
 
 	input[type='number']::-webkit-outer-spin-button,
 	input[type='number']::-webkit-inner-spin-button {
 		-webkit-appearance: none;
 		display: none;
-	}
-
-	.outer {
-		background: #ddd;
-		margin: 0;
-		padding: 1rem;
-		min-height: 100vh;
-
-		.wrapper {
-			display: flex;
-			justify-content: start;
-			align-items: center;
-			flex-direction: column;
-			margin-inline: auto;
-			/* text-align: center; */
-			/* max-width: 1024px; */
-			padding: var(--size-3);
-			/* max-width: 50rem; */
-		}
 	}
 
 	@media (max-width: 600px) {
@@ -193,23 +205,23 @@
 			padding: var(--size-1);
 		}
 		.wrapper h1 {
-			/* border: var(--border-size-2) solid #a00; */
-			/* font-family: 'Katherine Script', sans-serif; */
 			font-size: var(--font-size-1);
 		}
 
-		button {
-			font-size: 100%;
-			padding: 0 0.5rem 0.35rem 0.5rem;
-			margin-block-start: 1rem;
-		}
+		// button {
+		// 	// font-size: 100%;
+		// 	// padding: 0 0.5rem 0.35rem 0.5rem;
+		// 	// margin-block-start: 1rem;
+		// }
 		.card {
-			border-width: var(--border-size-2);
-			font-size: 100%;
+			border-width: var(--border-size-3);
+			// font-size: 100%;
 			margin-inline: auto;
-			margin-block-start: 0;
+			// margin-block-start: 0;
+			// margin-block: 0;
 			min-width: 0;
-			padding-inline: 0.5rem;
+			padding: 1rem 3rem;
+			// 	padding-inline: 2rem;
 		}
 	}
 </style>
