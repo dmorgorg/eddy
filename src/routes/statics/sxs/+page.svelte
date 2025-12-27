@@ -12,8 +12,8 @@
 		Sumatra or Adobe Reader or ...) than viewed continuously scrolling through in a browser.
 	</div>
 	<div>
-		Pages on these document contain a lot of information, and the font size is necessarily small.
-		These are more suited to laptop or pc screens than projection onto classroom screens.
+		Pages on these document contain a lot of information, and the font size is necessarily small,
+		more suited to personal use than to projection onto classroom screens.
 	</div>
 
 	<ul>
