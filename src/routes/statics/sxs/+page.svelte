@@ -11,7 +11,10 @@
 		presentations, for download. They are better stepped-through in a standalone pdf reader (like
 		Sumatra or Adobe Reader or ...) than viewed continuously scrolling through in a browser.
 	</div>
-	<div>Check back every now and again, as more will be posted.</div>
+	<div>
+		Pages on these document contain a lot of information, and the font size is necessarily small.
+		These are more suited to laptop or pc screens than projection onto classroom screens.
+	</div>
 
 	<ul>
 		<li>
@@ -22,6 +25,11 @@
 		<li>
 			<a href="/statics/sxs/08MoSSxS.pdf" download>08 Method of Sections (Download)</a>
 			<a href="/statics/sxs/08MoSSxS.pdf">(View Online)</a> (Added 24th October, 2025)
+		</li>
+		<br />
+		<li>
+			<a href="/statics/sxs/09CFSxS.pdf" download>09 Complex Frames (Download)</a>
+			<a href="/statics/sxs/09CFSxS.pdf">(View Online)</a> (Added 27th December, 2025)
 		</li>
 	</ul>
 
