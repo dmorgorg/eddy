@@ -240,11 +240,9 @@
 
 	h1 {
 		background-color: inherit;
-		// border: none;
-		// box-shadow: none;
 		color: #4682b4;
 		font-family: 'Shitake', cursive;
-		font-size: 5vw;
+		font-size: 10vw;
 		font-weight: bold;
 		letter-spacing: 0.375rem;
 		line-height: 1;
@@ -285,9 +283,69 @@
 			margin-block-end: 1rem;
 		}
 
+		.radioGroup {
+			display: flex;
+			justify-content: center;
+			align-items: center;
+			// background: yellow;
+
+			label.radio {
+				cursor: pointer;
+				display: inline-block;
+				margin-block: 1rem;
+				margin-inline: 2rem;
+				input {
+					vertical-align: middle;
+
+					&:hover {
+						background: #aaa;
+						// color: white;
+					}
+					&:checked {
+						background: #689bc4;
+						// color: white;
+					}
+				}
+			}
+		}
+		// hide default styling
+		input[type='radio'] {
+			appearance: none;
+			width: 20px;
+			height: 20px;
+			border: 2px solid #333;
+			border-radius: 50%;
+			outline: none;
+		}
+
+		// input[type='radio']:before {
+		// 	content: '';
+		// 	display: block;
+		// 	width: 60%;
+		// 	border-radius: 5%;
+		// }
+
+		input[type='radio']:checked:before {
+			background: #4682b4;
+			border-width: 4px;
+		}
+
+		blockquote {
+			background-color: #e9f0f6;
+			// color: #4682b4;
+
+			// border: 1px solid #333;
+			border-left: 5px solid #38688f;
+			// border-radius: 5px;
+			font-size: 75%;
+			margin-bottom: 1.5rem;
+			padding-inline: 2rem;
+			text-align: left;
+		}
+
 		.result {
 			color: white;
-			background: #0a0;
+			background: #4682b4;
 			border-radius: var(--radius-2);
 			font-size: 1.5rem;
 			padding-inline: 1rem;
@@ -334,53 +392,6 @@
 		}
 	}
 
-	.radioGroup {
-		display: flex;
-		justify-content: center;
-		align-items: center;
-		// background: yellow;
-
-		label.radio {
-			cursor: pointer;
-			display: inline-block;
-			margin-block: 1rem;
-			margin-inline: 2rem;
-			input {
-				vertical-align: middle;
-
-				&:hover {
-					background: #aaa;
-					// color: white;
-				}
-				&:checked {
-					background: #080;
-					// color: white;
-				}
-			}
-		}
-	}
-	// hide default styling
-	input[type='radio'] {
-		appearance: none;
-		width: 20px;
-		height: 20px;
-		border: 2px solid #333;
-		border-radius: 50%;
-		outline: none;
-	}
-
-	input[type='radio']:before {
-		content: '';
-		display: block;
-		width: 60%;
-		border-radius: 50%;
-	}
-
-	input[type='radio']:checked:before {
-		background: #080;
-		border-width: 4px;
-	}
-
 	input[type='number'] {
 		background-color: #eee;
 		border: 1px solid #333;
@@ -394,54 +405,43 @@
 		display: none;
 	}
 
-	blockquote {
-		padding-inline: 2rem;
-		background-color: #eee;
-		// border: 1px solid #333;
-		// border-left: 5px solid #080;
-		// border-radius: 5px;
-		color: #080;
-		margin-bottom: 1.5rem;
-		text-align: left;
-	}
+	// @media (max-width: 600px) {
+	// 	.outer {
+	// 		padding: 0.5rem;
+	// 		padding-inline: 0;
+	// 	}
+	// 	.wrapper {
+	// 		padding: var(--size-1);
+	// 	}
+	// 	.wrapper h1 {
+	// 		font-family: 'Shitake';
+	// 		font-size: var(--font-size-5);
+	// 	}
 
-	@media (max-width: 600px) {
-		.outer {
-			padding: 0.5rem;
-			padding-inline: 0;
-		}
-		.wrapper {
-			padding: var(--size-1);
-		}
-		.wrapper h1 {
-			font-family: 'Shitake';
-			font-size: var(--font-size-5);
-		}
+	// 	.card {
+	// 		border-width: var(--border-size-3);
+	// 		font-size: 1.25rem;
+	// 		margin-inline: auto;
+	// 		margin-block-start: 1rem;
+	// 		padding-block: 1rem;
+	// 		min-width: 0;
+	// 		padding-inline: 0.5rem;
+	// 	}
+	// 	.calc {
+	// 		width: 85%;
+	// 		margin-inline: auto;
+	// 	}
+	// 	/* .resultbox {
+	// 		font-size: 120%;
+	// 	} */
+	// 	.radioGroup {
+	// 		padding-block-start: 0;
+	// 	}
 
-		.card {
-			border-width: var(--border-size-3);
-			font-size: 1.25rem;
-			margin-inline: auto;
-			margin-block-start: 1rem;
-			padding-block: 1rem;
-			min-width: 0;
-			padding-inline: 0.5rem;
-		}
-		.calc {
-			width: 85%;
-			margin-inline: auto;
-		}
-		/* .resultbox {
-			font-size: 120%;
-		} */
-		.radioGroup {
-			padding-block-start: 0;
-		}
-
-		.result {
-			font-size: 1.25rem;
-			padding: 0.5rem;
-			padding-block: 0.25rem;
-		}
-	}
+	// 	.result {
+	// 		font-size: 1.25rem;
+	// 		padding: 0.5rem;
+	// 		padding-block: 0.25rem;
+	// 	}
+	// }
 </style>
