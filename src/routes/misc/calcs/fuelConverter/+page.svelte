@@ -142,7 +142,7 @@
 		border: 0.5vw solid black;
 		border-radius: var(--radius-3);
 		box-shadow: var(--shadow-6);
-		margin-inline: 0.5vw;
+		margin-inline: 1vw;
 		padding: 3vw 1vw;
 		font-family: 'AlkesRgIt', sans-serif;
 		font-style: italic;

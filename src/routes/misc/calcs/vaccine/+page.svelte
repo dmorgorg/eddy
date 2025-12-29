@@ -79,8 +79,8 @@
 							id="popVaccinated"
 							bind:value={pv}
 							on:input={() => {
-								if (pv >= 100) {
-									pv = 99;
+								if (Number(pv) >= 100) {
+									pv = '99';
 								}
 							}}
 						/>
@@ -98,8 +98,8 @@
 							id="deathsVaccinated"
 							bind:value={dv}
 							on:input={() => {
-								if (dv >= 100) {
-									dv = 99;
+								if (Number(dv) >= 100) {
+									dv = '99';
 								}
 							}}
 						/>
@@ -155,14 +155,14 @@
 					</li>
 					<li>
 						100% - {Number(Number(pv).toPrecision(precision))}% = {Number(
-							(numberUnvaccinated = 100 - pv).toPrecision(precision)
+							(numberUnvaccinated = 100 - Number(pv)).toPrecision(precision)
 						)}% of the population of {popnSize}
 						are not vaccinated.
 						<br />
 						That is,
 						<strong>
 							{(numberUnvaccinated = Number(
-								(((100 - pv) / 100) * popnSize).toPrecision(precision)
+								(((100 - Number(pv)) / 100) * Number(popnSize)).toPrecision(precision)
 							))}
 							{numberUnvaccinated === 1 ? 'is' : 'are'} NOT vaccinated.
 						</strong>
@@ -172,16 +172,16 @@
 						<br />
 						That is,
 						<strong>
-							{(vaccinatedDeaths = (dv / 100) * deathsSize)} who died were vaccinated.
+							{(vaccinatedDeaths = (Number(dv) / 100) * Number(deathsSize))} who died were vaccinated.
 						</strong>
 					</li>
 					<li>
-						100% - {Number(Number(dv).toPrecision(precision))}% = {(unvaccinatedDeaths = 100 - dv)}%
-						of the {Number(deathsSize)} deaths were not vaccinated.
+						100% - {Number(Number(dv).toPrecision(precision))}% = {(unvaccinatedDeaths =
+							100 - Number(dv))}% of the {Number(deathsSize)} deaths were not vaccinated.
 						<br />
 						That is,
 						<strong>
-							{((100 - dv) / 100) * deathsSize} who died were NOT vaccinated.
+							{((100 - Number(dv)) / 100) * Number(deathsSize)} who died were NOT vaccinated.
 						</strong>
 					</li>
 					<li>
