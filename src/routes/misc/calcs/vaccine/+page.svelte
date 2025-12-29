@@ -1,4 +1,6 @@
 <script>
+	import HomeLink from '$lib/components/HomeLink.svelte';
+
 	let viewCalc = true;
 	let selectedOption = 'numbers';
 	let pv = '87';
@@ -25,6 +27,7 @@
 </script>
 
 <div class="outer">
+	<HomeLink color="#4682B4" />
 	<div class="wrapper">
 		<h1>Vaccine Efficacy Calculator</h1>
 
@@ -220,21 +223,36 @@
 </div>
 
 <style lang="scss">
-	.result {
-		color: white;
-		background: #0a0;
-		border-radius: var(--radius-2);
-		font-size: 1.5rem;
-		padding-inline: 1rem;
-		padding-block: 0.25rem;
+	.outer {
+		background-color: #e9f0f6;
+		min-height: 100vh;
 	}
-	.resultbox {
-		height: 2rem;
-		margin-block: 1rem;
-		font-family: inherit;
-		// font-size: 1.55rem;
-		font-style: italic;
+	.wrapper {
+		display: flex;
+		justify-content: start;
+		align-items: center;
+		flex-direction: column;
+		font-size: 16px;
+		margin-inline: auto;
+		text-align: center;
+		max-width: 550px;
+	}
+
+	h1 {
+		background-color: inherit;
+		// border: none;
+		// box-shadow: none;
+		color: #4682b4;
+		font-family: 'Shitake', cursive;
+		font-size: 5vw;
 		font-weight: bold;
+		letter-spacing: 0.375rem;
+		line-height: 1;
+		padding-inline: 2rem;
+		margin: 0;
+		margin-top: 1rem;
+		text-shadow: 2px 2px 2px black;
+		word-spacing: 0;
 	}
 
 	section.form {
@@ -243,47 +261,6 @@
 		row-gap: 0.5rem;
 		column-gap: 1rem;
 	}
-	.form .input {
-		justify-self: start;
-		align-self: center;
-	}
-	.form .label {
-		justify-self: end;
-		align-self: center;
-	}
-	.outer {
-		background-image: var(--gradient-19);
-		margin: 0;
-		// padding: 1rem;
-		min-height: 100vh;
-		width: 100vw;
-		// overflow-x: none;
-	}
-	.wrapper {
-		display: flex;
-		justify-content: start;
-		align-items: center;
-		flex-direction: column;
-		margin-inline: auto;
-		text-align: center;
-		max-width: 50rem;
-		font-size: var(--font-size-fluid-3);
-	}
-
-	.wrapper h1 {
-		background-color: inherit;
-		border: none;
-		box-shadow: none;
-		color: #0a0;
-		font-family: 'Shitake', cursive;
-		font-size: var(--font-size-8);
-		font-weight: bold;
-		letter-spacing: 0.25rem;
-		padding-inline: 2rem;
-		margin: 0;
-		-webkit-text-stroke: black 0.5px;
-		word-spacing: 0;
-	}
 
 	.card {
 		display: flex;
@@ -291,20 +268,47 @@
 		justify-content: center;
 		align-items: center;
 		background: white;
-		border: var(--border-size-3) solid #080;
+		border: var(--border-size-3) solid #38688f;
+		// border-color: black;
 		border-radius: var(--radius-3);
 		box-shadow: var(--shadow-6);
 		margin: 1rem;
 		padding: 1rem;
 		padding-block-end: 2rem;
 		font-family: 'AlkesRgIt', sans-serif;
-		font-size: var(--font-size-4);
+		font-size: 5vw;
 		font-style: italic;
 
 		& h4 {
-			// background: pink;
-			font-size: var(--font-size-4);
+			color: #4682b4;
+			font-size: 5vw;
 			margin-block-end: 1rem;
+		}
+
+		.result {
+			color: white;
+			background: #0a0;
+			border-radius: var(--radius-2);
+			font-size: 1.5rem;
+			padding-inline: 1rem;
+			padding-block: 0.25rem;
+		}
+		.resultbox {
+			height: 2rem;
+			margin-block: 1rem;
+			font-family: inherit;
+			// font-size: 1.55rem;
+			font-style: italic;
+			font-weight: bold;
+		}
+
+		.form .input {
+			justify-self: start;
+			align-self: center;
+		}
+		.form .label {
+			justify-self: end;
+			align-self: center;
 		}
 
 		.resultbox {

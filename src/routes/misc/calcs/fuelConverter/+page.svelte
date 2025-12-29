@@ -94,6 +94,22 @@
 		max-width: 450px;
 	}
 
+	h1.card {
+		background-color: inherit;
+		border: none;
+		box-shadow: none;
+		color: #568f56;
+		font-family: 'Kaushan', cursive;
+		font-size: 10vw;
+		letter-spacing: 0.125rem;
+		padding-block: 1rem;
+		margin: 0 auto;
+		text-align: center;
+		// -webkit-text-stroke: #437043 0.5px;
+		text-shadow: 1px 1px 2px black;
+		word-spacing: 0;
+	}
+
 	section.form {
 		column-gap: 1rem;
 		display: grid;
@@ -113,21 +129,6 @@
 		font-style: italic;
 	}
 
-	h1.card {
-		background-color: inherit;
-		border: none;
-		box-shadow: none;
-		color: #568f56;
-		font-family: 'Kaushan', cursive;
-		font-size: 10vw;
-		letter-spacing: 0.125rem;
-		padding-block: 1rem;
-		margin: 0 auto;
-		text-align: center;
-		// -webkit-text-stroke: #437043 0.5px;
-		text-shadow: 1px 1px 2px black;
-		word-spacing: 0;
-	}
 	.input span {
 		// font-size: 85%;
 		margin-left: 0.25rem;
