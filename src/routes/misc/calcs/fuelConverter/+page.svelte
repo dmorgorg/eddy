@@ -1,4 +1,5 @@
 <script>
+	import HomeLink from '$lib/components/HomeLink.svelte';
 	/**
 	 * @type {any}
 	 */
@@ -46,6 +47,7 @@
 </script>
 
 <div class="outer">
+	<HomeLink color="#568F56;" />
 	<div class="wrapper">
 		<h1 class="card">Metric/Imperial Fuel Converter</h1>
 
@@ -87,7 +89,6 @@
 	}
 
 	.wrapper {
-		// border: 1px solid black;
 		font-size: 16px;
 		margin-inline: auto;
 		max-width: 450px;
@@ -96,8 +97,8 @@
 	section.form {
 		column-gap: 1rem;
 		display: grid;
-		grid-template-columns: 1fr 1fr;
-		row-gap: 0.5rem;
+		grid-template-columns: 1.25fr 1fr;
+		row-gap: 2vw;
 	}
 	// .form .input {
 	// 	justify-self: start;
@@ -116,16 +117,15 @@
 		background-color: inherit;
 		border: none;
 		box-shadow: none;
-		color: #70a970;
+		color: #568f56;
 		font-family: 'Kaushan', cursive;
 		font-size: 10vw;
-		font-weight: bold;
 		letter-spacing: 0.125rem;
-		// padding-inline: 2rem;
 		padding-block: 1rem;
 		margin: 0 auto;
 		text-align: center;
-		-webkit-text-stroke: #437043 0.5px;
+		// -webkit-text-stroke: #437043 0.5px;
+		text-shadow: 1px 1px 2px black;
 		word-spacing: 0;
 	}
 	.input span {
@@ -142,8 +142,8 @@
 		border: 0.5vw solid black;
 		border-radius: var(--radius-3);
 		box-shadow: var(--shadow-6);
-		margin-inline: 0.5rem;
-		padding: 1rem;
+		margin-inline: 0.5vw;
+		padding: 3vw 1vw;
 		font-family: 'AlkesRgIt', sans-serif;
 		font-style: italic;
 	}
@@ -151,7 +151,7 @@
 	input[type='number'] {
 		width: 5rem;
 		background-color: #eff5ef;
-		border: 0.5vw solid black;
+		border: 3px solid black;
 	}
 
 	input[type='number']::-webkit-outer-spin-button,
@@ -160,13 +160,16 @@
 		display: none;
 	}
 
-	// @media screen and (max-width: 600px) {
-	// 	.card {
-	// 		border-width: 0.5vw;
-	// 		// font-size: 100%;
-	// 		margin-inline: auto;
-	// 		padding: 1rem;
-	// 		// 	padding-inline: 2rem;
-	// 	}
-	// }
+	@media only screen and (min-width: 600px) {
+		h1.card {
+			font-size: 48px;
+		}
+		.card {
+			border: 4px solid black;
+			font-size: 18px;
+		}
+		input[type='number'] {
+			border: 4px solid black;
+		}
+	}
 </style>
