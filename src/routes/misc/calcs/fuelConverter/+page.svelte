@@ -83,18 +83,18 @@
 <style lang="scss">
 	.outer {
 		background-color: yellow;
-		// background: #ddd;
-		margin: 0;
-		// padding: 1rem;
-		min-height: 100vh;
+	}
 
+	.wrapper {
+		border: 1px solid black;
+		font-size: 16px;
+		margin-inline: auto;
+		max-width: 450px;
+	}
+
+	@media (max-width: 600px) {
 		.wrapper {
-			display: flex;
-			justify-content: start;
-			align-items: center;
-			flex-direction: column;
-			// margin-inline: auto;
-			// padding: var(--size-3);
+			color: blue;
 		}
 	}
 
@@ -109,30 +109,35 @@
 		align-self: center;
 	}
 	.form .label {
-		justify-self: end;
+		// justify-self: end;
+		text-align: right;
 		align-self: center;
+		// font-size: 85%;
 	}
-	.form input {
-		font-size: 1.5rem;
-		font-style: italic;
-	}
+	// .form input {
+	// 	font-size: 1.5rem;
+	// 	font-style: italic;
+	// }
 
-	.wrapper h1.card {
+	h1.card {
 		background-color: inherit;
 		border: none;
 		box-shadow: none;
-		color: black;
 		color: lime;
 		font-family: 'Kaushan', cursive;
-		font-size: var(--font-size-7);
+		font-size: 32px;
 		font-weight: bold;
 		letter-spacing: 0.125rem;
-		padding-inline: 2rem;
-		padding-block: 0;
-		margin: 0;
+		// padding-inline: 2rem;
+		padding-block: 1rem;
+		margin: 0 auto;
 		text-align: center;
 		-webkit-text-stroke: black 0.5px;
 		word-spacing: 0;
+	}
+	.input span {
+		// font-size: 85%;
+		margin-left: 0.25rem;
 	}
 
 	.card {
@@ -144,13 +149,13 @@
 		border: var(--border-size-3) solid black;
 		border-radius: var(--radius-3);
 		box-shadow: var(--shadow-6);
-		margin: 1rem;
+		// margin: 1rem;
 		// margin-top: 2rem;
 		padding: 1rem;
 		// padding: 1rem 12rem;
 		font-family: 'AlkesRgIt', sans-serif;
-		font-size: var(--font-size-3);
-		font-size: 3vw;
+		// font-size: var(--font-size-3);
+		// font-size: 3vw;
 		font-style: italic;
 
 		& + button {
@@ -196,32 +201,16 @@
 		display: none;
 	}
 
-	@media (max-width: 600px) {
-		.outer {
-			padding: 0.5rem;
-			padding-inline: 0;
-		}
-		.wrapper {
-			padding: var(--size-1);
-		}
-		.wrapper h1 {
-			font-size: var(--font-size-1);
-		}
-
-		// button {
-		// 	// font-size: 100%;
-		// 	// padding: 0 0.5rem 0.35rem 0.5rem;
-		// 	// margin-block-start: 1rem;
-		// }
-		.card {
-			border-width: var(--border-size-3);
-			// font-size: 100%;
-			margin-inline: auto;
-			// margin-block-start: 0;
-			// margin-block: 0;
-			min-width: 0;
-			padding: 1rem 3rem;
-			// 	padding-inline: 2rem;
-		}
-	}
+	// @media (max-width: 600px) {
+	// 	.card {
+	// 		border-width: 1vw;
+	// 		// font-size: 100%;
+	// 		margin-inline: auto;
+	// 		// margin-block-start: 0;
+	// 		// margin-block: 0;
+	// 		min-width: 0;
+	// 		padding: 1rem 3rem;
+	// 		// 	padding-inline: 2rem;
+	// 	}
+	// }
 </style>
