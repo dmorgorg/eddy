@@ -76,63 +76,56 @@
 				</div>
 			</section>
 		</div>
-		<button class="card" onclick={reset}>Clear</button>
+		<!-- <button class="card" onclick={reset}>Clear</button> -->
 	</div>
 </div>
 
 <style lang="scss">
 	.outer {
-		background-color: yellow;
+		background-color: #cfe2cf;
+		min-height: 100vh;
 	}
 
 	.wrapper {
-		border: 1px solid black;
+		// border: 1px solid black;
 		font-size: 16px;
 		margin-inline: auto;
 		max-width: 450px;
 	}
 
-	@media (max-width: 600px) {
-		.wrapper {
-			color: blue;
-		}
-	}
-
 	section.form {
-		display: grid;
-		grid-template-columns: 1.25fr 1fr;
-		row-gap: 0.5rem;
 		column-gap: 1rem;
+		display: grid;
+		grid-template-columns: 1fr 1fr;
+		row-gap: 0.5rem;
 	}
-	.form .input {
-		justify-self: start;
-		align-self: center;
-	}
+	// .form .input {
+	// 	justify-self: start;
+	// 	align-self: center;
+	// }
 	.form .label {
-		// justify-self: end;
 		text-align: right;
 		align-self: center;
-		// font-size: 85%;
 	}
-	// .form input {
-	// 	font-size: 1.5rem;
-	// 	font-style: italic;
-	// }
+	.form input {
+		font-size: 1.125rem;
+		font-style: italic;
+	}
 
 	h1.card {
 		background-color: inherit;
 		border: none;
 		box-shadow: none;
-		color: lime;
+		color: #70a970;
 		font-family: 'Kaushan', cursive;
-		font-size: 32px;
+		font-size: 10vw;
 		font-weight: bold;
 		letter-spacing: 0.125rem;
 		// padding-inline: 2rem;
 		padding-block: 1rem;
 		margin: 0 auto;
 		text-align: center;
-		-webkit-text-stroke: black 0.5px;
+		-webkit-text-stroke: #437043 0.5px;
 		word-spacing: 0;
 	}
 	.input span {
@@ -145,54 +138,20 @@
 		flex-direction: column;
 		justify-content: center;
 		align-items: center;
-		background: lime;
-		border: var(--border-size-3) solid black;
+		background: #70a970;
+		border: 0.5vw solid black;
 		border-radius: var(--radius-3);
 		box-shadow: var(--shadow-6);
-		// margin: 1rem;
-		// margin-top: 2rem;
+		margin-inline: 0.5rem;
 		padding: 1rem;
-		// padding: 1rem 12rem;
 		font-family: 'AlkesRgIt', sans-serif;
-		// font-size: var(--font-size-3);
-		// font-size: 3vw;
 		font-style: italic;
-
-		& + button {
-			margin-top: 0.5rem;
-			padding-block: 0.5rem;
-		}
-	}
-
-	button {
-		justify-self: flex-end;
-		// background: white;
-		border: var(--border-size-3) solid black;
-		border-radius: 0.75rem;
-		color: black;
-		font-size: var(--font-size-2);
-		font-weight: semibold;
-		letter-spacing: 0.035rem;
-		margin: 1rem;
-		// margin-top: 0.5rem;
-		// padding-block: 3rem;
-		// padding: 0 3rem;
-		// font-family: 'AlkesRgIt', sans-serif;
-		font-size: var(--font-size-3);
-		font-style: italic;
-	}
-	button:hover {
-		background: black;
-		/* background-color: black; */
-
-		color: white;
-		// text-align: right;
 	}
 
 	input[type='number'] {
 		width: 5rem;
-		background-color: yellow;
-		border: var(--border-size-2) solid black;
+		background-color: #eff5ef;
+		border: 0.5vw solid black;
 	}
 
 	input[type='number']::-webkit-outer-spin-button,
@@ -201,15 +160,12 @@
 		display: none;
 	}
 
-	// @media (max-width: 600px) {
+	// @media screen and (max-width: 600px) {
 	// 	.card {
-	// 		border-width: 1vw;
+	// 		border-width: 0.5vw;
 	// 		// font-size: 100%;
 	// 		margin-inline: auto;
-	// 		// margin-block-start: 0;
-	// 		// margin-block: 0;
-	// 		min-width: 0;
-	// 		padding: 1rem 3rem;
+	// 		padding: 1rem;
 	// 		// 	padding-inline: 2rem;
 	// 	}
 	// }
