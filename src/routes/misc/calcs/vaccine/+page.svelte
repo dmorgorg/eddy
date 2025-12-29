@@ -352,7 +352,8 @@
 			padding-block: 0.25rem;
 		}
 		.resultbox {
-			height: 2rem;
+			color: #4682b4;
+			// height: 2rem;
 			margin-block: 1rem;
 			font-family: inherit;
 			// font-size: 1.55rem;
