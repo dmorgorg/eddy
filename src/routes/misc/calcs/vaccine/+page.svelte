@@ -17,7 +17,7 @@
 
 	const options = [
 		{ value: 'percentages', label: 'Percentages' },
-		{ value: 'numbers', label: 'Percentages with numbers' }
+		{ value: 'numbers', label: 'Percentages (with population numbers)' }
 	];
 
 	// function percentageResult()) {
@@ -29,7 +29,7 @@
 <div class="outer">
 	<HomeLink color="#4682B4" />
 	<div class="wrapper">
-		<h1>Vaccine Efficacy Calculator</h1>
+		<h1 class="title">Vaccine Efficacy Calculator</h1>
 
 		<div class="card">
 			<h4>Percentages only? Or percentages with population numbers?</h4>
@@ -149,7 +149,7 @@
 				<ul>
 					<li>
 						{Number(Number(pv).toPrecision(precision))}% of the population of {popnSize} are vaccinated.
-						<br />
+						<!-- <br /> -->
 						That is,
 						<strong>
 							{(numberVaccinated = (Number(pv) / 100) * Number(popnSize)).toPrecision(precision)} are
@@ -161,7 +161,7 @@
 							(numberUnvaccinated = 100 - Number(pv)).toPrecision(precision)
 						)}% of the population of {popnSize}
 						are not vaccinated.
-						<br />
+						<!-- <br /> -->
 						That is,
 						<strong>
 							{(numberUnvaccinated = Number(
@@ -172,7 +172,7 @@
 					</li>
 					<li>
 						{dv}% of the {deathsSize} deaths were vaccinated.
-						<br />
+						<!-- <br /> -->
 						That is,
 						<strong>
 							{(vaccinatedDeaths = (Number(dv) / 100) * Number(deathsSize))} who died were vaccinated.
@@ -181,7 +181,7 @@
 					<li>
 						100% - {Number(Number(dv).toPrecision(precision))}% = {(unvaccinatedDeaths =
 							100 - Number(dv))}% of the {Number(deathsSize)} deaths were not vaccinated.
-						<br />
+						<!-- <br /> -->
 						That is,
 						<strong>
 							{((100 - Number(dv)) / 100) * Number(deathsSize)} who died were NOT vaccinated.
@@ -189,7 +189,7 @@
 					</li>
 					<li>
 						{unvaccinatedDeaths} unvaccinated died out of the unvaccinated {numberUnvaccinated}.
-						<br />
+						<!-- <br /> -->
 						That is,
 						<strong>
 							1 in {Number((numberUnvaccinated / unvaccinatedDeaths).toPrecision(precision))} unvaccinated
@@ -198,7 +198,7 @@
 					</li>
 					<li>
 						{vaccinatedDeaths} vaccinated died out of the vaccinated {numberVaccinated}.
-						<br />
+						<!-- <br /> -->
 						That is,
 						<strong>
 							1 in {Number((numberVaccinated / vaccinatedDeaths).toPrecision(precision))} vaccinated
@@ -232,13 +232,12 @@
 		justify-content: start;
 		align-items: center;
 		flex-direction: column;
-		font-size: 16px;
 		margin-inline: auto;
 		text-align: center;
 		max-width: 550px;
 	}
 
-	h1 {
+	h1.title {
 		background-color: inherit;
 		color: #4682b4;
 		font-family: 'Shitake', cursive;
@@ -253,196 +252,218 @@
 		word-spacing: 0;
 	}
 
-	section.form {
-		display: grid;
-		grid-template-columns: 3fr 1fr;
-		row-gap: 0.5rem;
-		column-gap: 1rem;
-	}
-
 	.card {
+		align-items: center;
+		background: white;
+		border: 4px solid #38688f;
+		border-radius: 10px;
 		display: flex;
 		flex-direction: column;
 		justify-content: center;
-		align-items: center;
-		background: white;
-		border: var(--border-size-3) solid #38688f;
-		// border-color: black;
-		border-radius: var(--radius-3);
-		box-shadow: var(--shadow-6);
 		margin: 1rem;
 		padding: 1rem;
-		padding-block-end: 2rem;
-		font-family: 'AlkesRgIt', sans-serif;
-		font-size: 5vw;
-		font-style: italic;
 
 		& h4 {
-			color: #4682b4;
 			font-size: 5vw;
+			font-weight: bold;
 			margin-block-end: 1rem;
 		}
 
 		.radioGroup {
+			align-items: top;
 			display: flex;
 			justify-content: center;
-			align-items: center;
-			// background: yellow;
+			// display: inline-block;
+			margin-block-end: 1rem;
 
-			label.radio {
-				cursor: pointer;
-				display: inline-block;
-				margin-block: 1rem;
-				margin-inline: 2rem;
-				input {
-					vertical-align: middle;
-
-					&:hover {
-						background: #aaa;
-						// color: white;
-					}
-					&:checked {
-						background: #689bc4;
-						// color: white;
-					}
-				}
+			input[type='radio'] {
+				appearance: none; // remove default styling
+				// background-color: #e9f0f6;
+				border: 2px solid #333;
+				border-radius: 50%;
+				height: 20px;
+				width: 20px;
 			}
-		}
-		// hide default styling
-		input[type='radio'] {
-			appearance: none;
-			width: 20px;
-			height: 20px;
-			border: 2px solid #333;
-			border-radius: 50%;
-			outline: none;
-		}
-
-		// input[type='radio']:before {
-		// 	content: '';
-		// 	display: block;
-		// 	width: 60%;
-		// 	border-radius: 5%;
-		// }
-
-		input[type='radio']:checked:before {
-			background: #4682b4;
-			border-width: 4px;
 		}
 
 		blockquote {
 			background-color: #e9f0f6;
-			// color: #4682b4;
-
-			// border: 1px solid #333;
-			border-left: 5px solid #38688f;
-			// border-radius: 5px;
-			font-size: 75%;
+			border-left: none;
+			border-radius: 5px;
+			font-size: 85%;
 			margin-bottom: 1.5rem;
-			padding-inline: 2rem;
-			text-align: left;
-		}
-
-		.result {
-			color: white;
-			background: #4682b4;
-			border-radius: var(--radius-2);
-			font-size: 1.5rem;
 			padding-inline: 1rem;
-			padding-block: 0.25rem;
-		}
-		.resultbox {
-			color: #4682b4;
-			// height: 2rem;
-			margin-block: 1rem;
-			font-family: inherit;
-			// font-size: 1.55rem;
-			font-style: italic;
-			font-weight: bold;
-		}
-
-		.form .input {
-			justify-self: start;
-			align-self: center;
-		}
-		.form .label {
-			justify-self: end;
-			align-self: center;
-		}
-
-		.resultbox {
-			// background: pink;
-			width: 80%;
-			margin-top: 2rem;
-		}
-
-		& + .calc {
-			// width: 100%;
-			ul {
-				font-size: 1.5rem;
-				list-style-type: none;
-				margin-inline: auto;
-				padding-inline-start: 0;
-				text-align: left;
-				width: 90%;
-
-				li {
-					margin-block: 1rem;
-				}
-			}
+			text-align: left;
+			width: 100%;
 		}
 	}
 
-	input[type='number'] {
-		background-color: #eee;
-		border: 1px solid #333;
-		// box-shadow: var(--shadow-6);
-		width: 7rem;
-	}
+	// section.form {
+	// 	display: grid;
+	// 	grid-template-columns: 3fr 1fr;
+	// 	row-gap: 0.5rem;
+	// 	column-gap: 1rem;
+	// }
 
-	input[type='number']::-webkit-outer-spin-button,
-	input[type='number']::-webkit-inner-spin-button {
-		-webkit-appearance: none;
-		display: none;
-	}
+	// 	box-shadow: var(--shadow-6);
+	//
+	//
+	// 	padding-block-end: 2rem;
+	// 	font-family: 'AlkesRgIt', sans-serif;
+	// 	font-size: 5vw;
+	// 	font-style: normal;
 
-	// @media (max-width: 600px) {
-	// 	.outer {
-	// 		padding: 0.5rem;
-	// 		padding-inline: 0;
+	// 		label.radio {
+	// 			// background-color:
+	// 			cursor: pointer;
+	// 			font-size: 16px;
+	// 			// font-weight: bold;
+	// 			margin-block: 1rem;
+	// 			margin-inline: 2rem;
+	// 			border: 2px solid #333;
+	// 			input {
+	// 				vertical-align: middle;
+
+	// 				font-style: normal;
+	// 				// &:hover {
+	// 				// 	background: #aaa;
+	// 				// 	// color: white;
+	// 				// }
+	// 				&:checked {
+	// 					background: #689bc4;
+	// 					// color: white;
+	// 				}
+	// 			}
+	// 		}
 	// 	}
-	// 	.wrapper {
-	// 		padding: var(--size-1);
-	// 	}
-	// 	.wrapper h1 {
-	// 		font-family: 'Shitake';
-	// 		font-size: var(--font-size-5);
+	// 	// hide default styling
+
+	//
+	//
+	// 		font-style: normal;
+	// 		width: 20px;
+	// 		height: 20px;
+
+	// 		outline: none;
 	// 	}
 
-	// 	.card {
-	// 		border-width: var(--border-size-3);
-	// 		font-size: 1.25rem;
-	// 		margin-inline: auto;
-	// 		margin-block-start: 1rem;
-	// 		padding-block: 1rem;
-	// 		min-width: 0;
-	// 		padding-inline: 0.5rem;
-	// 	}
-	// 	.calc {
-	// 		width: 85%;
-	// 		margin-inline: auto;
-	// 	}
-	// 	/* .resultbox {
-	// 		font-size: 120%;
-	// 	} */
-	// 	.radioGroup {
-	// 		padding-block-start: 0;
+	// 	// input[type='radio']:before {
+	// 	// 	content: '';
+	// 	// 	display: block;
+	// 	// 	width: 60%;
+	// 	// 	border-radius: 5%;
+	// 	// }
+
+	// 	input[type='radio']:checked:before {
+	// 		background: #4682b4;
+	// 		border-width: 4px;
 	// 	}
 
 	// 	.result {
-	// 		font-size: 1.25rem;
-	// 		padding: 0.5rem;
+	// 		color: white;
+	// 		background: #4682b4;
+	// 		border-radius: var(--radius-2);
+	// 		// font-size: 1.25rem;
+	// 		padding-inline: 1rem;
 	// 		padding-block: 0.25rem;
 	// 	}
+	// 	.resultbox {
+	// 		// color: #4682b4;
+	// 		// height: 2rem;
+	// 		margin-block: 1rem;
+	// 		// font-family: inherit;
+	// 		font-size: 1.25rem;
+	// 		// font-style: italic;
+	// 		font-weight: bold;
+	// 	}
+
+	// 	.form .input {
+	// 		justify-self: start;
+	// 		align-self: center;
+	// 	}
+	// 	.form .label {
+	// 		justify-self: end;
+	// 		align-self: center;
+	// 	}
+
+	// 	.resultbox {
+	// 		// background: pink;
+	// 		width: 80%;
+	// 		margin-top: 2rem;
+	// 	}
+
+	// 	& + .calc {
+	// 		// width: 100%;
+	// 		ul {
+	// 			font-size: 1.125rem;
+	// 			list-style-type: none;
+	// 			margin-inline: auto;
+	// 			padding-inline-start: 0;
+	// 			text-align: left;
+	// 			width: 95%;
+
+	// 			li {
+	// 				margin-block: 1rem;
+	// 			}
+	// 		}
+	// 	}
+	// }
+
+	// input[type='number'] {
+	// 	background-color: #e9f0f6;
+	// 	border: 1px solid #333;
+	// 	// box-shadow: var(--shadow-6);
+	// 	width: 7rem;
+	// }
+
+	// input[type='number']::-webkit-outer-spin-button,
+	// input[type='number']::-webkit-inner-spin-button {
+	// 	-webkit-appearance: none;
+	// 	display: none;
+
+	// // @media (max-width: 600px) {
+	// // 	.outer {
+	// // 		padding: 0.5rem;
+	// // 		padding-inline: 0;
+	// // 	}
+	// // 	.wrapper {
+	// // 		padding: var(--size-1);
+	// // 	}
+	// // 	.wrapper h1 {
+	// // 		font-family: 'Shitake';
+	// // 		font-size: var(--font-size-5);
+	// // 	}
+
+	// // 	.card {
+	// // 		border-width: var(--border-size-3);
+	// // 		font-size: 1.25rem;
+	// // 		margin-inline: auto;
+	// // 		margin-block-start: 1rem;
+	// // 		padding-block: 1rem;
+	// // 		min-width: 0;
+	// // 		padding-inline: 0.5rem;
+	// // 	}
+	// // 	.calc {
+	// // 		width: 85%;
+	// // 		margin-inline: auto;
+	// // 	}
+	// // 	/* .resultbox {
+	// // 		font-size: 120%;
+	// // 	} */
+	// // 	.radioGroup {
+	// // 		padding-block-start: 0;
+	// // 	}
+
+	// // 	.result {
+	// // 		font-size: 1.25rem;
+	// // 		padding: 0.5rem;
+	// // 		padding-block: 0.25rem;
+	// // 	}
+	// // }
+
+	// label.radio,
+	// h4 {
+	// 	font-size: 1.125rem;
+	// 	font-style: normal;
 	// }
 </style>
