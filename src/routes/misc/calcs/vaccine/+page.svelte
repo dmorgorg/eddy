@@ -61,21 +61,23 @@
 			<section class="form">
 				{#if selectedOption === 'percentages'}
 					<div class="label">Percentage of the population vaccinated</div>
+
 					<div class="input">
 						<input type="number" id="popVaccinated" bind:value={pv} />
-						<span>%</span>
 					</div>
+					<div>%</div>
 					<div class="label">Percentage of deaths that were vaccinated</div>
 					<div class="input">
 						<input type="number" id="deathsVaccinated" bind:value={dv} />
-						<span>%</span>
 					</div>
+					<div>%</div>
 				{:else}
-					<div class="label">Size of the population</div>
+					<div class="label">Size of the population:</div>
 					<div class="input">
 						<input type="number" id="popVaccinated" bind:value={popnSize} />
 					</div>
-					<div class="label">Percentage of the population vaccinated</div>
+					<div>&nbsp;</div>
+					<div class="label">Percentage vaccinated:</div>
 					<div class="input">
 						<input
 							type="number"
@@ -87,14 +89,15 @@
 								}
 							}}
 						/>
-						<span>%</span>
 					</div>
+					<div>%</div>
 
-					<div class="label">Number of deaths</div>
+					<div class="label">Number of deaths:</div>
 					<div class="input">
 						<input type="number" id="deathsVaccinated" bind:value={deathsSize} />
 					</div>
-					<div class="label">Percentage of deaths that were vaccinated</div>
+					<div>&nbsp;</div>
+					<div class="label">Percentage of vaccinated deaths:</div>
 					<div class="input">
 						<input
 							type="number"
@@ -106,8 +109,8 @@
 								}
 							}}
 						/>
-						<span>%</span>
 					</div>
+					<div>%</div>
 				{/if}
 			</section>
 
@@ -278,51 +281,88 @@
 
 			input[type='radio'] {
 				appearance: none; // remove default styling
-				// background-color: #e9f0f6;
+				background-color: #e9f0f6;
 				border: 2px solid #333;
 				border-radius: 50%;
 				height: 20px;
 				width: 20px;
+
+				label.radio input:checked {
+					background: red;
+				}
+
+				label.radio {
+					// background-color:
+					cursor: pointer;
+					// font-size: 16px;
+					// font-weight: bold;
+					margin: 1rem;
+				}
+
+				input:checked {
+					background: #4682b4;
+					background: red;
+					// vertical-align: middle;
+				}
 			}
+
+			// input[type='radio']:before {
+			// 	content: '';
+			// 	display: block;
+			// 	width: 60%;
+			// 	border-radius: 5%;
+			// 	background: gray;
+			// }
 		}
 
 		blockquote {
 			background-color: #e9f0f6;
 			border-left: none;
+			border: 1px solid #333;
 			border-radius: 5px;
-			font-size: 85%;
 			margin-bottom: 1.5rem;
 			padding-inline: 1rem;
 			text-align: left;
-			width: 100%;
 		}
+
+		section.form {
+			align-items: center;
+			column-gap: 0.25rem;
+			display: grid;
+			grid-template-columns: 3fr 1fr 0.125fr;
+			margin-block-end: 2rem;
+			row-gap: 0.5rem;
+
+			input[type='number'] {
+				background-color: #e9f0f6;
+				border: 1px solid #333;
+				width: 5rem;
+			}
+		}
+
+		.resultbox {
+			font-size: 1.25rem;
+			font-weight: bold;
+
+			.result {
+				color: white;
+				background: #4682b4;
+				border-radius: var(--radius-2);
+				padding-inline: 0.5rem;
+				padding-block: 0.25rem;
+			}
+		}
+
+		box-shadow: var(--shadow-6);
 	}
-
-	// section.form {
-	// 	display: grid;
-	// 	grid-template-columns: 3fr 1fr;
-	// 	row-gap: 0.5rem;
-	// 	column-gap: 1rem;
-	// }
-
-	// 	box-shadow: var(--shadow-6);
-	//
 	//
 	// 	padding-block-end: 2rem;
 	// 	font-family: 'AlkesRgIt', sans-serif;
 	// 	font-size: 5vw;
 	// 	font-style: normal;
 
-	// 		label.radio {
-	// 			// background-color:
-	// 			cursor: pointer;
-	// 			font-size: 16px;
-	// 			// font-weight: bold;
-	// 			margin-block: 1rem;
-	// 			margin-inline: 2rem;
-	// 			border: 2px solid #333;
 	// 			input {
-	// 				vertical-align: middle;
+	//
 
 	// 				font-style: normal;
 	// 				// &:hover {
@@ -334,15 +374,8 @@
 	// 					// color: white;
 	// 				}
 	// 			}
-	// 		}
+	// }
 	// 	}
-	// 	// hide default styling
-
-	//
-	//
-	// 		font-style: normal;
-	// 		width: 20px;
-	// 		height: 20px;
 
 	// 		outline: none;
 	// 	}
@@ -354,43 +387,19 @@
 	// 	// 	border-radius: 5%;
 	// 	// }
 
-	// 	input[type='radio']:checked:before {
-	// 		background: #4682b4;
-	// 		border-width: 4px;
-	// 	}
+	// input[type='radio']:checked:before {
+	// 	background: #4682b4;
+	// 	border-width: 14px;
+	// }
 
-	// 	.result {
-	// 		color: white;
-	// 		background: #4682b4;
-	// 		border-radius: var(--radius-2);
-	// 		// font-size: 1.25rem;
-	// 		padding-inline: 1rem;
-	// 		padding-block: 0.25rem;
-	// 	}
-	// 	.resultbox {
-	// 		// color: #4682b4;
-	// 		// height: 2rem;
-	// 		margin-block: 1rem;
-	// 		// font-family: inherit;
-	// 		font-size: 1.25rem;
-	// 		// font-style: italic;
-	// 		font-weight: bold;
-	// 	}
-
-	// 	.form .input {
-	// 		justify-self: start;
-	// 		align-self: center;
-	// 	}
-	// 	.form .label {
-	// 		justify-self: end;
-	// 		align-self: center;
-	// 	}
-
-	// 	.resultbox {
-	// 		// background: pink;
-	// 		width: 80%;
-	// 		margin-top: 2rem;
-	// 	}
+	// .form .input {
+	// 	justify-self: start;
+	// 	align-self: center;
+	// }
+	.form .label {
+		justify-self: end;
+		align-self: center;
+	}
 
 	// 	& + .calc {
 	// 		// width: 100%;
@@ -407,13 +416,6 @@
 	// 			}
 	// 		}
 	// 	}
-	// }
-
-	// input[type='number'] {
-	// 	background-color: #e9f0f6;
-	// 	border: 1px solid #333;
-	// 	// box-shadow: var(--shadow-6);
-	// 	width: 7rem;
 	// }
 
 	// input[type='number']::-webkit-outer-spin-button,
