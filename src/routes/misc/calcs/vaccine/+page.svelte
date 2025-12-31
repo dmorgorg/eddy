@@ -16,8 +16,8 @@
 	let result;
 
 	const options = [
-		{ value: 'percentages', label: 'Percentages' },
-		{ value: 'numbers', label: 'Percentages (with population numbers)' }
+		{ value: 'percentages', label: 'Percentages only.' },
+		{ value: 'numbers', label: '...with population numbers' }
 	];
 
 	// function percentageResult()) {
@@ -42,18 +42,17 @@
 							bind:group={selectedOption}
 							value={option.value}
 							checked={selectedOption === option.value}
-							class="input"
 						/>
-						{option.label}
+						<div>{option.label}</div>
 					</label>
 				{/each}
 			</div>
 
 			{#if selectedOption !== 'percentages'}
 				<blockquote>
-					Note that population numbers are not required for the result but are useful to simplify
-					the manual calculation below &mdash; and to avoid the use of algebra for those who have
-					been out of school for a while!
+					Note that population numbers are not required to calculate the result below but theyare
+					useful to simplify the calculation &mdash; and to avoid the need for algebra for those who
+					have been out of school for a while!
 				</blockquote>
 				<p></p>
 			{/if}
@@ -67,29 +66,29 @@
 					</div>
 					<div>%</div>
 					<div class="label">Percentage of deaths that were vaccinated</div>
-					<div class="input">
-						<input type="number" id="deathsVaccinated" bind:value={dv} />
-					</div>
+					<!-- <div class="input"> -->
+					<input type="number" id="deathsVaccinated" bind:value={dv} />
+					<!-- </div> -->
 					<div>%</div>
 				{:else}
 					<div class="label">Size of the population:</div>
-					<div class="input">
-						<input type="number" id="popVaccinated" bind:value={popnSize} />
-					</div>
+					<!-- <div class="input"> -->
+					<input type="number" id="popVaccinated" bind:value={popnSize} />
+					<!-- </div> -->
 					<div>&nbsp;</div>
 					<div class="label">Percentage vaccinated:</div>
-					<div class="input">
-						<input
-							type="number"
-							id="popVaccinated"
-							bind:value={pv}
-							on:input={() => {
-								if (Number(pv) >= 100) {
-									pv = '99';
-								}
-							}}
-						/>
-					</div>
+					<!-- <div class="input"> -->
+					<input
+						type="number"
+						id="popVaccinated"
+						bind:value={pv}
+						on:input={() => {
+							if (Number(pv) >= 100) {
+								pv = '99';
+							}
+						}}
+					/>
+					<!-- </div> -->
 					<div>%</div>
 
 					<div class="label">Number of deaths:</div>
@@ -98,18 +97,18 @@
 					</div>
 					<div>&nbsp;</div>
 					<div class="label">Percentage of vaccinated deaths:</div>
-					<div class="input">
-						<input
-							type="number"
-							id="deathsVaccinated"
-							bind:value={dv}
-							on:input={() => {
-								if (Number(dv) >= 100) {
-									dv = '99';
-								}
-							}}
-						/>
-					</div>
+					<!-- <div class="input"> -->
+					<input
+						type="number"
+						id="deathsVaccinated"
+						bind:value={dv}
+						on:input={() => {
+							if (Number(dv) >= 100) {
+								dv = '99';
+							}
+						}}
+					/>
+					<!-- </div> -->
 					<div>%</div>
 				{/if}
 			</section>
@@ -273,46 +272,28 @@
 		}
 
 		.radioGroup {
-			align-items: top;
 			display: flex;
-			justify-content: center;
-			// display: inline-block;
-			margin-block-end: 1rem;
+			margin-block-end: 1em;
+			padding-block: 1em;
 
-			input[type='radio'] {
-				appearance: none; // remove default styling
-				background-color: #e9f0f6;
-				border: 2px solid #333;
-				border-radius: 50%;
-				height: 20px;
-				width: 20px;
-
-				label.radio input:checked {
-					background: red;
-				}
-
-				label.radio {
-					// background-color:
-					cursor: pointer;
-					// font-size: 16px;
-					// font-weight: bold;
-					margin: 1rem;
-				}
-
-				input:checked {
-					background: #4682b4;
-					background: red;
-					// vertical-align: middle;
-				}
+			label.radio {
+				cursor: pointer;
+				margin-inline: 1rem;
 			}
 
-			// input[type='radio']:before {
-			// 	content: '';
-			// 	display: block;
-			// 	width: 60%;
-			// 	border-radius: 5%;
-			// 	background: gray;
-			// }
+			input[type='radio'] {
+				appearance: none;
+				background-color: transparent;
+				border: 2px solid black;
+				border-radius: 50%;
+				height: 20px;
+				outline: none;
+				width: 20px;
+			}
+
+			input[type='radio']:checked {
+				background-color: #38688f;
+			}
 		}
 
 		blockquote {
@@ -337,6 +318,8 @@
 				background-color: #e9f0f6;
 				border: 1px solid #333;
 				width: 5rem;
+				padding-inline-start: 0.5rem;
+				padding-inline-end: 0.125rem;
 			}
 		}
 
