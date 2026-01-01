@@ -1,10 +1,8 @@
 <script>
-	export let color = 'black';
-	// export let shadow = 'red';
-	// var
+	let { color = 'green', fontSize = 24 } = $props();
 </script>
 
-<a class="homelink" href="/" style="color: {color}; ">eduk8r.org</a>
+<a class="homelink" href="/" style="color: {color}; font-size:{fontSize}px">eduk8r.org</a>
 
 <style lang="scss">
 	a.homelink:link,

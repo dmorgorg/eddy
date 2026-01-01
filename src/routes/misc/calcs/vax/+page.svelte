@@ -1,36 +1,31 @@
 <script>
+	// @ts-nocheck
+
 	import HomeLink from '$lib/components/HomeLink.svelte';
 
-	let viewCalc = true;
-	let selectedOption = 'numbers';
-	let pv = '87';
-	let dv = '33';
-	let popnSize = '100000';
-	let deathsSize = '100';
-	let numberVaccinated;
-	let numberUnvaccinated;
-	let vaccinatedDeaths;
-	let unvaccinatedDeaths;
-	let precision = 5;
-
+	let viewCalc = $state(true);
+	let selectedOption = $state('numbers');
+	let pv = $state('87');
+	let dv = $state('33');
+	let popnSize = $state('100000');
+	let deathsSize = $state('100');
+	let numberVaccinated = $state();
+	let numberUnvaccinated = $state();
+	let vaccinatedDeaths = $state();
+	let unvaccinatedDeaths = $state();
+	let precision = $state(5);
 	let result;
 
 	const options = [
 		{ value: 'percentages', label: 'Percentages only.' },
 		{ value: 'numbers', label: '...with population numbers' }
 	];
-
-	// function percentageResult()) {
-	// 	let result = ((100 - dv)/(100-pv)*pv/dv).toFixed(2)
-	// 	return result
-	// }
 </script>
 
 <div class="outer">
-	<HomeLink color="#4682B4" />
+	<HomeLink color="#4682B4" fontSize="20" />
 	<div class="wrapper">
 		<h1 class="title">Vaccine Efficacy Calculator</h1>
-
 		<div class="card">
 			<h4>Percentages only? Or percentages with population numbers?</h4>
 			<div class="radioGroup">
@@ -47,7 +42,6 @@
 					</label>
 				{/each}
 			</div>
-
 			{#if selectedOption !== 'percentages'}
 				<blockquote>
 					Note that population numbers are not required to calculate the result below but they are
@@ -56,39 +50,33 @@
 				</blockquote>
 				<p></p>
 			{/if}
-
 			<section class="form">
 				{#if selectedOption === 'percentages'}
-					<div class="label">Percentage vaccinated:</div>
+					<div class="label">Percentage of population vaccinated:</div>
 
 					<div class="input">
 						<input type="number" id="popVaccinated" bind:value={pv} />
 					</div>
 					<div>%</div>
 					<div class="label">Percentage of deaths vaccinated:</div>
-					<!-- <div class="input"> -->
 					<input type="number" id="deathsVaccinated" bind:value={dv} />
-					<!-- </div> -->
 					<div>%</div>
 				{:else}
 					<div class="label">Size of the population:</div>
 					<!-- <div class="input"> -->
 					<input type="number" id="popVaccinated" bind:value={popnSize} />
-					<!-- </div> -->
 					<div>&nbsp;</div>
-					<div class="label">Percentage vaccinated:</div>
-					<!-- <div class="input"> -->
+					<div class="label">Percentage of population vaccinated:</div>
 					<input
 						type="number"
 						id="popVaccinated"
 						bind:value={pv}
-						on:input={() => {
+						oninput={() => {
 							if (Number(pv) >= 100) {
 								pv = '99';
 							}
 						}}
 					/>
-					<!-- </div> -->
 					<div>%</div>
 
 					<div class="label">Number of deaths:</div>
@@ -97,130 +85,20 @@
 					</div>
 					<div>&nbsp;</div>
 					<div class="label">Percentage of deaths vaccinated:</div>
-					<!-- <div class="input"> -->
 					<input
 						type="number"
 						id="deathsVaccinated"
 						bind:value={dv}
-						on:input={() => {
+						oninput={() => {
 							if (Number(dv) >= 100) {
 								dv = '99';
 							}
 						}}
 					/>
-					<!-- </div> -->
 					<div>%</div>
 				{/if}
 			</section>
-
-			{#if selectedOption === 'percentages'}
-				<div class="resultbox">
-					{#if pv && dv && Number(pv) < 100 && Number(dv) < 100}Death for the unvaccinated is <span
-							class="result"
-						>
-							{Number(
-								(((100 - Number(dv)) * Number(pv)) / (100 - Number(pv)) / Number(dv)).toFixed(2)
-							)}
-						</span>
-						times as likely as for the vaccinated.
-					{/if}
-				</div>
-			{:else}
-				<div class="resultbox">
-					{#if pv && dv && Number(pv) < 100 && Number(dv) < 100}Death for the unvaccinated is <span
-							class="result"
-						>
-							{Number(
-								(((100 - Number(dv)) * Number(pv)) / (100 - Number(pv)) / Number(dv)).toPrecision(
-									precision - 1
-								)
-							)}
-						</span>
-						times more likely than for the vaccinated.
-					{/if}
-				</div>
-			{/if}
 		</div>
-
-		{#if selectedOption === 'percentages' && pv && dv && Number(pv) < 100 && Number(dv) < 100}
-			<!-- <div class="card">percentages</div> -->
-			<div>&nbsp;</div>
-		{:else if pv && dv && Number(pv) < 100 && Number(dv) < 100 && popnSize && deathsSize}
-			<div class="card calc">
-				<h4>Calculations</h4>
-				<ul>
-					<li>
-						{Number(Number(pv).toPrecision(precision))}% of the population of {popnSize} are vaccinated.
-						<!-- <br /> -->
-						That is,
-						<strong>
-							{(numberVaccinated = (Number(pv) / 100) * Number(popnSize)).toPrecision(precision)} are
-							vaccinated.
-						</strong>
-					</li>
-					<li>
-						100% - {Number(Number(pv).toPrecision(precision))}% = {Number(
-							(numberUnvaccinated = 100 - Number(pv)).toPrecision(precision)
-						)}% of the population of {popnSize}
-						are not vaccinated.
-						<!-- <br /> -->
-						That is,
-						<strong>
-							{(numberUnvaccinated = Number(
-								(((100 - Number(pv)) / 100) * Number(popnSize)).toPrecision(precision)
-							))}
-							{numberUnvaccinated === 1 ? 'is' : 'are'} NOT vaccinated.
-						</strong>
-					</li>
-					<li>
-						{dv}% of the {deathsSize} deaths were vaccinated.
-						<!-- <br /> -->
-						That is,
-						<strong>
-							{(vaccinatedDeaths = (Number(dv) / 100) * Number(deathsSize))} who died were vaccinated.
-						</strong>
-					</li>
-					<li>
-						100% - {Number(Number(dv).toPrecision(precision))}% = {(unvaccinatedDeaths =
-							100 - Number(dv))}% of the {Number(deathsSize)} deaths were not vaccinated.
-						<!-- <br /> -->
-						That is,
-						<strong>
-							{((100 - Number(dv)) / 100) * Number(deathsSize)} who died were NOT vaccinated.
-						</strong>
-					</li>
-					<li>
-						{unvaccinatedDeaths} unvaccinated died out of the unvaccinated {numberUnvaccinated}.
-						<!-- <br /> -->
-						That is,
-						<strong>
-							1 in {Number((numberUnvaccinated / unvaccinatedDeaths).toPrecision(precision))} unvaccinated
-							died.
-						</strong>
-					</li>
-					<li>
-						{vaccinatedDeaths} vaccinated died out of the vaccinated {numberVaccinated}.
-						<!-- <br /> -->
-						That is,
-						<strong>
-							1 in {Number((numberVaccinated / vaccinatedDeaths).toPrecision(precision))} vaccinated
-							died.
-						</strong>
-					</li>
-				</ul>
-				<div class="resultbox">
-					So, unvaccinated are <br />{Number(numberVaccinated / vaccinatedDeaths).toPrecision(
-						precision
-					)}/{Number(numberUnvaccinated / unvaccinatedDeaths).toPrecision(precision)} =
-					<span class="result"
-						>{(
-							(numberVaccinated / vaccinatedDeaths / numberUnvaccinated) *
-							unvaccinatedDeaths
-						).toPrecision(precision - 1)}</span
-					><br /> times more likely to die than are vaccinated for these inputs.
-				</div>
-			</div>
-		{/if}
 	</div>
 </div>
 
@@ -249,7 +127,7 @@
 		line-height: 1;
 		padding-inline: 2rem;
 		margin: 0;
-		margin-top: 1rem;
+		margin-top: 2rem;
 		text-shadow: 2px 2px 2px black;
 		word-spacing: 0;
 	}
@@ -359,12 +237,11 @@
 		}
 	}
 
-	// }
-
-	// input[type='number']::-webkit-outer-spin-button,
-	// input[type='number']::-webkit-inner-spin-button {
-	// 	-webkit-appearance: none;
-	// 	display: none;
+	input[type='number']::-webkit-outer-spin-button,
+	input[type='number']::-webkit-inner-spin-button {
+		-webkit-appearance: none;
+		display: none;
+	}
 
 	// // @media (max-width: 600px) {
 	// // 	.outer {
