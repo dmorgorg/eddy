@@ -4,7 +4,7 @@
 	import HomeLink from '$lib/components/HomeLink.svelte';
 
 	let viewCalc = $state(true);
-	let selectedOption = $state('numbers');
+	let selectedOption = $state('popnNumbers');
 	let pv = $state('87');
 	let dv = $state('33');
 	let popnSize = $state('100000');
@@ -14,12 +14,29 @@
 	let vaccinatedDeaths = $state();
 	let unvaccinatedDeaths = $state();
 	let precision = $state(5);
-	let result;
+	let result = $derived(sd(((100 - dv) * pv) / ((100 - pv) * dv), 3));
 
 	const options = [
 		{ value: 'percentages', label: 'Percentages only.' },
-		{ value: 'numbers', label: '...with population numbers' }
+		{ value: 'popnNumbers', label: '...with population numbers' }
 	];
+
+	function sd(num, prec = precision) {
+		return Number(num).toPrecision(prec);
+	}
+
+	function setValues() {
+		if (selectedOption === 'popnNumbers') {
+			popnSize = Math.round(Number(popnSize));
+			deathsSize = Math.round(Number(deathsSize));
+			vaccinatedDeaths = (dv / 100) * Number(deathsSize);
+			unvaccinatedDeaths = Number(deathsSize) - vaccinatedDeaths;
+			numberVaccinated = Math.round((pv / 100) * popnSize);
+			// numberVaccinated = ((pv / 100) * popnSize).toFixed(2);
+			numberUnvaccinated = popnSize - numberVaccinated;
+		}
+	}
+	setValues();
 </script>
 
 <div class="outer">
@@ -27,7 +44,7 @@
 	<div class="wrapper">
 		<h1 class="title">Vaccine Efficacy Calculator</h1>
 		<div class="card">
-			<h4>Percentages only? Or percentages with population numbers?</h4>
+			<!-- <h4>Percentages only? Or percentages with population numbers?</h4> -->
 			<div class="radioGroup">
 				{#each options as option}
 					<label class="radio">
@@ -44,27 +61,54 @@
 			</div>
 			{#if selectedOption !== 'percentages'}
 				<blockquote>
-					Note that population numbers are not required to calculate the result below but they are
-					useful to simplify the calculation &mdash; and to remove the need for algebra for those
-					who have been out of school for a while!
+					Note that population numbers are not required to calculate the result but they help
+					simplify the calculation below, removing the need for algebra for those who have been out
+					of school for a while!
 				</blockquote>
 				<p></p>
 			{/if}
 			<section class="form">
 				{#if selectedOption === 'percentages'}
 					<div class="label">Percentage of population vaccinated:</div>
-
 					<div class="input">
-						<input type="number" id="popVaccinated" bind:value={pv} />
+						<input
+							type="number"
+							id="popVaccinated"
+							bind:value={pv}
+							oninput={() => {
+								if (Number(pv) >= 100) {
+									pv = '99';
+								}
+							}}
+						/>
+					</div>
+					<div>%</div>
+
+					<div class="label">Percentage of deaths vaccinated:</div>
+					<div class="input">
+						<input
+							type="number"
+							id="deathsVaccinated"
+							bind:value={dv}
+							oninput={() => {
+								if (Number(dv) >= 100) {
+									dv = '99';
+								}
+							}}
+						/>
+					</div>
+					<div>%</div>
+					<!-- <div class="label">Percentage of deaths vaccinated:</div>
+					<div class="input">
+						<input type="number" id="deathsVaccinated" bind:value={dv} />
 					</div>
 					<div>%</div>
 					<div class="label">Percentage of deaths vaccinated:</div>
 					<input type="number" id="deathsVaccinated" bind:value={dv} />
-					<div>%</div>
+					<div>%</div> -->
 				{:else}
 					<div class="label">Size of the population:</div>
-					<!-- <div class="input"> -->
-					<input type="number" id="popVaccinated" bind:value={popnSize} />
+					<input type="number" id="popVaccinated" bind:value={popnSize} onkeyup={setValues} />
 					<div>&nbsp;</div>
 					<div class="label">Percentage of population vaccinated:</div>
 					<input
@@ -76,18 +120,16 @@
 								pv = '99';
 							}
 						}}
+						onkeyup={setValues}
 					/>
 					<div>%</div>
-
 					<div class="label">Number of deaths:</div>
-					<div class="input">
-						<input type="number" id="deathsVaccinated" bind:value={deathsSize} />
-					</div>
+					<input type="number" id="popVaccinated" bind:value={deathsSize} onkeyup={setValues} />
 					<div>&nbsp;</div>
 					<div class="label">Percentage of deaths vaccinated:</div>
 					<input
 						type="number"
-						id="deathsVaccinated"
+						id="popVaccinated"
 						bind:value={dv}
 						oninput={() => {
 							if (Number(dv) >= 100) {
@@ -98,6 +140,107 @@
 					<div>%</div>
 				{/if}
 			</section>
+			<div class="resultbox">
+				{#if pv && dv && Number(pv) < 100 && Number(dv) < 100}Death for the unvaccinated is <span
+						class="result"
+					>
+						{result}
+					</span>
+					times as likely as for the vaccinated.
+				{/if}
+			</div>
+		</div>
+		<div class="card calc">
+			<h6>Calculations:</h6>
+			{#if selectedOption === 'popnNumbers'}
+				<ul>
+					<li>
+						{Number(Number(pv).toFixed(2))}% of the population of {popnSize} are vaccinated.<br />
+						That is,
+						<strong>
+							{numberVaccinated} are vaccinated.
+						</strong>
+					</li>
+					<li>
+						The rest, {popnSize} - {numberVaccinated}, are not vaccinated.<br />
+						That is,
+						<strong>
+							{numberUnvaccinated}
+							{numberUnvaccinated === 1 ? 'is' : 'are'} NOT vaccinated.
+						</strong>
+					</li>
+				</ul>
+			{:else}
+				percentages
+			{/if}
+			<!-- {#if selectedOption === 'percentages' && pv && dv && Number(pv) < 100 && Number(dv) < 100}
+				<div>&nbsp;</div>
+			{:else if pv && dv && Number(pv) < 100 && Number(dv) < 100 && popnSize && deathsSize}
+				<div class="card calc">
+					<h4>Calculations</h4>
+					<ul>
+						<li>
+							{Number(Number(pv).toPrecision(precision))}% of the population of {popnSize} are vaccinated.
+							That is,
+							<strong>
+								{(numberVaccinated = (Number(pv) / 100) * Number(popnSize)).toPrecision(precision)} are
+								vaccinated.
+							</strong>
+						</li>
+						<li>
+							100% - {Number(Number(pv).toPrecision(precision))}% = {Number(
+								(numberUnvaccinated = 100 - Number(pv)).toPrecision(precision)
+							)}% of the population of {popnSize}
+							are not vaccinated. That is,
+							<strong>
+								{(numberUnvaccinated = Number(
+									(((100 - Number(pv)) / 100) * Number(popnSize)).toPrecision(precision)
+								))}
+								{numberUnvaccinated === 1 ? 'is' : 'are'} NOT vaccinated.
+							</strong>
+						</li>
+						<li>
+							{dv}% of the {deathsSize} deaths were vaccinated. That is,
+							<strong>
+								{(vaccinatedDeaths = (Number(dv) / 100) * Number(deathsSize))} who died were vaccinated.
+							</strong>
+						</li>
+						<li>
+							100% - {Number(Number(dv).toPrecision(precision))}% = {(unvaccinatedDeaths =
+								100 - Number(dv))}% of the {Number(deathsSize)} deaths were not vaccinated. That is,
+							<strong>
+								{((100 - Number(dv)) / 100) * Number(deathsSize)} who died were NOT vaccinated.
+							</strong>
+						</li>
+						<li>
+							{unvaccinatedDeaths} unvaccinated died out of the unvaccinated {numberUnvaccinated}.
+							That is,
+							<strong>
+								1 in {Number((numberUnvaccinated / unvaccinatedDeaths).toPrecision(precision))} unvaccinated
+								died.
+							</strong>
+						</li>
+						<li>
+							{vaccinatedDeaths} vaccinated died out of the vaccinated {numberVaccinated}. That is,
+							<strong>
+								1 in {Number((numberVaccinated / vaccinatedDeaths).toPrecision(precision))} vaccinated
+								died.
+							</strong>
+						</li>
+					</ul>
+					<div class="resultbox">
+						So, unvaccinated are <br />{Number(numberVaccinated / vaccinatedDeaths).toPrecision(
+							precision
+						)}/{Number(numberUnvaccinated / unvaccinatedDeaths).toPrecision(precision)} =
+						<span class="result"
+							>{(
+								(numberVaccinated / vaccinatedDeaths / numberUnvaccinated) *
+								unvaccinatedDeaths
+							).toPrecision(precision - 1)}</span
+						><br /> times more likely to die than are vaccinated for these inputs.
+					</div>
+				</div>
+			{/if} -->
 		</div>
 	</div>
 </div>
@@ -113,8 +256,9 @@
 		align-items: center;
 		flex-direction: column;
 		margin-inline: auto;
-		text-align: center;
 		max-width: 550px;
+		text-align: center;
+		width: 90%;
 	}
 
 	h1.title {
@@ -142,10 +286,12 @@
 		justify-content: center;
 		margin: 1rem;
 		padding: 1rem;
+		width: 100%;
 
-		& h4 {
-			font-size: 5vw;
-			font-weight: bold;
+		& h6 {
+			font-size: 3vw;
+			// font-weight: bold;
+			font-weight: 700;
 			margin-block-end: 1rem;
 		}
 
@@ -196,6 +342,7 @@
 				background-color: #e9f0f6;
 				border: 1px solid #333;
 				width: 5rem;
+				outline: none;
 				padding-inline-start: 0.5rem;
 				padding-inline-end: 0.125rem;
 			}
@@ -204,6 +351,8 @@
 		.resultbox {
 			font-size: 1.25rem;
 			font-weight: bold;
+			text-align: center;
+			// border: 1px solid black;
 
 			.result {
 				color: white;
