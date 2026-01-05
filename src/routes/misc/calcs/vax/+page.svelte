@@ -28,12 +28,12 @@
 	function setValues() {
 		if (selectedOption === 'popnNumbers') {
 			popnSize = Math.round(Number(popnSize));
-			deathsSize = Math.round(Number(deathsSize));
-			vaccinatedDeaths = (dv / 100) * Number(deathsSize);
-			unvaccinatedDeaths = Number(deathsSize) - vaccinatedDeaths;
 			numberVaccinated = Math.round((pv / 100) * popnSize);
-			// numberVaccinated = ((pv / 100) * popnSize).toFixed(2);
 			numberUnvaccinated = popnSize - numberVaccinated;
+
+			deathsSize = Math.round(Number(deathsSize));
+			vaccinatedDeaths = Math.round((dv / 100) * deathsSize);
+			unvaccinatedDeaths = Number(deathsSize) - vaccinatedDeaths;
 		}
 	}
 	setValues();
@@ -98,14 +98,6 @@
 						/>
 					</div>
 					<div>%</div>
-					<!-- <div class="label">Percentage of deaths vaccinated:</div>
-					<div class="input">
-						<input type="number" id="deathsVaccinated" bind:value={dv} />
-					</div>
-					<div>%</div>
-					<div class="label">Percentage of deaths vaccinated:</div>
-					<input type="number" id="deathsVaccinated" bind:value={dv} />
-					<div>%</div> -->
 				{:else}
 					<div class="label">Size of the population:</div>
 					<input type="number" id="popVaccinated" bind:value={popnSize} onkeyup={setValues} />
@@ -136,6 +128,7 @@
 								dv = '99';
 							}
 						}}
+						onkeyup={setValues}
 					/>
 					<div>%</div>
 				{/if}
@@ -151,7 +144,7 @@
 			</div>
 		</div>
 		<div class="card calc">
-			<h6>Calculations:</h6>
+			<h6>Calculations, with population numbers:</h6>
 			{#if selectedOption === 'popnNumbers'}
 				<ul>
 					<li>
@@ -169,6 +162,48 @@
 							{numberUnvaccinated === 1 ? 'is' : 'are'} NOT vaccinated.
 						</strong>
 					</li>
+					<li>
+						{Number(Number(dv).toFixed(2))}% of the {deathsSize} deaths were vaccinated.<br />
+						That is,
+						<strong>
+							{vaccinatedDeaths} who died
+							{vaccinatedDeaths === 1 ? 'was' : 'were'} vaccinated.
+						</strong>
+					</li>
+					<li>
+						The rest, {deathsSize} - {vaccinatedDeaths}, of the deaths were not vaccinated.<br />
+						That is,
+						<strong>
+							{unvaccinatedDeaths} who died
+							{unvaccinatedDeaths === 1 ? 'was' : 'were'} NOT vaccinated.
+						</strong>
+					</li>
+					<li>
+						{unvaccinatedDeaths} of the {numberUnvaccinated} unvaccinated died.<br /> That is,
+						<strong>
+							1 in {Number((numberUnvaccinated / unvaccinatedDeaths).toFixed(2))} of the unvaccinated
+							died.
+						</strong>
+					</li>
+					<li>
+						{vaccinatedDeaths} of the {numberVaccinated} vaccinated died.<br /> That is,
+						<strong>
+							1 in {Number((numberVaccinated / vaccinatedDeaths).toFixed(2))} of the vaccinated died.
+						</strong>
+					</li>
+					<!-- <li> -->
+					<div class="resultbox">
+						Therefore, the unvaccinated are <br />{Number(
+							numberVaccinated / vaccinatedDeaths
+						).toFixed(2)}/{Number(numberUnvaccinated / unvaccinatedDeaths).toFixed(2)} =
+						<span class="result"
+							>{(
+								(numberVaccinated / vaccinatedDeaths / numberUnvaccinated) *
+								unvaccinatedDeaths
+							).toFixed(1)}</span
+						><br /> times more likely to die than are the vaccinated <br />(for these inputs).
+					</div>
+					<!-- </li> -->
 				</ul>
 			{:else}
 				percentages
@@ -179,39 +214,10 @@
 				<div class="card calc">
 					<h4>Calculations</h4>
 					<ul>
-						<li>
-							{Number(Number(pv).toPrecision(precision))}% of the population of {popnSize} are vaccinated.
-							That is,
-							<strong>
-								{(numberVaccinated = (Number(pv) / 100) * Number(popnSize)).toPrecision(precision)} are
-								vaccinated.
-							</strong>
-						</li>
-						<li>
-							100% - {Number(Number(pv).toPrecision(precision))}% = {Number(
-								(numberUnvaccinated = 100 - Number(pv)).toPrecision(precision)
-							)}% of the population of {popnSize}
-							are not vaccinated. That is,
-							<strong>
-								{(numberUnvaccinated = Number(
-									(((100 - Number(pv)) / 100) * Number(popnSize)).toPrecision(precision)
-								))}
-								{numberUnvaccinated === 1 ? 'is' : 'are'} NOT vaccinated.
-							</strong>
-						</li>
-						<li>
-							{dv}% of the {deathsSize} deaths were vaccinated. That is,
-							<strong>
-								{(vaccinatedDeaths = (Number(dv) / 100) * Number(deathsSize))} who died were vaccinated.
-							</strong>
-						</li>
-						<li>
-							100% - {Number(Number(dv).toPrecision(precision))}% = {(unvaccinatedDeaths =
-								100 - Number(dv))}% of the {Number(deathsSize)} deaths were not vaccinated. That is,
-							<strong>
-								{((100 - Number(dv)) / 100) * Number(deathsSize)} who died were NOT vaccinated.
-							</strong>
-						</li>
+						
+						
+						
+						
 						<li>
 							{unvaccinatedDeaths} unvaccinated died out of the unvaccinated {numberUnvaccinated}.
 							That is,
@@ -289,10 +295,10 @@
 		width: 100%;
 
 		& h6 {
-			font-size: 3vw;
+			font-size: 1.125em;
 			// font-weight: bold;
 			font-weight: 700;
-			margin-block-end: 1rem;
+			margin-block-end: 0.25rem;
 		}
 
 		.radioGroup {
@@ -349,7 +355,7 @@
 		}
 
 		.resultbox {
-			font-size: 1.25rem;
+			font-size: 1.125em;
 			font-weight: bold;
 			text-align: center;
 			// border: 1px solid black;
@@ -373,7 +379,7 @@
 
 	.calc {
 		ul {
-			font-size: 1.125rem;
+			font-size: 0.95em;
 			list-style-type: none;
 			margin-inline: auto;
 			padding-inline-start: 0;
