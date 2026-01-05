@@ -17,8 +17,8 @@
 	let result = $derived(sd(((100 - dv) * pv) / ((100 - pv) * dv), 3));
 
 	const options = [
-		{ value: 'percentages', label: 'Percentages only.' },
-		{ value: 'popnNumbers', label: '...with population numbers' }
+		{ value: 'percentages', label: 'Percentages only...' },
+		{ value: 'popnNumbers', label: '...or with population numbers.' }
 	];
 
 	function sd(num, prec = precision) {
@@ -40,7 +40,7 @@
 </script>
 
 <div class="outer">
-	<HomeLink color="#4682B4" fontSize="20" />
+	<HomeLink color="#4682B4" />
 	<div class="wrapper">
 		<h1 class="title">Vaccine Efficacy Calculator</h1>
 		<div class="card">
@@ -196,12 +196,8 @@
 						Therefore, the unvaccinated are <br />{Number(
 							numberVaccinated / vaccinatedDeaths
 						).toFixed(2)}/{Number(numberUnvaccinated / unvaccinatedDeaths).toFixed(2)} =
-						<span class="result"
-							>{(
-								(numberVaccinated / vaccinatedDeaths / numberUnvaccinated) *
-								unvaccinatedDeaths
-							).toFixed(1)}</span
-						><br /> times more likely to die than are the vaccinated <br />(for these inputs).
+						<span class="result">{result}</span><br /> times more likely to die than are the
+						vaccinated <br />(for these inputs).
 					</div>
 					<!-- </li> -->
 				</ul>
@@ -254,32 +250,34 @@
 <style lang="scss">
 	.outer {
 		background-color: #e9f0f6;
+		font-size: 0.875rem; // this governs the homelink size
 		min-height: 100vh;
 	}
 	.wrapper {
-		display: flex;
-		justify-content: start;
 		align-items: center;
+		display: flex;
 		flex-direction: column;
+		justify-content: start;
 		margin-inline: auto;
-		max-width: 550px;
+		max-width: 450px;
+		// min-width: 250px;
 		text-align: center;
 		width: 90%;
 	}
 
 	h1.title {
 		background-color: inherit;
+		// border: 1px solid red;
 		color: #4682b4;
 		font-family: 'Shitake', cursive;
-		font-size: 10vw;
+		font-size: 2.5em;
 		font-weight: bold;
-		letter-spacing: 0.375rem;
+		letter-spacing: 0.175em;
 		line-height: 1;
-		padding-inline: 2rem;
+		padding-inline: 2em;
 		margin: 0;
-		margin-top: 2rem;
+		margin-top: 1em;
 		text-shadow: 2px 2px 2px black;
-		word-spacing: 0;
 	}
 
 	.card {
@@ -289,16 +287,17 @@
 		border-radius: 10px;
 		display: flex;
 		flex-direction: column;
+		font-size: 1em;
 		justify-content: center;
-		margin: 1rem;
-		padding: 1rem;
+		margin: 1em;
+		padding: 1em;
 		width: 100%;
 
 		& h6 {
 			font-size: 1.125em;
 			// font-weight: bold;
 			font-weight: 700;
-			margin-block-end: 0.25rem;
+			margin-block-end: 0.25em;
 		}
 
 		.radioGroup {
@@ -308,7 +307,8 @@
 
 			label.radio {
 				cursor: pointer;
-				margin-inline: 1rem;
+				margin-inline: 1em;
+				font-size: inherit;
 			}
 
 			input[type='radio'] {
@@ -316,6 +316,7 @@
 				background-color: transparent;
 				border: 2px solid black;
 				border-radius: 50%;
+
 				height: 20px;
 				outline: none;
 				width: 20px;
@@ -329,15 +330,19 @@
 		blockquote {
 			background-color: #e9f0f6;
 			border-left: none;
-			border: 1px solid #333;
+			border: 1px solid #4682b4;
 			border-radius: 5px;
+			font-size: 90%;
+			line-height: 1.25;
 			margin-bottom: 1.5rem;
 			padding-inline: 1rem;
 			text-align: left;
+			width: 100%;
 		}
 
 		section.form {
 			align-items: center;
+			// background: yellow;
 			column-gap: 0.25rem;
 			display: grid;
 			grid-template-columns: 3fr 1fr 0.125fr;
@@ -398,49 +403,49 @@
 		display: none;
 	}
 
-	// // @media (max-width: 600px) {
-	// // 	.outer {
-	// // 		padding: 0.5rem;
-	// // 		padding-inline: 0;
-	// // 	}
-	// // 	.wrapper {
-	// // 		padding: var(--size-1);
-	// // 	}
-	// // 	.wrapper h1 {
-	// // 		font-family: 'Shitake';
-	// // 		font-size: var(--font-size-5);
-	// // 	}
+	@media (min-width: 600px) {
+		.outer {
+			padding: 0.5rem;
+			padding-inline: 0;
+		}
+		.wrapper {
+			padding: var(--size-1);
+		}
+		.wrapper h1 {
+			font-family: 'Shitake';
+			font-size: 5vw;
+		}
 
-	// // 	.card {
-	// // 		border-width: var(--border-size-3);
-	// // 		font-size: 1.25rem;
-	// // 		margin-inline: auto;
-	// // 		margin-block-start: 1rem;
-	// // 		padding-block: 1rem;
-	// // 		min-width: 0;
-	// // 		padding-inline: 0.5rem;
-	// // 	}
-	// // 	.calc {
-	// // 		width: 85%;
-	// // 		margin-inline: auto;
-	// // 	}
-	// // 	/* .resultbox {
-	// // 		font-size: 120%;
-	// // 	} */
-	// // 	.radioGroup {
-	// // 		padding-block-start: 0;
-	// // 	}
+		.card {
+			border-width: var(--border-size-3);
+			font-size: 1.25rem;
+			margin-inline: auto;
+			margin-block-start: 1rem;
+			padding-block: 1rem;
+			min-width: 0;
+			padding-inline: 0.5rem;
+		}
+		.calc {
+			width: 85%;
+			margin-inline: auto;
+		}
+		/* .resultbox {
+			font-size: 120%;
+		} */
+		.radioGroup {
+			padding-block-start: 0;
+		}
 
-	// // 	.result {
-	// // 		font-size: 1.25rem;
-	// // 		padding: 0.5rem;
-	// // 		padding-block: 0.25rem;
-	// // 	}
-	// // }
+		.result {
+			font-size: 1.25rem;
+			padding: 0.5rem;
+			padding-block: 0.25rem;
+		}
+	}
 
-	// label.radio,
-	// h4 {
-	// 	font-size: 1.125rem;
-	// 	font-style: normal;
-	// }
+	label.radio,
+	h4 {
+		font-size: 1.125rem;
+		font-style: normal;
+	}
 </style>
