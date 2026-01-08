@@ -76,9 +76,8 @@
 		</p>
 		<p>
 			Consider first, the <strong>don't switch</strong> strategy. You have a 1/3 chance, or probability,
-			of guessing correctly (with one-third probability) which door the car is behind. Since you don't
-			switch, you will win if you guessed correctly. So, the probability of winning is 1/3. And the probability
-			of losing is 2/3.
+			of guessing correctly which door the car is behind. Since you don't switch, you will win if you
+			guessed correctly. So, the probability of winning is 1/3. And the probability of losing is 2/3.
 		</p>
 		<p>
 			Now, consider the <strong>switch</strong> strategy. You have a 1/3 chance of guessing
@@ -89,9 +88,9 @@
 		<p>
 			<strong>Why do you always win when you switch after guessing incorrectly?</strong> Because then
 			one of the two doors you didn't pick contains the car. And the other goat. The host will always
-			reveal the goat, leaving the car behind the closed door you didn't initially choose. If you switch
-			to the door that the host doesn't open, you win. (If this is confusing, just step through the simulation
-			a few times, paying close attention to what happens when you switch!)
+			reveal the goat, leaving the car behind the closed door that you didn't initially choose. If you
+			switch to the door that the host doesn't open, you win. (If this is confusing, just step through
+			the simulation a few times, paying close attention to what happens when you switch!)
 		</p>
 		<p>
 			When you see it, you'll wonder how so many of these brainiacs ended up with egg on their
@@ -117,7 +116,7 @@
 			(winning that prize, losing, getting a head, ...).
 		</p>
 		<p>
-			<strong>Expected winnings with a 'DON'T SWITCH' strategy:</strong><br />
+			<strong>Expected winnings with a 'DON'T&nbsp;SWITCH' strategy:</strong>
 			Guessing the door with the car behind occurs with a one in three chance. By not switching, you
 			win the car. You guess incorrectly with a two in three chance. By not switching, you win a goat.
 			{@html kd(`

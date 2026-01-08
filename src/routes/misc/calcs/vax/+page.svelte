@@ -2,8 +2,9 @@
 	// @ts-nocheck
 
 	import HomeLink from '$lib/components/HomeLink.svelte';
+	import { slide } from 'svelte/transition';
 
-	let viewCalc = $state(true);
+	let viewCalc = $state(false);
 	let selectedOption = $state('popnNumbers');
 	let pv = $state('87');
 	let dv = $state('33');
@@ -20,6 +21,22 @@
 		{ value: 'percentages', label: 'Percentages only...' },
 		{ value: 'popnNumbers', label: '...or with population numbers.' }
 	];
+
+	function toggleCalcView() {
+		viewCalc = !viewCalc;
+		scrollToBottom(document.body);
+	}
+
+	const scrollToBottom = (node) => {
+		const scroll = () =>
+			node.scroll({
+				top: node.scrollHeight,
+				behavior: 'smooth'
+			});
+		scroll();
+
+		return { update: scroll };
+	};
 
 	function sd(num, prec = precision) {
 		return Number(num).toPrecision(prec);
@@ -44,7 +61,6 @@
 	<div class="wrapper">
 		<h1 class="title">Vaccine Efficacy Calculator</h1>
 		<div class="card">
-			<!-- <h4>Percentages only? Or percentages with population numbers?</h4> -->
 			<div class="radioGroup">
 				{#each options as option}
 					<label class="radio">
@@ -143,9 +159,19 @@
 				{/if}
 			</div>
 		</div>
-		<div class="card calc">
-			<h6>Calculations, with population numbers:</h6>
-			{#if selectedOption === 'popnNumbers'}
+
+		{#if !viewCalc}
+			<button class="toggle" onclick={toggleCalcView}
+				>Show Calculations (using population numbers)</button
+			>
+		{:else}
+			<button class="toggle" onclick={toggleCalcView}>Hide Calculations</button>
+		{/if}
+		<!-- <div class="card calc">
+			
+		</div> -->
+		{#if selectedOption === 'popnNumbers' && viewCalc}
+			<div class="card calc" transition:slide use:scrollToBottom={this}>
 				<ul>
 					<li>
 						{Number(Number(pv).toFixed(2))}% of the population of {popnSize} are vaccinated.<br />
@@ -192,58 +218,18 @@
 						</strong>
 					</li>
 					<!-- <li> -->
-					<div class="resultbox">
-						Therefore, the unvaccinated are <br />{Number(
-							numberVaccinated / vaccinatedDeaths
-						).toFixed(2)}/{Number(numberUnvaccinated / unvaccinatedDeaths).toFixed(2)} =
-						<span class="result">{result}</span><br /> times more likely to die than are the
-						vaccinated <br />(for these inputs).
-					</div>
+
 					<!-- </li> -->
 				</ul>
-			{:else}
-				percentages
-			{/if}
-			<!-- {#if selectedOption === 'percentages' && pv && dv && Number(pv) < 100 && Number(dv) < 100}
-				<div>&nbsp;</div>
-			{:else if pv && dv && Number(pv) < 100 && Number(dv) < 100 && popnSize && deathsSize}
-				<div class="card calc">
-					<h4>Calculations</h4>
-					<ul>
-						
-						
-						
-						
-						<li>
-							{unvaccinatedDeaths} unvaccinated died out of the unvaccinated {numberUnvaccinated}.
-							That is,
-							<strong>
-								1 in {Number((numberUnvaccinated / unvaccinatedDeaths).toPrecision(precision))} unvaccinated
-								died.
-							</strong>
-						</li>
-						<li>
-							{vaccinatedDeaths} vaccinated died out of the vaccinated {numberVaccinated}. That is,
-							<strong>
-								1 in {Number((numberVaccinated / vaccinatedDeaths).toPrecision(precision))} vaccinated
-								died.
-							</strong>
-						</li>
-					</ul>
-					<div class="resultbox">
-						So, unvaccinated are <br />{Number(numberVaccinated / vaccinatedDeaths).toPrecision(
-							precision
-						)}/{Number(numberUnvaccinated / unvaccinatedDeaths).toPrecision(precision)} =
-						<span class="result"
-							>{(
-								(numberVaccinated / vaccinatedDeaths / numberUnvaccinated) *
-								unvaccinatedDeaths
-							).toPrecision(precision - 1)}</span
-						><br /> times more likely to die than are vaccinated for these inputs.
-					</div>
+				<div class="resultbox">
+					Therefore, the unvaccinated are <br />{Number(
+						numberVaccinated / vaccinatedDeaths
+					).toFixed(2)}/{Number(numberUnvaccinated / unvaccinatedDeaths).toFixed(2)} =
+					<span class="result">{result} times</span><br /> more likely to die than are the
+					vaccinated <br />(for these inputs).
 				</div>
-			{/if} -->
-		</div>
+			</div>
+		{/if}
 	</div>
 </div>
 
@@ -258,6 +244,7 @@
 		display: flex;
 		flex-direction: column;
 		justify-content: start;
+		padding-block-end: 2em;
 		margin-inline: auto;
 		max-width: 450px;
 		// min-width: 250px;
@@ -351,7 +338,8 @@
 
 			input[type='number'] {
 				background-color: #e9f0f6;
-				border: 1px solid #333;
+				border: 1px solid #4682b4;
+				// box-shadow: var(--shadow-3);
 				width: 5rem;
 				outline: none;
 				padding-inline-start: 0.5rem;
@@ -362,6 +350,7 @@
 		.resultbox {
 			font-size: 1.125em;
 			font-weight: bold;
+			margin-top: 1rem;
 			text-align: center;
 			// border: 1px solid black;
 
@@ -373,8 +362,6 @@
 				padding-block: 0.25rem;
 			}
 		}
-
-		box-shadow: var(--shadow-6);
 	}
 
 	.form .label {
@@ -383,18 +370,30 @@
 	}
 
 	.calc {
+		padding: 0;
 		ul {
 			font-size: 0.95em;
 			list-style-type: none;
 			margin-inline: auto;
+			margin-block-start: -1em;
+			padding-block-start: 0;
 			padding-inline-start: 0;
 			text-align: left;
-			width: 95%;
+			width: 75%;
 
 			li {
-				margin-block: 1rem;
+				margin-block-end: 1rem;
 			}
 		}
+	}
+
+	button.toggle {
+		font-size: 0.875em;
+		font-weight: bold;
+		text-align: center;
+		width: 100%;
+		border: 4px solid #38688f;
+		border-radius: 10px;
 	}
 
 	input[type='number']::-webkit-outer-spin-button,
@@ -405,47 +404,22 @@
 
 	@media (min-width: 600px) {
 		.outer {
-			padding: 0.5rem;
-			padding-inline: 0;
+			font-size: 1.5em;
 		}
 		.wrapper {
-			padding: var(--size-1);
-		}
-		.wrapper h1 {
-			font-family: 'Shitake';
-			font-size: 5vw;
+			font-size: 1em;
+			max-width: 550px;
+			h1 {
+				font-size: 2em;
+			}
 		}
 
 		.card {
-			border-width: var(--border-size-3);
-			font-size: 1.25rem;
+			font-size: 1.125rem;
 			margin-inline: auto;
-			margin-block-start: 1rem;
-			padding-block: 1rem;
+			margin-block-start: 1em;
 			min-width: 0;
-			padding-inline: 0.5rem;
+			padding-block: 2em;
 		}
-		.calc {
-			width: 85%;
-			margin-inline: auto;
-		}
-		/* .resultbox {
-			font-size: 120%;
-		} */
-		.radioGroup {
-			padding-block-start: 0;
-		}
-
-		.result {
-			font-size: 1.25rem;
-			padding: 0.5rem;
-			padding-block: 0.25rem;
-		}
-	}
-
-	label.radio,
-	h4 {
-		font-size: 1.125rem;
-		font-style: normal;
 	}
 </style>

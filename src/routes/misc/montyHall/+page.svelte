@@ -126,9 +126,9 @@
 </script>
 
 <div class="outer">
-	<HomeLink color="#A7BEAE" shadow="black" />
-	<header class="title">Monty Hall Paradox &ndash; A Simul8r</header>
+	<HomeLink color="black" />
 	<div class="wrapper">
+		<header class="title">Monty Hall Paradox &ndash; A Simul8r</header>
 		<a href="/misc/montyHall/intro"><button>What is the Monty Hall Paradox?</button></a>
 
 		<div class="simWrap">
@@ -398,7 +398,7 @@
 					class="hide"
 					class:show={buttonsIndex === 4}
 				/><button onclick={switchGuess} disabled={buttonsIndex !== 4}
-					>Contestant: Make The Switch</button
+					>Contestant: Makes Their Choice</button
 				>
 			</div>
 			<div>
@@ -435,55 +435,46 @@
 </div>
 
 <style lang="scss">
-	:root {
-		scrollbar-color: unset;
+	// :root {
+	// 	scrollbar-color: unset;
 
-		/* Handle */
-		::-webkit-scrollbar-thumb {
-			background: purple;
-			border-radius: 10px;
-			border: 4px solid #f8f9fa;
-		}
-		::-webkit-scrollbar-thumb:hover {
-			background: blue;
-			/* border-radius: 10px; */
-			/* border: 4px solid var(--main-bg-color); */
-		}
-		::-webkit-scrollbar {
-			width: 15px;
-		}
-		::-webkit-scrollbar-track {
-			/* background-color: var(--scrollbar-track); */
-			background-color: inherit;
-		}
-	}
+	// 	/* Handle */
+	// 	::-webkit-scrollbar-thumb {
+	// 		background: purple;
+	// 		border-radius: 10px;
+	// 		border: 4px solid #f8f9fa;
+	// 	}
+	// 	::-webkit-scrollbar-thumb:hover {
+	// 		background: blue;
+	// 		/* border-radius: 10px; */
+	// 		/* border: 4px solid var(--main-bg-color); */
+	// 	}
+	// 	::-webkit-scrollbar {
+	// 		width: 15px;
+	// 	}
+	// 	::-webkit-scrollbar-track {
+	// 		/* background-color: var(--scrollbar-track); */
+	// 		background-color: inherit;
+	// 	}
+	// }
 	.outer {
-		background-color: var(--terracotta);
+		// background-color: var(--terracotta);
+		// background-color: red;
 		min-height: 100vh;
 		max-width: 100%;
 		overflow-x: hidden; // disable overflow-x scrollbar
 		overflow-y: auto; // ensure vertical scrolling is still enabled
 		padding-bottom: 1rem;
+		font-size: 0.75em;
 
-		.title {
-			color: var(--mutedTeal-6);
-			display: inline-block;
-			font-family: 'AlkesRgIt';
-			font-weight: bold;
-			font-size: clamp(12px, 6vw, 48px);
-			line-height: 1;
-			margin-inline: auto;
-			padding-block-start: 4vw;
-			padding-block-end: 2vw;
-			text-align: center;
-			text-shadow: 0.05vw 0.1vw 0 var(--mutedTeal-9);
-			width: 100vw;
-			// border: 1px solid white;
+		button {
+			color: black;
 		}
-
 		.wrapper {
 			align-items: center;
 			background-color: var(--lightBeige-3);
+			background-color: #8fbc8f;
+			// background-color: red;
 			border: 0.5vw solid var(--mutedTeal-6);
 			border-radius: 0.5vw;
 			display: flex;
@@ -494,32 +485,62 @@
 			padding-inline: 1.5vw;
 			padding-block: 1.5rem;
 
+			.title {
+				// border: 1px solid white;
+				color: var(--mutedTeal-6);
+				color: #437043;
+				color: black;
+				display: inline-block;
+				font-family: 'AlkesRgIt';
+				font-weight: bold;
+				font-size: 2.5em;
+				line-height: 1;
+				margin-inline: auto;
+				padding-block-start: 0.5em;
+				padding-block-end: 0.5em;
+				// padding-inline: 0;
+				text-align: center;
+				text-shadow: 0.05vw 0.1vw 0 #000;
+				// width: 100vw;
+				// border: 1px solid white;
+			}
+
 			.simWrap {
+				// border: 2px solid red;
+				width: 70%;
+				margin-bottom: -3em;
+
 				.title,
 				.result,
 				.totals {
-					color: var(--mutedTeal-7);
+					// color: var(--mutedTeal-7);
+					color: black;
 					display: flex;
 					font-family: var(--font-sans);
 					font-size: clamp(16px, 1.75vw, 20px);
 					font-weight: 700;
 					line-height: 1;
 					margin: 0;
-					margin-top: 1.5rem;
-					margin-bottom: -0.5rem;
+					margin-top: 0.75rem;
+					margin-bottom: -0.75rem;
 					padding: 0;
 					text-align: center;
 					text-shadow: none;
 					width: 100%;
 
 					.stick {
-						width: 47.5%;
-						margin-inline-end: 2.5%;
+						// border: 2px solid yellow;
+						width: 45%;
+						// margin-inline-end: 7.5%;
 					}
 					.switch {
-						width: 47.5%;
-						margin-inline-start: 2.5%;
+						// border: 2px solid yellow;
+						width: 45%;
+						// margin-inline-start: 7.5%;
 					}
+				}
+				.title {
+					justify-content: space-between;
 				}
 
 				.totals {
@@ -549,9 +570,9 @@
 
 				.simul8r {
 					display: flex;
-					gap: 0.5rem;
+					gap: 10%;
 					justify-content: space-between;
-					margin-block-end: 1rem;
+					margin-block-end: 2rem;
 					// margin-inline: 0.75vw;
 					// padding-inline: 3rem;
 					padding-block: 0;
@@ -559,7 +580,8 @@
 					.switch,
 					.dontSwitch {
 						background: white;
-						border: 0.2vw solid var(--mutedTeal-6);
+						// border: 0.2vw solid var(--mutedTeal-6);
+						border: 0.29vw solid black;
 						border-radius: var(--radius-2);
 						box-shadow: var(--shadow-4);
 						column-gap: calc(0.75vw + 0.125rem);
@@ -598,12 +620,13 @@
 	}
 	.win {
 		color: var(--lightBeige-6);
+		color: #437043;
 		font-family: 'awesome';
 		// font-size: ;
 		font-weight: bold;
 		letter-spacing: 0.4rem;
 		margin-top: 0.5rem;
-		text-shadow: 0.1vw 0.1vw 0.2vw var(--mutedTeal-9);
+		// text-shadow: 0.1vw 0.1vw 0.2vw var(--mutedTeal-9);
 		&::before {
 			content: 'Win!';
 		}
@@ -661,8 +684,8 @@
 	}
 
 	button {
-		border: 0.2vw solid var(--mutedTeal-7);
-		background-color: var(--lightBeige-3);
+		border: 0.2vw solid black;
+		background-color: #437043;
 		background-color: white;
 		box-shadow: var(--shadow-4);
 		font-weight: 700;
@@ -686,13 +709,14 @@
 
 		&:disabled {
 			background-color: var(--lightBeige-6);
+			background-color: #437043;
 			border: none;
 			box-shadow: none;
 			// border-color: white;
-			color: white;
+			color: #8fbc8f;
 			cursor: default;
-			font-weight: 700;
-			text-shadow: 0.1vw 0.1vw 0.2vw var(--mutedTeal-9);
+			font-weight: normal;
+			// text-shadow: 0.1vw 0.1vw 0.2vw var(--mutedTeal-9);
 		}
 	}
 
@@ -726,7 +750,7 @@
 			}
 		}
 	}
-	@media (max-width: 600px) {
+	@media (min-width: 600px) {
 		.outer {
 			background-color: var(--lightBeige-1);
 
