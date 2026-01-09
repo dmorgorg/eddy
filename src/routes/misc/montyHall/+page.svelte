@@ -514,10 +514,11 @@
 				.result,
 				.totals {
 					// color: var(--mutedTeal-7);
+					border: 2px solid black;
 					color: black;
 					display: flex;
 					font-family: var(--font-sans);
-					font-size: clamp(16px, 1.75vw, 20px);
+					font-size: 16px;
 					font-weight: 700;
 					line-height: 1;
 					margin: 0;
