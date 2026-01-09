@@ -139,7 +139,7 @@
 
 			<section class="simul8r">
 				<div class="dontSwitch">
-					<div id="11">
+					<div id="oneOne">
 						<img
 							src="/montyHall/carTerra.png"
 							alt=""
@@ -149,7 +149,7 @@
 							class:hideTrans={car !== 1 && !runningSim}
 						/>
 					</div>
-					<div id="12">
+					<div id="oneTwo">
 						<img
 							src="/montyHall/carTerra.png"
 							alt=""
@@ -159,7 +159,7 @@
 							class:hideTrans={car !== 2 && !runningSim}
 						/>
 					</div>
-					<div id="13">
+					<div id="oneThree">
 						<img
 							src="/montyHall/carTerra.png"
 							alt=""
@@ -169,7 +169,7 @@
 							class:hideTrans={car !== 3 && !runningSim}
 						/>
 					</div>
-					<div id="21" class="parent">
+					<div id="twoOne" class="parent">
 						<img src="/montyHall/doorOpen.png" alt="" class="abs" />
 						<img
 							src="/montyHall/door.png"
@@ -180,7 +180,7 @@
 							class:showTrans={open !== 1 && !runningSim}
 						/>
 					</div>
-					<div id="22" class="parent">
+					<div id="twoTwo" class="parent">
 						<img src="/montyHall/doorOpen.png" alt="" class="abs" />
 						<img
 							src="/montyHall/door.png"
@@ -191,7 +191,7 @@
 							class:showTrans={open !== 2 && !runningSim}
 						/>
 					</div>
-					<div id="23" class="parent">
+					<div id="twoThree" class="parent">
 						<img src="/montyHall/doorOpen.png" alt="" class="abs" />
 						<img
 							src="/montyHall/door.png"
@@ -202,7 +202,7 @@
 							class:showTrans={open !== 3 && !runningSim}
 						/>
 					</div>
-					<div id="31">
+					<div id="threeOne">
 						<img
 							src="/montyHall/upTerra.png"
 							alt="upArrow"
@@ -213,7 +213,7 @@
 							class:hideTrans={guess !== 1 && !runningSim}
 						/>
 					</div>
-					<div id="32">
+					<div id="threeTwo">
 						<img
 							src="/montyHall/upTerra.png"
 							alt=""
@@ -224,7 +224,7 @@
 							class:hideTrans={guess !== 2 && !runningSim}
 						/>
 					</div>
-					<div id="33">
+					<div id="threeThree">
 						<img
 							src="/montyHall/upTerra.png"
 							alt=""
@@ -241,7 +241,7 @@
 				</div>
 
 				<div class="switch">
-					<div id="11">
+					<div id="oneOne">
 						<img
 							src="/montyHall/carTerra.png"
 							alt=""
@@ -251,7 +251,7 @@
 							class:hideTrans={car !== 1 && !runningSim}
 						/>
 					</div>
-					<div id="s12">
+					<div id="sOneTwo">
 						<img
 							src="/montyHall/carTerra.png"
 							alt=""
@@ -261,7 +261,7 @@
 							class:hideTrans={car !== 2 && !runningSim}
 						/>
 					</div>
-					<div id="s13">
+					<div id="sOneThree">
 						<img
 							src="/montyHall/carTerra.png"
 							alt=""
@@ -271,7 +271,7 @@
 							class:hideTrans={car !== 3 && !runningSim}
 						/>
 					</div>
-					<div id="s21" class="parent">
+					<div id="sTwoOne" class="parent">
 						<img src="/montyHall/doorOpen.png" alt="" class="abs" />
 						<img
 							src="/montyHall/door.png"
@@ -282,7 +282,7 @@
 							class:showTrans={open !== 1 && !runningSim}
 						/>
 					</div>
-					<div id="s22" class="parent">
+					<div id="sTwoTwo" class="parent">
 						<img src="/montyHall/doorOpen.png" alt="" class="abs" />
 						<img
 							src="/montyHall/door.png"
@@ -293,7 +293,7 @@
 							class:showTrans={open !== 2 && !runningSim}
 						/>
 					</div>
-					<div id="s23" class="parent">
+					<div id="sTwoThree" class="parent">
 						<img src="/montyHall/doorOpen.png" alt="" class="abs" />
 						<img
 							src="/montyHall/door.png"
@@ -304,7 +304,7 @@
 							class:showTrans={open !== 3 && !runningSim}
 						/>
 					</div>
-					<div id="s31">
+					<div id="sThreeOne">
 						<img
 							src="/montyHall/upTerra.png"
 							alt=""
@@ -315,7 +315,7 @@
 							class:hideTrans={switchedGuess !== 1 && !runningSim}
 						/>
 					</div>
-					<div id="s32">
+					<div id="sThreeTwo">
 						<img
 							src="/montyHall/upTerra.png"
 							alt=""
@@ -326,7 +326,7 @@
 							class:hideTrans={switchedGuess !== 2 && !runningSim}
 						/>
 					</div>
-					<div id="s33">
+					<div id="sThreeThree">
 						<img
 							src="/montyHall/upTerra.png"
 							alt=""
@@ -508,7 +508,7 @@
 			.simWrap {
 				// border: 2px solid red;
 				width: 70%;
-				margin-bottom: -3em;
+				// margin-bottom: -3em;
 
 				.title,
 				.result,
@@ -529,14 +529,15 @@
 					width: 100%;
 
 					.stick {
-						// border: 2px solid yellow;
+						margin-inline-end: 7.5%;
+						// margin-top: -1em;
 						width: 45%;
-						// margin-inline-end: 7.5%;
+						// border: 1px solid yellow;
 					}
 					.switch {
-						// border: 2px solid yellow;
+						margin-inline-start: 7.5%;
+						// margin-top: -1em;
 						width: 45%;
-						// margin-inline-start: 7.5%;
 					}
 				}
 				.title {
@@ -545,7 +546,7 @@
 
 				.totals {
 					min-height: 1.75rem;
-					margin-top: -3rem;
+					margin-top: -4rem;
 					margin-bottom: 0.5rem;
 					text-align: center;
 				}
@@ -602,6 +603,20 @@
 		}
 	}
 
+	// #threeOne,
+	// #sThreeOne,
+	// #threeTwo,
+	// #sThreeTwo,
+	// #threeThree,
+	// #sThreeThree {
+	// 	border: 3px solid blue;
+	// 	// margin-top: -5.5rem;
+	// 	z-index: 0;
+	// 	.img {
+	// 		// border: 3px solid red;
+	// 	}
+	// }
+
 	.buttonList {
 		width: 100%;
 		div {
@@ -619,14 +634,16 @@
 		}
 	}
 	.win {
-		color: var(--lightBeige-6);
 		color: #437043;
 		font-family: 'awesome';
-		// font-size: ;
+		// border: 2px solid black;
 		font-weight: bold;
 		letter-spacing: 0.4rem;
-		margin-top: 0.5rem;
+		margin-top: 1.5rem;
+		// padding: 0;
 		// text-shadow: 0.1vw 0.1vw 0.2vw var(--mutedTeal-9);
+		vertical-align: bottom;
+		// z-index: 1000;
 		&::before {
 			content: 'Win!';
 		}
@@ -659,12 +676,13 @@
 	img {
 		height: 100%;
 		width: 100%;
+		// z-index: 1000;
 		&.raise {
 			margin-top: -3vw;
 		}
 
 		&.scale50 {
-			transform: scale(0.5);
+			transform: scale(0.75);
 		}
 	}
 
@@ -743,10 +761,12 @@
 			position: relative;
 			top: 0;
 			left: 0;
+
 			&.abs {
 				position: absolute;
 				top: 0;
 				left: 0;
+				// z-index: 1000;
 			}
 		}
 	}
@@ -769,7 +789,7 @@
 
 			padding-top: 2rem;
 			font-size: 7vw;
-			// border: 1px solid black;
+			border: 1px solid black;
 		}
 
 		.buttonList {
