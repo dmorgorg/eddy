@@ -514,7 +514,7 @@
 				.result,
 				.totals {
 					// color: var(--mutedTeal-7);
-					border: 2px solid black;
+					// border: 2px solid black;
 					color: black;
 					display: flex;
 					font-family: var(--font-sans);
@@ -530,13 +530,13 @@
 					width: 100%;
 
 					.stick {
-						margin-inline-end: 7.5%;
+						margin-inline-end: 5%;
 						// margin-top: -1em;
 						width: 45%;
 						// border: 1px solid yellow;
 					}
 					.switch {
-						margin-inline-start: 7.5%;
+						margin-inline-start: 5%;
 						// margin-top: -1em;
 						width: 45%;
 					}
