@@ -19,6 +19,7 @@
 	let busy250 = $state(false);
 	let busy1000 = $state(false);
 	let busy = $state(false);
+	let stepThrough = $state(true);
 
 	let prefersReducedMotion = $state(false);
 
@@ -36,6 +37,10 @@
 	const placeVehicle = () => {
 		car = Math.floor(Math.random() * 3) + 1;
 		buttonsIndex = 2;
+		// if (!busy) {
+		// 	stepThrough = true;
+		// }
+		stepThrough = busy ? false : true;
 	};
 	const chooseDoor = () => {
 		switchedGuess = guess = Math.floor(Math.random() * 3) + 1;
@@ -128,12 +133,9 @@
 			chooseDoor();
 			openDoor();
 			switchGuess();
-			// if (i < times - 1) {
 			isWinner();
-			// }
 
 			if (!prefersReducedMotion) {
-				// let delay = 25;
 				await new Promise((resolve) => setTimeout(resolve, delay));
 			}
 		}
@@ -371,9 +373,13 @@
 				<div class="result">
 					{#if gameComplete}
 						<!-- svelte-ignore a11y_missing_content -->
-						<div class="stick"><h1 class:win={stickWins} class:lose={!stickWins}>&nbsp;</h1></div>
+						<div class="stick">
+							<h1 class:win={stickWins && (busy || stepThrough)} class:lose={!stickWins}>&nbsp;</h1>
+						</div>
 						<!-- svelte-ignore a11y_missing_content -->
-						<div class="switch"><h1 class:win={switchWins} class:lose={!switchWins}></h1></div>
+						<div class="switch">
+							<h1 class:win={switchWins && (busy || stepThrough)} class:lose={!switchWins}></h1>
+						</div>
 					{/if}
 				</div>
 			</section>
@@ -449,10 +455,10 @@
 					>Run Simulator<br />100&times; more</button
 				>
 				<button onclick={() => runSimulation(250)} disabled={busy250}
-					>Run<br /> 250&times; more</button
+					>Run Simulator<br /> 250&times; more</button
 				>
 				<button onclick={() => runSimulation(1000)} disabled={busy1000}
-					>Run<br /> 1000&times; more</button
+					>Run Simulator<br /> 1000&times; more</button
 				>
 				<!-- <button onclick={zero} class="mt-4" disabled={totalGames === 0}>Reset All To 0?</button> -->
 			</div>
