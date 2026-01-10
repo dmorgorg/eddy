@@ -14,6 +14,9 @@
 	let switchTotal = $state(0);
 	let totalGames = $derived(stickTotal + switchTotal);
 	let runningSim = $state(false);
+	let busy100 = $state(false);
+	let busy250 = $state(false);
+	let busy1000 = $state(false);
 
 	let prefersReducedMotion = $state(false);
 
@@ -28,7 +31,7 @@
 		}
 	};
 
-	const placeVehice = () => {
+	const placeVehicle = () => {
 		car = Math.floor(Math.random() * 3) + 1;
 		buttonsIndex = 2;
 	};
@@ -105,9 +108,16 @@
 	};
 
 	const runSimulation = async (/** @type {number} */ times) => {
-		runningSim = true;
+		// runningSim = true;
+		if (times === 100) {
+			busy100 = true;
+		} else if (times === 250) {
+			busy250 = true;
+		} else if (times === 1000) {
+			busy1000 = true;
+		}
 		for (let i = 0; i < times; i++) {
-			placeVehice();
+			placeVehicle();
 			chooseDoor();
 			openDoor();
 			switchGuess();
@@ -119,9 +129,14 @@
 			}
 		}
 		await new Promise((resolve) => setTimeout(resolve, 250));
-		// tick().then(() => {
-		runningSim = false;
-		// });
+		// runningSim = false;
+		if (times === 100) {
+			busy100 = false;
+		} else if (times === 250) {
+			busy250 = false;
+		} else if (times === 1000) {
+			busy1000 = false;
+		}
 	};
 </script>
 
@@ -235,9 +250,9 @@
 							class:hideTrans={guess !== 3 && !runningSim}
 						/>
 					</div>
-					<div id="41"></div>
-					<div id="42"><img src="/montyHall/user2.png" alt="" /></div>
-					<div id="43"></div>
+					<div id="fourOne"></div>
+					<div id="fourTwo"><img src="/montyHall/user2.png" alt="" /></div>
+					<div id="fourThree"></div>
 				</div>
 
 				<div class="switch">
@@ -371,7 +386,8 @@
 					alt="rightTrans"
 					class="hide"
 					class:show={buttonsIndex === 1}
-				/><button onclick={placeVehice} disabled={buttonsIndex !== 1}>Monty: Places Vehicle</button>
+				/><button onclick={placeVehicle} disabled={buttonsIndex !== 1}>Monty: Places Vehicle</button
+				>
 			</div>
 			<div>
 				<img
@@ -419,13 +435,19 @@
 			</div>
 
 			<div class="runSim mt-4">
-				<button onclick={() => runSimulation(100)}>Run Simulation<br />100&times; more</button>
-				<button onclick={() => runSimulation(250)}>Run Simulation<br /> 250&times; more</button>
-				<button onclick={() => runSimulation(1000)}>Run Simulation<br /> 1000&times; more</button>
+				<button onclick={() => runSimulation(100)} disabled={busy100}
+					>Run Simulation<br />100&times; more</button
+				>
+				<button onclick={() => runSimulation(250)} disabled={busy250}
+					>Run Simulation<br /> 250&times; more</button
+				>
+				<button onclick={() => runSimulation(1000)} disabled={busy1000}
+					>Run Simulation<br /> 1000&times; more</button
+				>
 				<!-- <button onclick={zero} class="mt-4" disabled={totalGames === 0}>Reset All To 0?</button> -->
 			</div>
 			<div class="mt-2 ml-4">
-				<button onclick={zero} class="mt-4" disabled={totalGames === 0}>Reset All To 0?</button>
+				<button onclick={zero} class="mt-4" disabled={totalGames === 0}>Reset All To 0</button>
 				<button onclick={toggleReducedMotion} class="mt-4">
 					{prefersReducedMotion ? 'Enable Motion' : 'Disable Motion'}
 				</button>
@@ -629,22 +651,18 @@
 			}
 			button {
 				text-align: center;
-
 				margin-right: 1rem;
+				// color: pink;
 			}
 		}
 	}
 	.win {
 		color: #437043;
 		font-family: 'awesome';
-		// border: 2px solid black;
 		font-weight: bold;
 		letter-spacing: 0.4rem;
 		margin-top: 1.5rem;
-		// padding: 0;
-		// text-shadow: 0.1vw 0.1vw 0.2vw var(--mutedTeal-9);
 		vertical-align: bottom;
-		// z-index: 1000;
 		&::before {
 			content: 'Win!';
 		}
@@ -707,9 +725,9 @@
 		background-color: #437043;
 		background-color: white;
 		box-shadow: var(--shadow-4);
-		font-weight: 700;
+		font-weight: normal;
 		// font-weight: bold;
-		font-size: clamp(16px, 1.75vw, 24px);
+		font-size: 16px;
 		color: var(--mutedTeal-7);
 		padding: 0.125rem;
 		padding-inline: 1rem;
@@ -719,33 +737,32 @@
 		text-shadow: 0.07vw 0.07vw 0.1vw var(--mutedTeal-9);
 		width: 100%;
 
-		&:hover:enabled {
-			// text-shadow: 0.025vw 0.025vw 0.05vw purple;
-			color: white;
-			background-color: var(--mutedTeal-7);
-			border-color: var(--mutedTeal-8);
-		}
+		// &:hover:enabled {
+		// 	// &:hover:enabled {
+
+		// 	background-color: #437043;
+		// 	border-color: black;
+		// 	color: DarkSeaGreen;
+		// 	font-weight: normal;
+		// }
 
 		&:disabled {
 			background-color: var(--lightBeige-6);
 			background-color: #437043;
 			border: none;
 			box-shadow: none;
-			// border-color: white;
 			color: #8fbc8f;
 			cursor: default;
 			font-weight: normal;
-			// text-shadow: 0.1vw 0.1vw 0.2vw var(--mutedTeal-9);
 		}
 	}
 
 	.runSim {
 		clear: both;
 		display: flex;
+		justify-content: space-between;
 		margin-inline-start: 1rem;
 
-		// margin-block-start: 1rem;
-		justify-content: space-between;
 		button {
 			width: 30%;
 			padding-inline: 0;
