@@ -8,9 +8,15 @@
 	<h3>Lectures and Handouts</h3>
 	<div>
 		Here you can find a collection of 'refreshed' versions of my old Statics presentations,
-		formatted as .pdf presentations. There are also associated handouts for each lecture topic.
+		formatted as .pdf presentations. There are also associated handouts for most lecture topics.
+		(These were discontinued when I learned that these were not being ditributed to students and,
+		thus, probably unnecessary. If there is any interest in having these handouts made available
+		again, please let me know.)
 	</div>
-	<div>Check back every week or two, as more will be posted.</div>
+	<div>
+		Note that I taught the course to civil engineering technology students and the curriculum did
+		not include any three-dimensional statics, nor any treatment of springs or friction.
+	</div>
 
 	<ul>
 		<li>

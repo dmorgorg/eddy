@@ -160,13 +160,13 @@
 			</div>
 		</div>
 
-		{#if !viewCalc}
+		<!-- {#if !viewCalc}
 			<button class="toggle" onclick={toggleCalcView}
 				>Show Calculations (using population numbers)</button
 			>
 		{:else}
 			<button class="toggle" onclick={toggleCalcView}>Hide Calculations</button>
-		{/if}
+		{/if} -->
 		<!-- <div class="card calc">
 			
 		</div> -->

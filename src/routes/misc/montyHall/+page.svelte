@@ -513,7 +513,7 @@
 			background-color: var(--lightBeige-3);
 			background-color: #8fbc8f;
 			// background-color: red;
-			border: 0.5vw solid var(--mutedTeal-6);
+			// border: 0.5vw solid var(--mutedTeal-6);
 			border-radius: 0.5vw;
 			display: flex;
 			flex-direction: column;
@@ -756,15 +756,6 @@
 		text-shadow: 0.07vw 0.07vw 0.1vw var(--mutedTeal-9);
 		width: 100%;
 
-		// &:hover:enabled {
-		// 	// &:hover:enabled {
-
-		// 	background-color: #437043;
-		// 	border-color: black;
-		// 	color: DarkSeaGreen;
-		// 	font-weight: normal;
-		// }
-
 		&:disabled {
 			background-color: var(--lightBeige-6);
 			background-color: #437043;
@@ -809,25 +800,25 @@
 	}
 	@media (min-width: 600px) {
 		.outer {
-			background-color: var(--lightBeige-1);
+			background-color: DarkSeaGreen;
 
 			header {
 				margin-top: 0.5rem;
 			}
 
 			.wrapper {
-				border: none;
-				width: 100%;
-				background-color: inherit;
+				// border: none;
+				width: 60%;
+				// background-color: inherit;
 			}
 		}
-		.win {
-			margin-top: -1rem;
+		// .win {
+		// 	margin-top: -1rem;
 
-			padding-top: 2rem;
-			font-size: 7vw;
-			border: 1px solid black;
-		}
+		// 	padding-top: 2rem;
+		// 	font-size: 7vw;
+		// 	border: 1px solid black;
+		// }
 
 		.buttonList {
 			div {

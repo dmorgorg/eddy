@@ -7,13 +7,14 @@
 <div class="container">
 	<h3>Step-through worked examples</h3>
 	<div>
-		Here you can find a collection of worked 'step-through' examples for Statics, formatted as .pdf
-		presentations, for download. They are better stepped-through in a standalone pdf reader (like
-		Sumatra or Adobe Reader or ...) than viewed continuously scrolling through in a browser.
+		Here you can find a collection of worked examples for Statics, formatted as .pdf presentations,
+		for download. These presentations are designed to be viewed in a standalone .pdf reader (like
+		Sumatra or Adobe Reader or ...) on a desktop, stepping through the slides, rather than viewed
+		continuously scrolling through in a browser or on a smaller device.
 	</div>
 	<div>
-		Pages on these document contain a lot of information and the font size is necessarily small,
-		more suited to personal use than to projection onto classroom screens.
+		Pages on these documents contain a lot of information and the font size is necessarily small.
+		They more suited to personal use than to projection onto classroom screens.
 	</div>
 
 	<ul>
@@ -43,7 +44,6 @@
 	.container {
 		align-items: center;
 		background-color: transparent;
-		// background-color: pink;
 		display: flex;
 		flex-direction: column;
 		gap: 1rem;
@@ -66,8 +66,6 @@
 	}
 	ul {
 		list-style-type: none;
-		// display: flex;
-		// background-color: gray;
 		padding: 0;
 		margin: 0;
 		margin-top: 3rem;
