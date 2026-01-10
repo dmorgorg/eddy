@@ -14,9 +14,11 @@
 	let switchTotal = $state(0);
 	let totalGames = $derived(stickTotal + switchTotal);
 	let runningSim = $state(false);
+	// running various repeated simulations
 	let busy100 = $state(false);
 	let busy250 = $state(false);
 	let busy1000 = $state(false);
+	let busy = $state(false);
 
 	let prefersReducedMotion = $state(false);
 
@@ -109,22 +111,29 @@
 
 	const runSimulation = async (/** @type {number} */ times) => {
 		// runningSim = true;
+		let delay = 5;
+		busy = true;
 		if (times === 100) {
 			busy100 = true;
+			delay = 37;
 		} else if (times === 250) {
 			busy250 = true;
+			delay = 20;
 		} else if (times === 1000) {
 			busy1000 = true;
+			delay = 5;
 		}
 		for (let i = 0; i < times; i++) {
 			placeVehicle();
 			chooseDoor();
 			openDoor();
 			switchGuess();
+			// if (i < times - 1) {
 			isWinner();
+			// }
 
 			if (!prefersReducedMotion) {
-				let delay = 5;
+				// let delay = 25;
 				await new Promise((resolve) => setTimeout(resolve, delay));
 			}
 		}
@@ -137,6 +146,7 @@
 		} else if (times === 1000) {
 			busy1000 = false;
 		}
+		busy = false;
 	};
 </script>
 
@@ -436,13 +446,13 @@
 
 			<div class="runSim mt-4">
 				<button onclick={() => runSimulation(100)} disabled={busy100}
-					>Run Simulation<br />100&times; more</button
+					>Run Simulator<br />100&times; more</button
 				>
 				<button onclick={() => runSimulation(250)} disabled={busy250}
-					>Run Simulation<br /> 250&times; more</button
+					>Run<br /> 250&times; more</button
 				>
 				<button onclick={() => runSimulation(1000)} disabled={busy1000}
-					>Run Simulation<br /> 1000&times; more</button
+					>Run<br /> 1000&times; more</button
 				>
 				<!-- <button onclick={zero} class="mt-4" disabled={totalGames === 0}>Reset All To 0?</button> -->
 			</div>
@@ -659,10 +669,13 @@
 	.win {
 		color: #437043;
 		font-family: 'awesome';
+		font-size: 3em;
 		font-weight: bold;
 		letter-spacing: 0.4rem;
 		margin-top: 1.5rem;
+		text-shadow: 2px 2px 4px #000;
 		vertical-align: bottom;
+		z-index: 1000;
 		&::before {
 			content: 'Win!';
 		}
@@ -700,9 +713,9 @@
 			margin-top: -3vw;
 		}
 
-		&.scale50 {
-			transform: scale(0.75);
-		}
+		// &.scale50 {
+		// 	transform: scale(0.5);
+		// }
 	}
 
 	.hideTrans {
@@ -765,7 +778,7 @@
 
 		button {
 			width: 30%;
-			padding-inline: 0;
+			padding-inline: 0.25em;
 			margin-bottom: 0;
 			margin-top: 1rem;
 		}
