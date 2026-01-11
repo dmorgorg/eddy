@@ -50,8 +50,7 @@
 		margin-inline: auto;
 		width: 40rem;
 	}
-	h3,
-	h4 {
+	h3 {
 		color: #a00;
 	}
 	a:link,
