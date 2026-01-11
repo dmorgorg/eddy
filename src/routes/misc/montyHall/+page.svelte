@@ -715,9 +715,9 @@
 		height: 100%;
 		width: 100%;
 		// z-index: 1000;
-		&.raise {
-			margin-top: -3vw;
-		}
+		// &.raise {
+		// 	margin-top: -3vw;
+		// }
 
 		// &.scale50 {
 		// 	transform: scale(0.5);
