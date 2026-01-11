@@ -1,0 +1,23 @@
+:root {
+    --bg: #fff;
+    --primaryColor: #008d8a;
+}
+
+/* apply a natural box layout model to all elements, but allowing components to change */
+html {
+  box-sizing: border-box;
+}
+
+*,
+*:before,
+*:after {
+  box-sizing: inherit;
+}
+
+.katex {
+  font-size: 120%;
+}
+.katex-display > .katex,
+.katex-inline > .katex {
+  color: var(--primaryColor);
+}
