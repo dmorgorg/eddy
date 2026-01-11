@@ -280,12 +280,12 @@
 		padding: 1em;
 		width: 100%;
 
-		& h6 {
-			font-size: 1.125em;
-			// font-weight: bold;
-			font-weight: 700;
-			margin-block-end: 0.25em;
-		}
+		// & h6 {
+		// 	font-size: 1.125em;
+		// 	// font-weight: bold;
+		// 	font-weight: 700;
+		// 	margin-block-end: 0.25em;
+		// }
 
 		.radioGroup {
 			display: flex;
@@ -387,14 +387,14 @@
 		}
 	}
 
-	button.toggle {
-		font-size: 0.875em;
-		font-weight: bold;
-		text-align: center;
-		width: 100%;
-		border: 4px solid #38688f;
-		border-radius: 10px;
-	}
+	// button.toggle {
+	// 	font-size: 0.875em;
+	// 	font-weight: bold;
+	// 	text-align: center;
+	// 	width: 100%;
+	// 	border: 4px solid #38688f;
+	// 	border-radius: 10px;
+	// }
 
 	input[type='number']::-webkit-outer-spin-button,
 	input[type='number']::-webkit-inner-spin-button {
