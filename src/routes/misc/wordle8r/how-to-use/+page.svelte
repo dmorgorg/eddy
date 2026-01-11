@@ -38,7 +38,7 @@
 	<p>
 		When you look at the list of possible words for the current state of your guesses, you may
 		notice some in bold font. These represent the words originally in the answers list. For the most
-		part, it still represents the set of possible answers. "squid" and an unknown number of other
+		part, it still represents the set of possible answers. "squid" and a handful (or two) of other
 		words notwithstanding.
 	</p>
 	<p><a href="/misc/wordle8r"><strong>Let's Play</strong> </a></p>
