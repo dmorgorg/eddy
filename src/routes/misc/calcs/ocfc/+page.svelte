@@ -1,12 +1,33 @@
 <script>
 	import HomeLink from '$lib/components/HomeLink.svelte';
 	import OCFCHeader from './components/OCFCHeader.svelte';
+	import Rectangular from './components/channels/Rectangular.svelte';
+	import Triangular from './components/channels/Triangular.svelte';
+	import Trapezoidal from './components/channels/Trapezoidal.svelte';
+	import Circular from './components/channels/Circular.svelte';
+
+	let channelType = $state('rectangular');
 </script>
 
 <div class="outer">
 	<HomeLink color="var(--bg)" />
-	<OCFCHeader />
-	<div class="inner"></div>
+	<OCFCHeader bind:channelType />
+	<div class="inner">
+		<main>
+			<div class:hide={channelType !== 'rectangular'}>
+				<Rectangular />
+			</div>
+			<div class:hide={channelType !== 'triangular'}>
+				<Triangular />
+			</div>
+			<div class:hide={channelType !== 'trapezoidal'}>
+				<Trapezoidal />
+			</div>
+			<div class:hide={channelType !== 'circular'}>
+				<Circular />
+			</div>
+		</main>
+	</div>
 </div>
 
 <style lang="scss">

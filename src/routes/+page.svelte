@@ -15,6 +15,7 @@
 			<a href="/misc/calcs/alcohol">UK Alcohol Units Calcul8r</a>
 			<a href="/misc/calcs/vax">Vaccine Efficacy Calcul8r</a>
 			<a href="/misc/calcs/fuelConverter">Metric/Imperial Fuel Converter</a>
+			<a href="/misc/calcs/ocfc"><s>Open Channel Flow Calcul8r</s></a>
 		</div>
 	</Card>
 

@@ -21,3 +21,7 @@ html {
 .katex-inline > .katex {
   color: var(--primaryColor);
 }
+
+.hide {
+    display: none;
+  }

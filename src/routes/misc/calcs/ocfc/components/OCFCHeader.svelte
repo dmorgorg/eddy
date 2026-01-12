@@ -1,15 +1,16 @@
 <script>
 	import NavLink from './NavLink.svelte';
-	let { channelType = 'Rectangular' } = $props();
+	let { channelType = $bindable('rectangular') } = $props();
 </script>
 
 <nav class="nav">
-	<div class="nav-title">open channel flow calculator</div>
+	<div class="nav-title">open channel flow calcul8r</div>
 	<div class="nav-links">
-		<NavLink name={'rectangular'} {channelType} />
-		<NavLink name={'triangular'} {channelType} />
-		<NavLink name={'trapezoidal'} {channelType} />
-		<NavLink name={'circular'} {channelType} />
+		<!-- changes to channelType by clicking a NavLink component will be reflected here in the parent -->
+		<NavLink name={'rectangular'} bind:channelType />
+		<NavLink name={'triangular'} bind:channelType />
+		<NavLink name={'trapezoidal'} bind:channelType />
+		<NavLink name={'circular'} bind:channelType />
 	</div>
 </nav>
 
@@ -25,23 +26,24 @@
 		}
 		.nav-title {
 			// border: 1px solid black;
-			font-size: 1.75em;
+			font-size: 2em;
 			font-weight: bold;
 			margin-inline: auto;
-			padding: 0.25em;
+			padding-inline: 0.25em;
 			text-shadow: 0.125em 0.125em 0.125em black;
 			text-transform: capitalize;
 			width: fit-content;
+			word-spacing: 0.125em;
 		}
 		.nav-links {
-			border: 2px solid yellow;
+			// border: 2px solid yellow;
 			display: flex;
+			font-size: 1.0625em;
 			justify-content: space-between;
 			margin-inline: auto;
-			// margin-top: 1em;
-
-			// wrap: wrap;
-			width: 90%;
+			margin-block-end: -0.5em;
+			padding-block-end: 0;
+			width: 80%;
 		}
 	}
 </style>

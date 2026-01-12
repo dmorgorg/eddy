@@ -1,11 +1,13 @@
 <script>
-	let { name, channelType } = $props();
+	let { name, channelType = $bindable() } = $props();
 </script>
 
 <button
 	onclick={() => {
 		channelType = name;
 	}}
+	class:active={channelType === name}
+	class="nav-link"
 >
 	{name}
 </button>
@@ -16,6 +18,7 @@
 		border: none;
 		box-shadow: none;
 		color: var(--bg);
+		cursor: pointer;
 		font-size: 1.25em;
 		font-weight: normal;
 		outline: none;
@@ -23,5 +26,15 @@
 		padding-inline: 0;
 		text-shadow: none;
 		text-transform: capitalize;
+
+		&:hover {
+			color: black;
+		}
+
+		&.active {
+			color: black;
+			// font-weight: bold;
+			text-shadow: 0.0625em 0.0625em 0 black;
+		}
 	}
 </style>
