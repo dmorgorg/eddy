@@ -51,14 +51,12 @@
 		</p>
 		<p>
 			By default, this calculator uses {@html ki(`${defaultSdigs}`)} significant digits for input values
-			and answers (or {@html ki(`${sD + 1}`)} significant digits if the first non-zero digit is a {@html ki(
-				`1`
-			)}, e.g. {@html ki(`${sd(0.23456789, defaultSdigs)}`)} but {@html ki(
+			and answers (or {@html ki(`${sD + 1}`)} significant digits if the first non-zero digit is a one,
+			e.g. {@html ki(`${sd(0.23456789, defaultSdigs)}`)} but {@html ki(
 				`${sd(0.123456789, defaultSdigs)}`
 			)}). Interim calculations are to {@html ki(`${defaultWdigs}`)} significant digits (or
-			{@html ki(`${wD + 1}`)} in the case of a leading
-			{@html ki(`1`)}) to avoid the accumulation of rounding errors. You can modify these default
-			values here:
+			{@html ki(`${wD + 1}`)} in the case of a leading one) to avoid the accumulation of rounding errors.
+			You can modify these default values here:
 		</p>
 		<div class="digs">
 			<p class="bold">Digits for inputs and results:</p>

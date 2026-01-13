@@ -1,28 +1,79 @@
 :root {
-    --bg: #fff;
-    --primaryColor: #008d8a;
+	--bg: #fff;
+	--primaryColor: #008d8a;
 }
 
 /* apply a natural box layout model to all elements, but allowing components to change */
 html {
-  box-sizing: border-box;
+	box-sizing: border-box;
 }
 
 *,
 *:before,
 *:after {
-  box-sizing: inherit;
+	box-sizing: inherit;
 }
 
 .katex {
-  font-size: 105%;
-  color: var(--primaryColor);
+	font-size: 105%;
+	color: var(--primaryColor);
 }
-/* .katex-display > .katex,
-.katex-inline > .katex {
-  color: var(--primaryColor);
-} */
 
 .hide {
-    display: none;
-  }
+	display: none;
+}
+
+input[type='range'] {
+	-webkit-appearance: none;
+	width: 20%;
+	background: transparent;
+}
+input[type='range']:focus {
+	outline: none; /* Removes the blue border. You should probably do some kind of focus styling for accessibility reasons though. */
+}
+
+input[type='range']::-ms-track {
+	width: 20%;
+	cursor: pointer;
+
+	/* Hides the slider so custom styles can be added */
+	background: transparent;
+	border-color: transparent;
+	color: transparent;
+}
+
+input[type='range']::-webkit-slider-thumb {
+	-webkit-appearance: none;
+	border: 1px solid #000000;
+	border: none;
+	height: 16px;
+	width: 16px;
+	border-radius: 50%;
+	background: var(--primaryColor);
+	/* cursor: pointer; */
+	margin-top: -14px; /* You need to specify a margin in Chrome, but in Firefox and IE it is automatic */
+}
+
+input[type='range']::-moz-range-thumb {
+	/* box-shadow:
+		1px 1px 1px #000000,
+		0px 0px 1px #0d0d0d;
+	border: 1px solid #000000; */
+	height: 16px;
+	width: 16px;
+	border-radius: 50%;
+	background: #ffffff;
+	/* cursor: pointer; */
+}
+
+input[type='range']::-ms-thumb {
+	/* box-shadow: 1px 1px 1px #000000, 0px 0px 1px #0d0d0d; */
+	/* border: 1px solid #000000;
+     */
+	border: none;
+	height: 16px;
+	width: 16px;
+	border-radius: 50%;
+	background: #ffffff;
+	/* cursor: pointer; */
+}
