@@ -66,31 +66,52 @@
 					(2-6)
 					<input type="number" bind:value={sD} min="2" max="6" />
 					<input type="range" bind:value={sD} min="2" max="6" />
-					<span>{@html ki(`${sd(0.23456789, sD)}`)}</span>
+					<span>{@html ki(`${sd(0.023456789, sD)}`)}</span>
 				</label>
 				<label>
 					Extra digit for leading one:
 					<input type="checkbox" bind:checked={extraDig} />
 					{#if extraDig}
-						Yes, extra digit
+						e.g., <span>{@html ki(`${sd(0.123456789, sD)}`)}</span>
 					{:else}
-						No extra digit
+						e.g., <span>{@html ki(`${sd(0.123456789, sD, false)}`)}</span>
+					{/if}
+				</label>
+			</div>
+			<p class="bold">Digits for interim calculations:</p>
+			<div class="wdigs">
+				<!-- <label> -->
+				<label>
+					({sD}-8)
+					<input type="number" bind:value={wD} min={sD} max="8" />
+					<input type="range" bind:value={wD} min={sD} max="8" />
+					<span>{@html ki(`${sd(0.023456789, wD)}`)}</span>
+				</label>
+				<label>
+					Extra digit for leading one:
+					<input type="checkbox" bind:checked={extraDig} />
+					{#if extraDig}
+						e.g., <span>{@html ki(`${sd(0.123456789, wD)}`)}</span>
+					{:else}
+						e.g., <span>{@html ki(`${sd(0.123456789, wD, false)}`)}</span>
 					{/if}
 				</label>
 			</div>
 		</div>
 	</section>
+	<br />bottom
 {/if}
 
 <style lang="scss">
 	section {
 		padding-inline: 3em;
 
-		.sdigs {
+		.sdigs,
+		.wdigs {
 			margin-block-start: -1em;
 			margin-inline: auto;
 			padding-block: 0;
-			width: 90%;
+			width: 100%;
 
 			label {
 				display: block;
@@ -104,14 +125,15 @@
 				display: inline;
 				margin-inline: 1em;
 			}
-			input[type='checkbox'] {
+			input[type='checkbox'],
+			input[type='range'] {
 				vertical-align: middle;
 			}
 
 			span {
 				font-size: 120%;
 				// margin-inline: 1em;
-				vertical-align: top;
+				// vertical-align: top;
 			}
 		}
 		.bold {
