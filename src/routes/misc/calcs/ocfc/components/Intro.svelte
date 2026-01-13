@@ -1,6 +1,6 @@
 <script>
 	import { fly } from 'svelte/transition';
-	import { ki } from '$lib/utils';
+	import { ki, sd } from '$lib/utils';
 
 	const defaultSdigs = 3;
 	const defaultWdigs = 5;
@@ -9,11 +9,11 @@
 
 	let channelType = $state('rectangular');
 	let isVisible = $state(true);
-	let sd = $state(defaultSdigs);
-	let sdigs = $derived(sd);
+	let sD = $state(defaultSdigs);
+	let sdigs = $derived(sD);
 	// let sdigs = $state(defaultSdigs);
-	let wd = $state(defaultWdigs);
-	let wdigs = $derived(wd < sdigs ? sdigs : wd);
+	let wD = $state(defaultWdigs);
+	let wdigs = $derived(wD < sdigs ? sdigs : wD);
 	let extraDig = $state(defaultExtraDig);
 	let extraWorkingDig = $state(defaultExtraWorkingDig);
 
@@ -51,15 +51,28 @@
 		</p>
 		<p>
 			By default, this calculator uses {@html ki(`${defaultSdigs}`)} significant digits for input values
-			and answers (or {@html ki(`${sd + 1}`)} significant digits if the first non-zero digit is a {@html ki(
+			and answers (or {@html ki(`${sD + 1}`)} significant digits if the first non-zero digit is a {@html ki(
 				`1`
-			)}, e.g. {@html ki(`0.234`)} but {@html ki(`0.1234`)}). Interim calculations are to {@html ki(
-				`${defaultWdigs}`
-			)} significant digits (or
-			{@html ki(`${wd + 1}`)} in the case of a leading
+			)}, e.g. {@html ki(`${sd(0.23456789, defaultSdigs)}`)} but {@html ki(
+				`${sd(0.123456789, defaultSdigs)}`
+			)}). Interim calculations are to {@html ki(`${defaultWdigs}`)} significant digits (or
+			{@html ki(`${wD + 1}`)} in the case of a leading
 			{@html ki(`1`)}) to avoid the accumulation of rounding errors. You can modify these default
 			values here:
 		</p>
+		<div class="digs">
+			<div class="sdigs">
+				<label>
+					<p>Digits for inputs and results:</p>
+					<p class="inputs">
+						(2-6)
+						<input type="number" bind:value={sD} min="2" max="6" />
+						<input type="range" bind:value={sD} min="2" max="6" />
+						<span>{@html ki(`${sd(0.23456789, sD)}`)}</span>
+					</p>
+				</label>
+			</div>
+		</div>
 	</section>
 {/if}
 
@@ -67,11 +80,28 @@
 	section {
 		padding-inline: 3em;
 		p {
-			font-size: 110%;
+			font-size: 120%;
+			line-height: 1.4em;
 			margin-block: 1em;
 			span {
 				font-weight: bold;
 				letter-spacing: -0.03em;
+			}
+			&.inputs {
+				margin-block-start: -0.5em;
+				margin-inline: auto;
+				width: 85%;
+
+				input {
+					display: inline;
+					margin-inline: 1em;
+				}
+
+				span {
+					font-size: 120%;
+					// margin-inline: 1em;
+					vertical-align: top;
+				}
 			}
 		}
 	}

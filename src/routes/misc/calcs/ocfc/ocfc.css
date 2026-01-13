@@ -15,7 +15,7 @@ html {
 }
 
 .katex {
-  font-size: 120%;
+  font-size: 105%;
   color: var(--primaryColor);
 }
 /* .katex-display > .katex,
