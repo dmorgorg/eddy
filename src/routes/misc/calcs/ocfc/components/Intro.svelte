@@ -61,26 +61,23 @@
 			values here:
 		</p>
 		<div class="digs">
+			<p class="bold">Digits for inputs and results:</p>
 			<div class="sdigs">
+				<!-- <label> -->
 				<label>
-					<p>Digits for inputs and results:</p>
-					<p class="inputs">
-						(2-6)
-						<input type="number" bind:value={sD} min="2" max="6" />
-						<input type="range" bind:value={sD} min="2" max="6" />
-						<span>{@html ki(`${sd(0.23456789, sD)}`)}</span>
-					</p>
+					(2-6)
+					<input type="number" bind:value={sD} min="2" max="6" />
+					<input type="range" bind:value={sD} min="2" max="6" />
+					<span>{@html ki(`${sd(0.23456789, sD)}`)}</span>
 				</label>
 				<label>
-					<p>
-						Extra digit for leading {@html ki(`1`)}:
-						<input type="checkbox" bind:checked={extraDig} />
-						<!-- {#if extraDig}
-                          Yes
-                        {:else}
-                          No
-                        {/if} -->
-					</p>
+					Extra digit for leading one:
+					<input type="checkbox" bind:checked={extraDig} />
+					{#if extraDig}
+						Yes, extra digit
+					{:else}
+						No extra digit
+					{/if}
 				</label>
 			</div>
 		</div>
@@ -90,6 +87,39 @@
 <style lang="scss">
 	section {
 		padding-inline: 3em;
+
+		.sdigs {
+			margin-block-start: -1em;
+			margin-inline: auto;
+			padding-block: 0;
+			width: 90%;
+
+			label {
+				display: block;
+				font-size: 120%;
+				// line-height: 0;
+				// padding: 0;
+				// margin: 0;
+			}
+
+			input {
+				display: inline;
+				margin-inline: 1em;
+			}
+			input[type='checkbox'] {
+				vertical-align: middle;
+			}
+
+			span {
+				font-size: 120%;
+				// margin-inline: 1em;
+				vertical-align: top;
+			}
+		}
+		.bold {
+			font-weight: bold;
+		}
+
 		p {
 			font-size: 120%;
 			line-height: 1.4em;
@@ -97,25 +127,6 @@
 			span {
 				font-weight: bold;
 				letter-spacing: -0.03em;
-			}
-			&.inputs {
-				margin-block-start: -0.5em;
-				margin-inline: auto;
-				width: 90%;
-
-				input {
-					display: inline;
-					margin-inline: 1em;
-				}
-				// input[type='range'] {
-				// 	background: yellow;
-				// }
-
-				span {
-					font-size: 120%;
-					// margin-inline: 1em;
-					vertical-align: top;
-				}
 			}
 		}
 	}
