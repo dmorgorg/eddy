@@ -89,8 +89,8 @@
 				</label>
 				<label>
 					Extra digit for leading one:
-					<input type="checkbox" bind:checked={extraDig} />
-					{#if extraDig}
+					<input type="checkbox" bind:checked={extraWorkingDig} />
+					{#if extraWorkingDig}
 						e.g., <span>{@html ki(`${sd(0.123456789, wD)}`)}</span>
 					{:else}
 						e.g., <span>{@html ki(`${sd(0.123456789, wD, false)}`)}</span>
