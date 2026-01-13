@@ -110,9 +110,9 @@
 		.wdigs {
 			margin-block-start: -1em;
 			// margin-inline: auto;
-			margin-inline-start: 2.5%;
+			margin-inline-start: 0;
 			padding-block: 0;
-			width: 97.5%;
+			width: 100%;
 
 			label {
 				display: block;
