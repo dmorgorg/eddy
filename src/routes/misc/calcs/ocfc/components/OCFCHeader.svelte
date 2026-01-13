@@ -4,7 +4,7 @@
 </script>
 
 <nav class="nav">
-	<div class="nav-title">open channel flow calcul8r</div>
+	<div class="nav-title">open channel flow calculator</div>
 	<div class="nav-links">
 		<!-- changes to channelType by clicking a NavLink component will be reflected here in the parent -->
 		<NavLink name={'rectangular'} bind:channelType />

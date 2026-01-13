@@ -12,10 +12,10 @@
 	</Card>
 	<Card header="Calcul8rs" theme="orange" secondary="#CB6015">
 		<div class="flex">
-			<a href="/misc/calcs/alcohol">UK Alcohol Units Calcul8r</a>
-			<a href="/misc/calcs/vax">Vaccine Efficacy Calcul8r</a>
+			<a href="/misc/calcs/alcohol">UK Alcohol Units Calculator</a>
+			<a href="/misc/calcs/vax">Vaccine Efficacy Calculator</a>
 			<a href="/misc/calcs/fuelConverter">Metric/Imperial Fuel Converter</a>
-			<a href="/misc/calcs/ocfc"><s>Open Channel Flow Calcul8r</s></a>
+			<a href="/misc/calcs/ocfc"><s>Open Channel Flow Calculator</s></a>
 		</div>
 	</Card>
 
