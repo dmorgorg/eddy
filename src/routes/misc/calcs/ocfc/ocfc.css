@@ -16,11 +16,12 @@ html {
 
 .katex {
   font-size: 120%;
-}
-.katex-display > .katex,
-.katex-inline > .katex {
   color: var(--primaryColor);
 }
+/* .katex-display > .katex,
+.katex-inline > .katex {
+  color: var(--primaryColor);
+} */
 
 .hide {
     display: none;
