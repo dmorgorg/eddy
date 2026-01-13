@@ -71,6 +71,17 @@
 						<span>{@html ki(`${sd(0.23456789, sD)}`)}</span>
 					</p>
 				</label>
+				<label>
+					<p>
+						Extra digit for leading {@html ki(`1`)}:
+						<input type="checkbox" bind:checked={extraDig} />
+						<!-- {#if extraDig}
+                          Yes
+                        {:else}
+                          No
+                        {/if} -->
+					</p>
+				</label>
 			</div>
 		</div>
 	</section>
@@ -90,12 +101,15 @@
 			&.inputs {
 				margin-block-start: -0.5em;
 				margin-inline: auto;
-				width: 85%;
+				width: 90%;
 
 				input {
 					display: inline;
 					margin-inline: 1em;
 				}
+				// input[type='range'] {
+				// 	background: yellow;
+				// }
 
 				span {
 					font-size: 120%;
