@@ -56,7 +56,7 @@
 				`${sd(0.123456789, defaultSdigs)}`
 			)}). Interim calculations are to {@html ki(`${defaultWdigs}`)} significant digits (or
 			{@html ki(`${wD + 1}`)} in the case of a leading one) to avoid the accumulation of rounding errors.
-			You can modify these default values here:
+			You can modify these default values below:
 		</p>
 		<div class="digs">
 			<p class="bold">Digits for inputs and results:</p>
@@ -109,9 +109,10 @@
 		.sdigs,
 		.wdigs {
 			margin-block-start: -1em;
-			margin-inline: auto;
+			// margin-inline: auto;
+			margin-inline-start: 5%;
 			padding-block: 0;
-			width: 100%;
+			width: 95%;
 
 			label {
 				display: block;
@@ -125,9 +126,16 @@
 				display: inline;
 				margin-inline: 1em;
 			}
-			input[type='checkbox'],
+			input[type='number'] {
+				width: 4em;
+			}
 			input[type='range'] {
 				vertical-align: middle;
+				width: 8em;
+			}
+			input[type='checkbox'] {
+				vertical-align: middle;
+				// width: 8em;
 			}
 
 			span {
