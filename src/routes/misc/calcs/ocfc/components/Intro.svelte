@@ -110,9 +110,9 @@
 		.wdigs {
 			margin-block-start: -1em;
 			// margin-inline: auto;
-			margin-inline-start: 5%;
+			margin-inline-start: 2.5%;
 			padding-block: 0;
-			width: 95%;
+			width: 97.5%;
 
 			label {
 				display: block;
@@ -127,11 +127,11 @@
 				margin-inline: 1em;
 			}
 			input[type='number'] {
-				width: 4em;
+				width: 3em;
 			}
 			input[type='range'] {
 				vertical-align: middle;
-				width: 8em;
+				width: 7em;
 			}
 			input[type='checkbox'] {
 				vertical-align: middle;
