@@ -10,10 +10,10 @@
 	let channelType = $state('rectangular');
 	let isVisible = $state(true);
 	let sD = $state(defaultSdigs);
-	let sdigs = $derived(sD);
+	// let sdigs = $derived(sD);
 	// let sdigs = $state(defaultSdigs);
 	let wD = $state(defaultWdigs);
-	let wdigs = $derived(wD < sdigs ? sdigs : wD);
+	wD = wD < sD ? sD : wD;
 	let extraDig = $state(defaultExtraDig);
 	let extraWorkingDig = $state(defaultExtraWorkingDig);
 
@@ -117,9 +117,10 @@
 			label {
 				display: block;
 				font-size: 120%;
-				// line-height: 0;
-				// padding: 0;
-				// margin: 0;
+				margin-inline: auto;
+				// border: 1px solid var black;
+				// background: yellow;
+				width: fit-content;
 			}
 
 			input {
