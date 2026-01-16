@@ -1,29 +1,35 @@
 <script>
-	import { fly } from 'svelte/transition';
+	import { slide } from 'svelte/transition';
 	import { ki, sd } from '$lib/utils';
 
+	const defaultSdigsMin = 2;
+	const defaultSdigsMax = 6;
+	const defaultWdigsMin = 2;
+	const defaultWdigsMax = 8;
 	const defaultSdigs = 3;
 	const defaultWdigs = 5;
 	const defaultExtraDig = true;
 	const defaultExtraWorkingDig = true;
 
 	let channelType = $state('rectangular');
-	let isVisible = $state(true);
+	let isVisible = $state(false);
 	let sD = $state(defaultSdigs);
-	// let sdigs = $derived(sD);
-	// let sdigs = $state(defaultSdigs);
 	let wD = $state(defaultWdigs);
-	wD = wD < sD ? sD : wD;
 	let extraDig = $state(defaultExtraDig);
 	let extraWorkingDig = $state(defaultExtraWorkingDig);
 
 	const toggle = () => {
 		isVisible = !isVisible;
 	};
+	const handleChange = () => {
+		if (wD < sD) {
+			wD = sD;
+		}
+	};
 </script>
 
 {#if isVisible}
-	<section>
+	<section transition:slide>
 		<p>
 			The calculator on this page is for <span>normal</span> (uniform) flow and for
 			<span>critical</span>
@@ -54,9 +60,10 @@
 			and answers (or {@html ki(`${sD + 1}`)} significant digits if the first non-zero digit is a one,
 			e.g. {@html ki(`${sd(0.23456789, defaultSdigs)}`)} but {@html ki(
 				`${sd(0.123456789, defaultSdigs)}`
-			)}). Interim calculations are to {@html ki(`${defaultWdigs}`)} significant digits (or
+			)}). Interim working calculations default to {@html ki(`${defaultWdigs}`)} significant digits (or
 			{@html ki(`${wD + 1}`)} in the case of a leading one) to avoid the accumulation of rounding errors.
-			You can modify these default values below:
+			Interim working precision may not be less than that for inputs and results. You can modify these
+			default values below:
 		</p>
 		<div class="digs">
 			<p class="bold">Digits for inputs and results:</p>
@@ -64,9 +71,21 @@
 				<!-- <label> -->
 				<label>
 					(2-6)
-					<input type="number" bind:value={sD} min="2" max="6" />
-					<input type="range" bind:value={sD} min="2" max="6" />
-					<span>{@html ki(`${sd(0.023456789, sD)}`)}</span>
+					<input
+						type="number"
+						bind:value={sD}
+						min={defaultSdigsMin}
+						max={defaultSdigsMax}
+						onchange={handleChange}
+					/>
+					<input
+						type="range"
+						bind:value={sD}
+						min={defaultSdigsMin}
+						max={defaultSdigsMax}
+						onchange={handleChange}
+					/>
+					<span>{@html ki(`${sd(0.023456789, sD)}`)}, {@html ki(`${sd(0.223456789, sD)}`)}</span>
 				</label>
 				<label>
 					Extra digit for leading one:
@@ -83,8 +102,8 @@
 				<!-- <label> -->
 				<label>
 					({sD}-8)
-					<input type="number" bind:value={wD} min={sD} max="8" />
-					<input type="range" bind:value={wD} min={sD} max="8" />
+					<input type="number" bind:value={wD} min={sD} max={defaultWdigsMax} />
+					<input type="range" bind:value={wD} min={sD} max={defaultWdigsMax} />
 					<span>{@html ki(`${sd(0.023456789, wD)}`)}</span>
 				</label>
 				<label>
@@ -99,8 +118,20 @@
 			</div>
 		</div>
 	</section>
-	<br />bottom
 {/if}
+
+<div class="toggle-btn">
+	<button onclick={toggle}>
+		{#if isVisible}
+			Hide Information &nbsp; &nbsp; &#9650;
+		{:else}
+			Show Information &nbsp; &nbsp; &#9660;
+		{/if}
+	</button>
+</div>
+<br />
+
+<br />
 
 <style lang="scss">
 	section {
@@ -108,7 +139,7 @@
 
 		.sdigs,
 		.wdigs {
-			margin-block-start: -1em;
+			margin-block-start: -0.5em;
 			// margin-inline: auto;
 			margin-inline-start: 0;
 			padding-block: 0;
@@ -118,8 +149,6 @@
 				display: block;
 				font-size: 120%;
 				margin-inline: auto;
-				// border: 1px solid var black;
-				// background: yellow;
 				width: fit-content;
 			}
 
@@ -141,8 +170,6 @@
 
 			span {
 				font-size: 120%;
-				// margin-inline: 1em;
-				// vertical-align: top;
 			}
 		}
 		.bold {
@@ -156,6 +183,27 @@
 			span {
 				font-weight: bold;
 				letter-spacing: -0.03em;
+			}
+		}
+	}
+	div.toggle-btn {
+		// border: 2px solid yellowgreen;
+		display: flex;
+		justify-content: center;
+		margin-top: 1em;
+		width: 100%;
+		button {
+			background-color: var(--primaryColor);
+			border: none;
+			color: white;
+			cursor: pointer;
+			outline: none;
+			text-shadow: none;
+			font-size: 110%;
+			padding: 0.5em 1em;
+
+			&:hover {
+				color: black;
 			}
 		}
 	}
