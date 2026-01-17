@@ -2,5 +2,4 @@
 	import Intro from '../Intro.svelte';
 </script>
 
-update test
-<Intro />
+<Intro channelType="rectangular" />

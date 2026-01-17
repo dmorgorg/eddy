@@ -2,6 +2,8 @@
 	import { slide } from 'svelte/transition';
 	import { ki, sd } from '$lib/utils';
 
+	let { channelType = 'rectangular' } = $props();
+
 	const defaultSdigsMin = 2;
 	const defaultSdigsMax = 6;
 	const defaultWdigsMin = 2;
@@ -11,7 +13,7 @@
 	const defaultExtraDig = true;
 	const defaultExtraWorkingDig = true;
 
-	let channelType = $state('rectangular');
+	// let channelType = $state('rectangular');
 	let isVisible = $state(false);
 	let sD = $state(defaultSdigs);
 	let wD = $state(defaultWdigs);
