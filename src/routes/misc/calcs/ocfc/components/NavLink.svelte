@@ -1,10 +1,14 @@
 <script>
+	import { digits } from '../digits.svelte.js';
 	let { name, channelType = $bindable() } = $props();
 </script>
 
 <button
 	onclick={() => {
-		channelType = name;
+		digits.isIntroVisible = false;
+		setTimeout(() => {
+			channelType = name;
+		}, 500);
 	}}
 	class:active={channelType === name}
 	class="nav-link"

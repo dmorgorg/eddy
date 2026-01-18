@@ -1,36 +1,31 @@
 <script>
 	import { slide } from 'svelte/transition';
 	import { ki, sd } from '$lib/utils';
+	// global 'store' for precision
+	import { digits } from '../digits.svelte.js';
 
-	let { channelType = 'rectangular' } = $props();
+	let { channelType } = $props();
 
 	const defaultSdigsMin = 2;
 	const defaultSdigsMax = 6;
-	const defaultWdigsMin = 2;
 	const defaultWdigsMax = 8;
 	const defaultSdigs = 3;
 	const defaultWdigs = 5;
-	const defaultExtraDig = true;
-	const defaultExtraWorkingDig = true;
-
-	// let channelType = $state('rectangular');
-	let isVisible = $state(false);
-	let sD = $state(defaultSdigs);
-	let wD = $state(defaultWdigs);
-	let extraDig = $state(defaultExtraDig);
-	let extraWorkingDig = $state(defaultExtraWorkingDig);
+	// const defaultExtraDig = true;
+	// const defaultExtraWorkingDig = false;
+	let isIntroVisible = $state(false);
 
 	const toggle = () => {
-		isVisible = !isVisible;
+		digits.isIntroVisible = !digits.isIntroVisible;
 	};
 	const handleChange = () => {
-		if (wD < sD) {
-			wD = sD;
+		if (digits.wdigs < digits.sdigs) {
+			digits.wdigs = digits.sdigs;
 		}
 	};
 </script>
 
-{#if isVisible}
+{#if digits.isIntroVisible}
 	<section transition:slide>
 		<p>
 			The calculator on this page is for <span>normal</span> (uniform) flow and for
@@ -59,13 +54,13 @@
 		</p>
 		<p>
 			By default, this calculator uses {@html ki(`${defaultSdigs}`)} significant digits for input values
-			and answers (or {@html ki(`${sD + 1}`)} significant digits if the first non-zero digit is a one,
-			e.g. {@html ki(`${sd(0.23456789, defaultSdigs)}`)} but {@html ki(
+			and answers (or {@html ki(`${digits.sdigs + 1}`)} significant digits if the first non-zero digit
+			is a one, e.g. {@html ki(`${sd(0.23456789, defaultSdigs)}`)} but {@html ki(
 				`${sd(0.123456789, defaultSdigs)}`
 			)}). Interim working calculations default to {@html ki(`${defaultWdigs}`)} significant digits (or
-			{@html ki(`${wD + 1}`)} in the case of a leading one) to avoid the accumulation of rounding errors.
-			Interim working precision may not be less than that for inputs and results. You can modify these
-			default values below:
+			{@html ki(`${digits.wdigs + 1}`)} in the case of a leading one) to avoid the accumulation of rounding
+			errors. Interim working precision may not be less than that for inputs and results. You can modify
+			these default values below:
 		</p>
 		<div class="digs">
 			<p class="bold">Digits for inputs and results:</p>
@@ -75,27 +70,31 @@
 					(2-6)
 					<input
 						type="number"
-						bind:value={sD}
+						bind:value={digits.sdigs}
 						min={defaultSdigsMin}
 						max={defaultSdigsMax}
 						onchange={handleChange}
 					/>
 					<input
 						type="range"
-						bind:value={sD}
+						bind:value={digits.sdigs}
 						min={defaultSdigsMin}
 						max={defaultSdigsMax}
 						onchange={handleChange}
 					/>
-					<span>{@html ki(`${sd(0.023456789, sD)}`)}, {@html ki(`${sd(0.223456789, sD)}`)}</span>
+					<span
+						>{@html ki(`${sd(0.023456789, digits.sdigs)}`)}, {@html ki(
+							`${sd(0.223456789, digits.sdigs)}`
+						)}</span
+					>
 				</label>
 				<label>
 					Extra digit for leading one:
-					<input type="checkbox" bind:checked={extraDig} />
-					{#if extraDig}
-						e.g., <span>{@html ki(`${sd(0.123456789, sD)}`)}</span>
+					<input type="checkbox" bind:checked={digits.extraForSdigs} />
+					{#if digits.extraForSdigs}
+						e.g., <span>{@html ki(`${sd(0.123456789, digits.sdigs)}`)}</span>
 					{:else}
-						e.g., <span>{@html ki(`${sd(0.123456789, sD, false)}`)}</span>
+						e.g., <span>{@html ki(`${sd(0.123456789, digits.sdigs, false)}`)}</span>
 					{/if}
 				</label>
 			</div>
@@ -103,18 +102,18 @@
 			<div class="wdigs">
 				<!-- <label> -->
 				<label>
-					({sD}-8)
-					<input type="number" bind:value={wD} min={sD} max={defaultWdigsMax} />
-					<input type="range" bind:value={wD} min={sD} max={defaultWdigsMax} />
-					<span>{@html ki(`${sd(0.023456789, wD)}`)}</span>
+					({digits.sdigs}-8)
+					<input type="number" bind:value={digits.wdigs} min={digits.sdigs} max={defaultWdigsMax} />
+					<input type="range" bind:value={digits.wdigs} min={digits.sdigs} max={defaultWdigsMax} />
+					<span>{@html ki(`${sd(0.023456789, digits.wdigs)}`)}</span>
 				</label>
 				<label>
 					Extra digit for leading one:
-					<input type="checkbox" bind:checked={extraWorkingDig} />
-					{#if extraWorkingDig}
-						e.g., <span>{@html ki(`${sd(0.123456789, wD)}`)}</span>
+					<input type="checkbox" bind:checked={digits.extraForWdigs} />
+					{#if digits.extraForWdigs}
+						e.g., <span>{@html ki(`${sd(0.123456789, digits.wdigs)}`)}</span>
 					{:else}
-						e.g., <span>{@html ki(`${sd(0.123456789, wD, false)}`)}</span>
+						e.g., <span>{@html ki(`${sd(0.123456789, digits.wdigs, false)}`)}</span>
 					{/if}
 				</label>
 			</div>
@@ -124,7 +123,7 @@
 
 <div class="toggle-btn">
 	<button onclick={toggle}>
-		{#if isVisible}
+		{#if digits.isIntroVisible}
 			Hide Information &nbsp; &nbsp; &#9650;
 		{:else}
 			Show Information &nbsp; &nbsp; &#9660;

@@ -1,4 +1,5 @@
 <script>
+	import { digits } from './digits.svelte.js';
 	import HomeLink from '$lib/components/HomeLink.svelte';
 	import OCFCHeader from './components/OCFCHeader.svelte';
 	import Rectangular from './components/channels/Rectangular.svelte';
