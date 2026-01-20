@@ -1,13 +1,28 @@
 <script>
-	// import { digits } from '../../digits.svelte.js';
+	import { digits } from '../../digits.svelte.js';
 	import Intro from '../Intro.svelte';
-	// import UpdateTest from '../UpdateTest.svelte';
-	// let { sdigs, wdigs, extraForSdigs, extraForWdigs } = digits;
-	// digits.sdigs = 42;
+	import YorQ from '../YorQ.svelte';
+	import RectangularQ from './RectangularQ.svelte';
+	import RectangularY from './RectangularY.svelte';
+	let { sdigs, wdigs, extraForSdigs, extraForWdigs } = digits;
+	let yorq = 'rectangularY';
+	let channelType = 'rectangular';
 </script>
 
 <Intro channelType="rectangular" />
-<!-- <UpdateTest /> -->
-<!-- Outside: {digits.sdigs}, wdigs: {digits.wdigs}, extraForSdigs: {digits.extraForSdigs
-	? 'true'
-	: 'false'}, extraForWdigs: {digits.extraForWdigs ? 'true' : 'false'} -->
+
+{#if !digits.isIntroVisible}
+	<YorQ bind:yorq {channelType} />
+	selected: {yorq}
+	<div class:hide={yorq !== 'rectangularY'}>
+		<RectangularY />
+	</div>
+	<div class:hide={yorq !== 'rectangularQ'}>
+		<RectangularQ />
+	</div>
+{/if}
+<!-- <style>
+	.katex {
+		font-size: 120%;
+	}
+</style> -->

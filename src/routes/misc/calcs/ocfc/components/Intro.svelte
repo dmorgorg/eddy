@@ -11,9 +11,7 @@
 	const defaultWdigsMax = 8;
 	const defaultSdigs = 3;
 	const defaultWdigs = 5;
-	// const defaultExtraDig = true;
-	// const defaultExtraWorkingDig = false;
-	let isIntroVisible = $state(false);
+	// let isIntroVisible = $state(false);
 
 	const toggle = () => {
 		digits.isIntroVisible = !digits.isIntroVisible;
@@ -58,7 +56,7 @@
 			is a one, e.g. {@html ki(`${sd(0.23456789, defaultSdigs)}`)} but {@html ki(
 				`${sd(0.123456789, defaultSdigs)}`
 			)}). Interim working calculations default to {@html ki(`${defaultWdigs}`)} significant digits (or
-			{@html ki(`${digits.wdigs + 1}`)} in the case of a leading one) to avoid the accumulation of rounding
+			{@html ki(`${defaultWdigs + 1}`)} in the case of a leading one) to avoid the accumulation of rounding
 			errors. Interim working precision may not be less than that for inputs and results. You can modify
 			these default values below:
 		</p>
@@ -82,11 +80,7 @@
 						max={defaultSdigsMax}
 						onchange={handleChange}
 					/>
-					<span
-						>{@html ki(`${sd(0.023456789, digits.sdigs)}`)}, {@html ki(
-							`${sd(0.223456789, digits.sdigs)}`
-						)}</span
-					>
+					e.g.,<span> {@html ki(`${sd(0.023456789, digits.sdigs)}`)} </span>
 				</label>
 				<label>
 					Extra digit for leading one:
@@ -105,7 +99,7 @@
 					({digits.sdigs}-8)
 					<input type="number" bind:value={digits.wdigs} min={digits.sdigs} max={defaultWdigsMax} />
 					<input type="range" bind:value={digits.wdigs} min={digits.sdigs} max={defaultWdigsMax} />
-					<span>{@html ki(`${sd(0.023456789, digits.wdigs)}`)}</span>
+					e.g.,<span>{@html ki(`${sd(0.023456789, digits.wdigs)}`)}</span>
 				</label>
 				<label>
 					Extra digit for leading one:

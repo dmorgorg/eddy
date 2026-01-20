@@ -15,8 +15,14 @@ html {
 }
 
 .katex {
-	font-size: 105%;
+	font-size: 110%;
 	color: var(--primaryColor);
+	color: black;
+}
+.katex-display > .katex,
+.katex-inline > .katex {
+	color: var(--primaryColor);
+	color: blue;
 }
 
 .hide {
@@ -29,3 +35,13 @@ input[type='number'] {
 	accent-color: var(--primaryColor);
 	background: #c1cdcd;
 }
+
+/* label.yQlayout input[type='radio'] {
+	appearance: none;
+	-webkit-appearance: none;
+	-moz-appearance: none;
+	border: none;
+	opacity: 0;
+	width: 0;
+	height: 0;
+} */

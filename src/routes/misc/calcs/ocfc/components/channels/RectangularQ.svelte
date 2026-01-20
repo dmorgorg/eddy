@@ -5,7 +5,8 @@
 
 <article>
 	<section>
-		<h2>Rectangular Channel - Flow Depth</h2>
-		<RectangularY />
+		<!-- <h2>Rectangular Channel - Flow Depth</h2> -->
+		<!-- <RectangularY /> -->
+		component rectangular Q
 	</section>
 </article>
