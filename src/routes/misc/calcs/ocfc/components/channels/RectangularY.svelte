@@ -1,12 +1,9 @@
 <script>
-	import RectangularY from './RectangularY.svelte';
-	import RectangularQ from './RectangularQ.svelte';
+	import RectangularCanvas from './RectangularCanvas.svelte';
 </script>
 
 <article>
 	<section>
-		<!-- <h2>Rectangular Channel - Flow Depth</h2> -->
-		<!-- <RectangularY /> -->
-		component rectangular y
+		<RectangularCanvas />
 	</section>
 </article>

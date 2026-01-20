@@ -90,10 +90,10 @@ export default function updateCanvas() {
 				startX - arrowSize * Math.cos(angleRad - Math.PI - arrowAngle),
 				startY + arrowSize * Math.sin(angleRad - Math.PI - arrowAngle)
 			);
-			ctx.lineTo(
-				startX - arrowSize * Math.cos(angleRad - Math.PI + arrowAngle),
-				startY + arrowSize * Math.sin(angleRad - Math.PI + arrowAngle)
-			);
+			// ctx.lineTo(
+			// 	startX - arrowSize * Math.cos(angleRad - Math.PI + arrowAngle),
+			// 	startY + arrowSize * Math.sin(angleRad - Math.PI + arrowAngle)
+			// );
 			ctx.closePath();
 			ctx.stroke();
 			ctx.fill();
