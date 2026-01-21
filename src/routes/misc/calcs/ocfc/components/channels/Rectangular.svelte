@@ -13,7 +13,7 @@
 
 {#if !digits.isIntroVisible}
 	<YorQ bind:yorq {channelType} />
-	selected: {yorq}
+	<!-- selected: {yorq} -->
 	<div class:hide={yorq !== 'rectangularY'}>
 		<RectangularY />
 	</div>
@@ -21,8 +21,9 @@
 		<RectangularQ />
 	</div>
 {/if}
-<!-- <style>
-	.katex {
-		font-size: 120%;
+
+<style>
+	.hide {
+		display: none !important;
 	}
-</style> -->
+</style>
