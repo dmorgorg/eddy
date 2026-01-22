@@ -31,9 +31,10 @@
 		// }
 		.yQLayout {
 			display: flex;
-			align-items: flex-end;
+			// align-items: flex-end;
 			gap: 0.25rem;
 			// background: green;
+			margin-bottom: -1em;
 		}
 
 		input[type='radio'] {
@@ -56,7 +57,8 @@
 			margin-bottom: 0.25em;
 			border-style: solid;
 			border-width: 1px;
-			border-color: var(--primaryColor);
+			// border-color: var(--primaryColor);
+			border-color: black;
 		}
 
 		label input[type='radio']:checked + *::before {

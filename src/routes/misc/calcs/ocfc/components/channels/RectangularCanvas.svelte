@@ -5,8 +5,15 @@
 
 	import { ki } from '$lib/utilities';
 
-	/** @type {{ base: number, depth: number, yOrQ?: 'y' | 'Q' }} */
-	let { base = $bindable(), depth = $bindable(), yOrQ = 'y' } = $props();
+	/** @type {{ base: number, depth: number, yOrQ?: 'y' | 'Q', baseLabelPos?: {x: number, y: number}, depthLabelPos?: {x: number, y: number}, children?: import('svelte').Snippet }} */
+	let {
+		base = $bindable(),
+		depth = $bindable(),
+		yOrQ = 'y',
+		baseLabelPos = $bindable({ x: 0, y: 0 }),
+		depthLabelPos = $bindable({ x: 0, y: 0 }),
+		children
+	} = $props();
 
 	// Tweened values using Tween.of() to track reactive state
 	const tweenedBase = Tween.of(() => base, {
@@ -23,7 +30,7 @@
 	const canvasWidth = 400;
 	const maxCanvasHeight = 300; // Maximum canvas height
 	const minChannelSize = 40; // Minimum channel width and depth in pixels
-	const padding = 40;
+	const padding = 30;
 	const wallExtension = 20; // How much the walls extend above water level
 	const maxAspectRatio = 6; // Max ratio before breaking aspect ratio (b > 6y or y > 6b)
 
@@ -32,27 +39,35 @@
 		const ratio = b / d;
 		let visualBase = b;
 		let visualDepth = d;
+		let aspectRatioMaintained = true;
 
 		if (ratio > maxAspectRatio) {
 			// Too wide (b > 6y) - clamp visual depth
 			visualDepth = b / maxAspectRatio;
+			aspectRatioMaintained = false;
 		} else if (ratio < 1 / maxAspectRatio) {
 			// Too tall (y > 6b) - clamp visual base
 			visualBase = d / maxAspectRatio;
+			aspectRatioMaintained = false;
 		}
 
-		return { visualBase, visualDepth };
+		return { visualBase, visualDepth, aspectRatioMaintained };
 	}
 
 	// Calculate scale that fits within canvas constraints
-	function getScale(visualBase, visualDepth) {
+	function getScale(visualBase, visualDepth, aspectRatioMaintained) {
 		const maxChannelWidth = canvasWidth - 2 * padding;
 		const maxChannelHeight = maxCanvasHeight - wallExtension - 2 * padding - 10;
 
 		const scaleX = maxChannelWidth / Math.max(visualBase, 0.1);
 		const scaleY = maxChannelHeight / Math.max(visualDepth, 0.1);
 
-		return Math.min(scaleX, scaleY);
+		let scale = Math.min(scaleX, scaleY);
+		// Scale down to 80% when maintaining aspect ratio
+		if (aspectRatioMaintained) {
+			scale *= 0.8;
+		}
+		return scale;
 	}
 
 	// Calculate canvas height based on channel proportions
@@ -60,8 +75,8 @@
 		const b = tweenedBase.current;
 		const d = tweenedDepth.current;
 
-		const { visualBase, visualDepth } = getVisualDimensions(b, d);
-		const scale = getScale(visualBase, visualDepth);
+		const { visualBase, visualDepth, aspectRatioMaintained } = getVisualDimensions(b, d);
+		const scale = getScale(visualBase, visualDepth, aspectRatioMaintained);
 
 		// Calculate drawn dimensions with minimum size constraints
 		const drawHeight = Math.max(visualDepth * scale, minChannelSize);
@@ -77,11 +92,11 @@
 		if (!ctx) return;
 
 		// Clear canvas
-		ctx.clearRect(0, 0, canvasWidth, height);
+		// ctx.clearRect(0, 0, canvasWidth, height);
 
 		// Get visual dimensions (clamped by aspect ratio)
-		const { visualBase, visualDepth } = getVisualDimensions(b, d);
-		const scale = getScale(visualBase, visualDepth);
+		const { visualBase, visualDepth, aspectRatioMaintained } = getVisualDimensions(b, d);
+		const scale = getScale(visualBase, visualDepth, aspectRatioMaintained);
 
 		// Calculate drawn dimensions, enforcing minimum sizes
 		const drawWidth = Math.max(visualBase * scale, minChannelSize);
@@ -89,7 +104,7 @@
 
 		// Center the channel horizontally, position at bottom with padding
 		const startX = (canvasWidth - drawWidth) / 2;
-		const startY = height - padding;
+		const startY = height - 1.5 * padding;
 
 		// Draw water fillrgba(100, 149, 237, 0.05)
 		ctx.fillStyle = '#008d8a';
@@ -174,8 +189,8 @@
 			const arrowBottom = startY;
 			const arrowHeadSize = 8;
 
-			ctx.strokeStyle = '#fff';
-			ctx.fillStyle = '#fff';
+			ctx.strokeStyle = '#000';
+			ctx.fillStyle = '#000';
 			ctx.lineWidth = 2;
 
 			// Vertical line
@@ -205,10 +220,6 @@
 	}
 
 	let canvasEl = $state(null);
-
-	// Label positions (updated during draw)
-	let baseLabelPos = $state({ x: 0, y: 0 });
-	let depthLabelPos = $state({ x: 0, y: 0 });
 
 	function bindCanvas(node) {
 		canvasEl = node;
@@ -242,23 +253,8 @@
 
 <div class="channel-container">
 	<div class="canvas-wrapper">
-		<canvas use:bindCanvas width={canvasWidth} height={canvasHeight()}> </canvas>
-		<label
-			class="input-label base-label"
-			style="left: {baseLabelPos.x}px; top: {baseLabelPos.y}px;"
-		>
-			<span class="var-name">{@html ki('b =')}</span>
-			<input type="number" bind:value={base} min="0.1" step="0.1" />
-			<span class="unit">{@html ki('\\mathsf{m}')}</span>
-		</label>
-		<label
-			class="input-label depth-label"
-			style="left: {depthLabelPos.x}px; top: {depthLabelPos.y}px;"
-		>
-			<span class="var-name">{@html ki(yOrQ === 'Q' ? 'Q =' : 'y =')}</span>
-			<input type="number" bind:value={depth} min="0.1" step="0.1" />
-			<span class="unit">{@html ki(yOrQ === 'Q' ? '\\mathsf{m^3/s}' : '\\mathsf{m}')}</span>
-		</label>
+		<canvas use:bindCanvas width={canvasWidth} height={canvasHeight}> </canvas>
+		{#if children}{@render children()}{/if}
 	</div>
 </div>
 
@@ -275,48 +271,17 @@
 
 	.canvas-wrapper {
 		position: relative;
-		display: inline-block;
+		/* display: inline-block; */
 		/* background-color: yellow; */
+		/* border: 1px solid red; */
 		margin-bottom: 0.5em;
-		margin-top: -3em;
+		/* margin-top: -3em; */
 	}
 
 	canvas {
 		border: none;
 		background: inherit;
-	}
-
-	.input-label {
-		position: absolute;
-		white-space: nowrap;
-		display: flex;
-		align-items: center;
-		gap: 4px;
-		background: white;
-		border: 1px solid black;
-		padding: 2px 6px;
-		border-radius: 3px;
-	}
-
-	.input-label input[type='number'] {
-		width: 60px;
-		padding: 2px 4px;
-		border: 1px solid #ccc;
-		border-radius: 3px;
-		font-size: 0.9rem;
-		text-align: center;
-	}
-
-	.input-label input[type='number']:focus {
-		outline: none;
-		border-color: var(--primaryColor, #008d8a);
-	}
-
-	.base-label {
-		transform: translateX(-50%);
-	}
-
-	.depth-label {
-		transform: translate(-50%, -50%);
+		/* border: 1px solid blue; */
+		/* margin-top: -1em; */
 	}
 </style>

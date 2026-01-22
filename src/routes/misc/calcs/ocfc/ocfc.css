@@ -34,6 +34,7 @@ input[type='checkbox'],
 input[type='number'] {
 	accent-color: var(--primaryColor);
 	background: #c1cdcd;
+	/* background: red; */
 }
 
 /* label.yQlayout input[type='radio'] {

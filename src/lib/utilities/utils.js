@@ -37,20 +37,3 @@ export const sd = (/** @type {any} */ num, /** @type {number} */ digs, extra = t
 	// num = Number(num);
 	return +num.toPrecision(digs);
 };
-/**
- * @typedef {Object} DebounceOptions
- * @property {number} [delay] - The delay in milliseconds before the function is called
- */
-
-// https://www.freecodecamp.org/news/javascript-debounce-example/
-export const debounce = (/** @type {(arg0: any) => void} */ func, delay = 2000) => {
-	/** @type {ReturnType<typeof setTimeout> | undefined} */
-	let timer;
-	return (/** @type {any[]} */ ...args) => {
-		clearTimeout(timer);
-		timer = setTimeout(() => {
-			// @ts-ignore
-			func.apply(this, args);
-		}, delay);
-	};
-};

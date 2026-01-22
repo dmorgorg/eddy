@@ -152,7 +152,7 @@
 				margin-inline: 1em;
 			}
 			input[type='number'] {
-				width: 3em;
+				width: 4em;
 			}
 			input[type='range'] {
 				vertical-align: middle;
@@ -190,6 +190,7 @@
 		button {
 			background-color: var(--primaryColor);
 			border: none;
+			border: 1px solid black;
 			color: white;
 			cursor: pointer;
 			outline: none;
