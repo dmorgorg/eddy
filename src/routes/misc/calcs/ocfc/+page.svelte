@@ -44,10 +44,13 @@
 		display: flex;
 		flex-direction: column;
 		font-size: 1em;
+		padding-bottom: 2em;
 		// justify-content: start;
 		// margin-inline: auto;
 		// text-align: center;
-		max-width: 550px;
+		// max-width: 550px;
+		width: 100%;
+		// background: pink;
 	}
 
 	// h1.title {
