@@ -34,7 +34,8 @@
 <style lang="scss">
 	.outer {
 		background-color: var(--bg);
-		font-size: 0.75em;
+		// just for finer control of home link font-size
+		font-size: 0.65em;
 		min-height: 100vh;
 		width: 100%;
 	}
@@ -50,7 +51,7 @@
 		padding-bottom: 2em;
 		margin-inline: auto;
 		width: fit-content;
-		background: yellow;
+		// background: yellow;
 	}
 
 	// h1.title {

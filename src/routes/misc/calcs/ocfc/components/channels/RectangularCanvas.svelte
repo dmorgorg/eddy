@@ -15,6 +15,7 @@
 
 <style>
 	div {
-		border: 10px solid red;
+		border: 2px solid black;
+		background: white;
 	}
 </style>

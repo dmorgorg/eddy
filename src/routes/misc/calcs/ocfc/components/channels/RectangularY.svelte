@@ -111,8 +111,8 @@
 		margin: 0;
 	}
 	article {
-		border: 2px solid green;
-		background: pink;
+		// border: 2px solid green;
+		// background: pink;
 		margin-inline: auto;
 	}
 </style>
