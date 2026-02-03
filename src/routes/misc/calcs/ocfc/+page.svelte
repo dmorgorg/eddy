@@ -43,11 +43,12 @@
 	.inner {
 		background-color: inherit;
 		display: flex;
+		flex-direction: column;
 		font-size: 1em;
-		padding: 0;
+		padding: 1em;
 		padding-bottom: 2em;
 		margin-inline: auto;
-		// width: 60%;
+		width: fit-content;
 		background: yellow;
 	}
 

@@ -113,5 +113,6 @@
 	article {
 		border: 2px solid green;
 		background: pink;
+		margin-inline: auto;
 	}
 </style>
