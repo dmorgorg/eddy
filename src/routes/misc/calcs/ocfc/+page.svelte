@@ -1,13 +1,13 @@
 <script>
-	import { digits } from './digits.svelte.js';
-	import HomeLink from '$lib/components/HomeLink.svelte';
-	import OCFCHeader from './components/OCFCHeader.svelte';
-	import Rectangular from './components/channels/Rectangular.svelte';
-	import Triangular from './components/channels/Triangular.svelte';
-	import Trapezoidal from './components/channels/Trapezoidal.svelte';
-	import Circular from './components/channels/Circular.svelte';
+	// import { digits } from './digits.svelte.js'
+	import HomeLink from '$lib/components/HomeLink.svelte'
+	import OCFCHeader from './components/OCFCHeader.svelte'
+	import Rectangular from './components/channels/Rectangular.svelte'
+	import Triangular from './components/channels/Triangular.svelte'
+	import Trapezoidal from './components/channels/Trapezoidal.svelte'
+	import Circular from './components/channels/Circular.svelte'
 
-	let channelType = $state('rectangular');
+	let channelType = $state('rectangular')
 </script>
 
 <div class="outer">
@@ -38,19 +38,17 @@
 		min-height: 100vh;
 		width: 100%;
 	}
+	// this sets the width of content and should be modified with media queries
+	// width determined by the space taken up by inputs-row
 	.inner {
-		align-items: center;
 		background-color: inherit;
 		display: flex;
-		flex-direction: column;
 		font-size: 1em;
+		padding: 0;
 		padding-bottom: 2em;
-		// justify-content: start;
-		// margin-inline: auto;
-		// text-align: center;
-		// max-width: 550px;
-		width: 100%;
-		// background: pink;
+		margin-inline: auto;
+		// width: 60%;
+		background: yellow;
 	}
 
 	// h1.title {

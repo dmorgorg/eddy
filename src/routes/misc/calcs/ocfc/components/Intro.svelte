@@ -1,26 +1,26 @@
 <script>
-	import { slide } from 'svelte/transition';
-	import { ki, sd } from '$lib/utils';
+	import { slide } from 'svelte/transition'
+	import { ki, sd } from '$lib/utils'
 	// global 'store' for precision
-	import { digits } from '../digits.svelte.js';
+	import { digits } from '../digits.svelte.js'
 
-	let { channelType } = $props();
+	let { channelType } = $props()
 
-	const defaultSdigsMin = 2;
-	const defaultSdigsMax = 6;
-	const defaultWdigsMax = 8;
-	const defaultSdigs = 3;
-	const defaultWdigs = 5;
+	const defaultSdigsMin = 2
+	const defaultSdigsMax = 6
+	const defaultWdigsMax = 8
+	const defaultSdigs = 3
+	const defaultWdigs = 5
 	// let isIntroVisible = $state(false);
 
 	const toggle = () => {
-		digits.isIntroVisible = !digits.isIntroVisible;
-	};
+		digits.isIntroVisible = !digits.isIntroVisible
+	}
 	const handleChange = () => {
 		if (digits.wdigs < digits.sdigs) {
-			digits.wdigs = digits.sdigs;
+			digits.wdigs = digits.sdigs
 		}
-	};
+	}
 </script>
 
 {#if digits.isIntroVisible}
@@ -46,8 +46,8 @@
 		<p>
 			{#if channelType !== 'triangular'}
 				<span>Note</span> that, for a {channelType}
-				channel, {@html ki(`y`)} cannot be determined analytically from {@html ki(`Q`)} and is found
-				using an iterative method.
+				channel, {@html ki(`y`)} cannot be determined analytically from {@html ki(`Q`)} and is found using
+				an iterative method.
 			{/if}
 		</p>
 		<p>
@@ -80,7 +80,7 @@
 						max={defaultSdigsMax}
 						onchange={handleChange}
 					/>
-					e.g.,<span> {@html ki(`${sd(0.023456789, digits.sdigs)}`)} </span>
+					e.g., <span> {@html ki(`${sd(0.023456789, digits.sdigs)}`)} </span>
 				</label>
 				<label>
 					Extra digit for leading one:
@@ -99,7 +99,7 @@
 					({digits.sdigs}-8)
 					<input type="number" bind:value={digits.wdigs} min={digits.sdigs} max={defaultWdigsMax} />
 					<input type="range" bind:value={digits.wdigs} min={digits.sdigs} max={defaultWdigsMax} />
-					e.g.,<span>{@html ki(`${sd(0.023456789, digits.wdigs)}`)}</span>
+					e.g., <span>{@html ki(`${sd(0.023456789, digits.wdigs)}`)}</span>
 				</label>
 				<label>
 					Extra digit for leading one:
@@ -164,7 +164,7 @@
 			}
 
 			span {
-				font-size: 120%;
+				font-size: 100%;
 			}
 		}
 		.bold {
@@ -189,8 +189,8 @@
 		width: 100%;
 		button {
 			background-color: var(--primaryColor);
-			border: none;
 			border: 1px solid black;
+			box-shadow: 2px 2px 6px #c1cdcd;
 			color: white;
 			cursor: pointer;
 			outline: none;

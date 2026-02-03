@@ -1,8 +1,10 @@
 <script>
-	import { ki } from '$lib/utilities';
-	let { yorq = $bindable(), channelType } = $props();
-	let y = channelType + 'Y';
-	let q = channelType + 'Q';
+	import { ki } from '$lib/utilities'
+	let { yorq = $bindable(), channelType } = $props()
+	// svelte-ignore state_referenced_locally
+	let y = channelType + 'Y'
+	// svelte-ignore state_referenced_locally
+	let q = channelType + 'Q'
 </script>
 
 <section class="radios">
@@ -43,6 +45,7 @@
 			-moz-appearance: none;
 			border: none;
 			background-color: inherit;
+			// box-shadow: 2px 2px 4px #c1cdcd;
 			position: absolute;
 		}
 		label input[type='radio'] + *::before {
@@ -59,6 +62,7 @@
 			border-width: 1px;
 			// border-color: var(--primaryColor);
 			border-color: black;
+			box-shadow: 1px 1px 2px #c1cdcd;
 		}
 
 		label input[type='radio']:checked + *::before {

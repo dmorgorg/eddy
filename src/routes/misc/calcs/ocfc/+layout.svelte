@@ -1,6 +1,6 @@
 <script>
-	import './ocfc.css';
-	let { children } = $props();
+	import './ocfc.css'
+	let { children } = $props()
 </script>
 
 {@render children()}

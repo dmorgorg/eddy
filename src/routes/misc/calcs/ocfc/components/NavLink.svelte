@@ -5,6 +5,7 @@
 
 <button
 	onclick={() => {
+		// shut intro on change of component
 		digits.isIntroVisible = false;
 		setTimeout(() => {
 			channelType = name;
