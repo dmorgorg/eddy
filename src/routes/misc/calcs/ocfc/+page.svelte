@@ -42,10 +42,11 @@
 	// width determined by the space taken up by inputs-row
 	.inner {
 		background-color: inherit;
-		display: flex;
-		flex-direction: column;
+		// display: flex;
+		// flex-direction: column;
 		font-size: 1em;
 		padding: 1em;
+		padding: 0;
 		padding-bottom: 2em;
 		margin-inline: auto;
 		width: fit-content;
