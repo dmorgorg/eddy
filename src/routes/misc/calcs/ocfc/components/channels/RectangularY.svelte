@@ -3,15 +3,18 @@
 	import { ki, kd, sd, debounce } from '$lib/utilities/utils.js'
 
 	// initial values
-	const initBase = '3.00'
-	const initDepth = '1.500'
+	const initBase = '1'
+	// const initDepth = '1.500'
+	const initDepth = '1'
 	const initSlope = 0.1
 	const initN = 0.013
 	const initG = 9.81
 
 	let base = $state(initBase)
 	let depth = $state(initDepth)
-	let aspectRatio = $derived(Math.min(Math.max(Number(base) / Number(depth), 1 / 6), 8))
+	let aspectRatio = $derived(
+		Math.round(Math.min(Math.max(Number(base) / Number(depth), 1 / 6), 8) * 100) / 100
+	)
 
 	// let base = $state(initBase)
 	// let depth = $state(initDepth)
@@ -23,7 +26,7 @@
 <article>
 	<section><RectangularCanvas {aspectRatio} /></section>
 	<label class="shrink">
-		Width:
+		Base:
 		<input type="number" bind:value={base} step="any" min="0" />
 		<span class="unit">{@html ki('\\mathsf{m}')}</span>
 	</label>
@@ -34,7 +37,6 @@
 		<span class="unit">{@html ki('\\mathsf{m}')}</span>
 	</label>
 
-	<p>Aspect ratio: {aspectRatio.toFixed(2)}</p>
 	<section>
 		<div class="inputs-row">
 			<label>
@@ -59,7 +61,7 @@
 	.inputs-row {
 		display: flex;
 		gap: 1em;
-		justify-content: space-around;
+		justify-content: center;
 		margin: 0 auto;
 		// border: 1px solid black;
 	}
@@ -77,7 +79,7 @@
 
 		&.shrink {
 			width: fit-content;
-			// color: yellow;
+			margin-inline: auto;
 		}
 	}
 
@@ -111,8 +113,8 @@
 		margin: 0;
 	}
 	article {
-		// border: 2px solid green;
-		// background: pink;
+		border: 2px solid green;
 		margin-inline: auto;
+		width: 38em;
 	}
 </style>
