@@ -113,7 +113,7 @@
 		margin: 0;
 	}
 	article {
-		border: 2px solid green;
+		// border: 2px solid green;
 		margin-inline: auto;
 		width: 38em;
 	}
