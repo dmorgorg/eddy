@@ -59,8 +59,9 @@
 
 <style lang="scss">
 	.inputs-row {
+		// font-size: 80%;
 		display: flex;
-		gap: 1em;
+		gap: 0.5em;
 		justify-content: center;
 		margin: 0 auto;
 		// border: 1px solid black;
@@ -84,13 +85,12 @@
 	}
 
 	input[type='number'] {
-		width: 5em;
-		padding: 0.125em;
+		width: 4em;
 		padding: 0;
 		border: 1px solid #ccc;
 		border: 0.125em solid #c1cdcd;
 		border-radius: 3px;
-		font-size: 0.9rem;
+		font-size: 0.75rem;
 		text-align: center;
 		-moz-appearance: textfield;
 		appearance: textfield;

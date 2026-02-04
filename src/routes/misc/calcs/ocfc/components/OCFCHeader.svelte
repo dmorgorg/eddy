@@ -5,7 +5,7 @@
 </script>
 
 <nav class="nav">
-	<div class="nav-title">open channel flow calculator</div>
+	<div class="nav-title">open channel<br /> normal & critical flow calculator</div>
 	<div class="nav-links">
 		<!-- changes to channelType by clicking a NavLink component will be reflected here in the parent -->
 		<NavLink name={'rectangular'} bind:channelType />
@@ -24,7 +24,7 @@
 			color: var(--bg);
 			margin-bottom: 0.5em; // provide room for box-shadow below
 			padding-block-end: 1em;
-			padding-block-start: 2em;
+			padding-block-start: 0.5em;
 			text-align: center;
 			width: 100%;
 			// box-shadow: 0 0.1em 0.2em rgba(0, 0, 0, 0.5);

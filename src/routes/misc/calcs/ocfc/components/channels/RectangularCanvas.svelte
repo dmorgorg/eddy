@@ -31,6 +31,9 @@
 	let stageWidth = $derived(Math.round(channelBase + 2 * paddingInlineEm * emToPx))
 	let stageHeight = $derived(Math.round(channelDepth + paddingTop + paddingBottom))
 	let channelLeft = $derived((stageWidth - channelBase) / 2)
+	let channelRight = $derived(paddingInline + channelBase)
+	let channelTop = $derived(paddingTop)
+	let channelBottom = $derived(paddingTop + channelDepth)
 </script>
 
 <!-- aspectRatio: {aspectRatio}, channelBase: {channelBase}, channelDepth: {channelDepth}, divWidth:
@@ -41,9 +44,32 @@
 		<div class="stage">
 			<Stage width={stageWidth} height={stageHeight} bind:this={stage}>
 				<Layer>
-					<Rect x={0} y={0} width={stageWidth} height={stageHeight} stroke="#000" />
-					<Rect x={channelLeft} y={20} width={channelBase} height={channelDepth} fill="#088" />
+					<!-- <Rect x={0} y={0} width={stageWidth} height={stageHeight} stroke="#000" /> -->
+					<Rect
+						x={channelLeft}
+						y={channelTop}
+						width={channelBase}
+						height={channelDepth}
+						fill="#088"
+					/>
 					<Line
+						x={0}
+						y={0}
+						points={[
+							channelLeft,
+							channelTop - paddingTop / 2,
+							channelLeft,
+							channelBottom,
+							channelRight,
+							channelBottom,
+							channelRight,
+							channelTop - paddingTop / 2
+						]}
+						stroke="black"
+						strokeWidth={3}
+						lineCap="round"
+					/>
+					<!-- <Line
 						x={20}
 						y={100}
 						points={[0, 0, 100, 0, 100, 100]}
@@ -53,7 +79,7 @@
 						fillLinearGradientStartPoint={{ x: -50, y: -50 }}
 						fillLinearGradientEndPoint={{ x: 50, y: 50 }}
 						fillLinearGradientColorStops={[0, 'red', 1, 'yellow']}
-					/>
+					/> -->
 				</Layer>
 			</Stage>
 		</div>
