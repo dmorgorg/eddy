@@ -24,18 +24,7 @@
 </script>
 
 <article>
-	<section><RectangularCanvas {aspectRatio} /></section>
-	<label class="shrink">
-		Base:
-		<input type="number" bind:value={base} step="any" min="0" />
-		<span class="unit">{@html ki('\\mathsf{m}')}</span>
-	</label>
-
-	<label class="shrink">
-		Depth:
-		<input type="number" bind:value={depth} step="any" min="0" />
-		<span class="unit">{@html ki('\\mathsf{m}')}</span>
-	</label>
+	<section><RectangularCanvas {aspectRatio} bind:base bind:depth /></section>
 
 	<section>
 		<div class="inputs-row">
@@ -90,7 +79,7 @@
 		border: 1px solid #ccc;
 		border: 0.125em solid #c1cdcd;
 		border-radius: 3px;
-		font-size: 0.75rem;
+		font-size: 0.625rem;
 		text-align: center;
 		-moz-appearance: textfield;
 		appearance: textfield;

@@ -1,14 +1,21 @@
 <script>
 	import { browser } from '$app/environment'
-	import { Stage, Layer, Rect, Line } from 'svelte-konva'
+	import { Stage, Layer, Rect, Line, Arrow } from 'svelte-konva'
+	import { ki } from '$lib/utilities/utils.js'
 
-	let { aspectRatio } = $props()
+	let { aspectRatio, base = $bindable('1'), depth = $bindable('1') } = $props()
 	let stage
 
 	const paddingTopEm = 1
 	// more space below for the Base input
 	const paddingBottomEm = 3
 	const paddingInlineEm = 1
+
+	// TWEENING CODE - COMMENTED OUT
+	// easeInOutCubic function
+	// function easeInOutCubic(t) {
+	// 	return t < 0.5 ? 4 * t * t * t : 1 - Math.pow(-2 * t + 2, 3) / 2
+	// }
 
 	let emToPx = $state(16)
 	let paddingTop = $derived(paddingTopEm * emToPx)
@@ -28,10 +35,61 @@
 		}
 	})
 	let channelDepth = $derived(Math.round(channelBase / aspectRatio))
+
+	// TWEENING CODE - COMMENTED OUT
+	// Animated values
+	// let animatedBase = $state(channelBase)
+	// let animatedDepth = $state(channelDepth)
+	// let isInitialRender = $state(true)
+	// let animationFrameId = $state(null)
+
+	// Watch for changes and animate
+	// $effect(() => {
+	// 	const targetBase = channelBase
+	// 	const targetDepth = channelDepth
+
+	// 	// Skip animation on initial render
+	// 	if (isInitialRender) {
+	// 		animatedBase = targetBase
+	// 		animatedDepth = targetDepth
+	// 		isInitialRender = false
+	// 		return
+	// 	}
+
+	// 	// Cancel any ongoing animation
+	// 	if (animationFrameId !== null) {
+	// 		cancelAnimationFrame(animationFrameId)
+	// 	}
+
+	// 	const startBase = animatedBase
+	// 	const startDepth = animatedDepth
+	// 	const duration = 500
+	// 	const startTime = performance.now()
+
+	// 	const animate = () => {
+	// 		const elapsed = performance.now() - startTime
+	// 		const progress = Math.min(elapsed / duration, 1)
+	// 		const easedProgress = easeInOutCubic(progress)
+
+	// 		animatedBase = startBase + (targetBase - startBase) * easedProgress
+	// 		animatedDepth = startDepth + (targetDepth - startDepth) * easedProgress
+
+	// 		if (progress < 1) {
+	// 			// @ts-ignore
+	// 			animationFrameId = requestAnimationFrame(animate)
+	// 		} else {
+	// 			animationFrameId = null
+	// 		}
+	// 	}
+
+	// 	// @ts-ignore
+	// 	animationFrameId = requestAnimationFrame(animate)
+	// })
+
 	let stageWidth = $derived(Math.round(channelBase + 2 * paddingInlineEm * emToPx))
 	let stageHeight = $derived(Math.round(channelDepth + paddingTop + paddingBottom))
-	let channelLeft = $derived((stageWidth - channelBase) / 2)
-	let channelRight = $derived(paddingInline + channelBase)
+	let channelLeft = $derived(paddingInline)
+	let channelRight = $derived(channelLeft + channelBase)
 	let channelTop = $derived(paddingTop)
 	let channelBottom = $derived(paddingTop + channelDepth)
 </script>
@@ -69,6 +127,38 @@
 						strokeWidth={3}
 						lineCap="round"
 					/>
+					<Arrow
+						x={0}
+						y={0}
+						points={[
+							channelLeft,
+							channelBottom + paddingBottom / 2,
+							channelRight,
+							channelBottom + paddingBottom / 2
+						]}
+						stroke="black"
+						fill="black"
+						pointerAtBeginning={true}
+						pointerLength={5}
+						pointerWidth={5}
+						strokeWidth={1.5}
+					/>
+					<Arrow
+						x={0}
+						y={0}
+						points={[
+							channelLeft + channelBase / 2,
+							channelTop + 3,
+							channelLeft + channelBase / 2,
+							channelBottom - 3
+						]}
+						stroke="black"
+						fill="black"
+						pointerAtBeginning={true}
+						pointerLength={5}
+						pointerWidth={5}
+						strokeWidth={1.5}
+					/>
 					<!-- <Line
 						x={20}
 						y={100}
@@ -80,6 +170,25 @@
 						fillLinearGradientEndPoint={{ x: 50, y: 50 }}
 						fillLinearGradientColorStops={[0, 'red', 1, 'yellow']}
 					/> -->
+					<label
+						class="base-input"
+						style="left: {channelLeft + channelBase / 2}px; top: {channelBottom +
+							paddingBottom / 2}px;"
+					>
+						<!-- Base: -->
+						<span class="unit">{@html ki('b=')}</span>
+						<input type="number" bind:value={base} step="any" min="0" />
+						<span class="unit">{@html ki('\\mathsf{m}')}</span>
+					</label>
+					<label
+						class="depth-input"
+						style="left: {channelLeft + channelBase / 2}px; top: {channelTop + channelDepth / 2}px;"
+					>
+						<!-- Depth: -->
+						<span class="unit">{@html ki('y=')}</span>
+						<input type="number" bind:value={depth} step="any" min="0" />
+						<span class="unit">{@html ki('\\mathsf{ m}')}</span>
+					</label>
 				</Layer>
 			</Stage>
 		</div>
@@ -91,5 +200,62 @@
 		/* background: pink; */
 		margin-inline: auto;
 		width: fit-content;
+		position: relative;
 	}
+
+	.base-input,
+	.depth-input {
+		position: absolute;
+		transform: translate(-50%, -50%);
+		display: flex;
+		align-items: center;
+		gap: 0.125em;
+		z-index: 10;
+		white-space: nowrap;
+		background: white;
+		border: 1px solid black;
+		/* box-shadow: 2px 2px 4px #c1cdcd; */
+		padding: 0.25em 0.625em;
+		border-radius: 3px;
+		font-size: 1em;
+	}
+
+	.base-input {
+		box-shadow: 2px 2px 4px #c1cdcd;
+	}
+
+	.base-input .unit,
+	.depth-input .unit {
+		font-size: 1em;
+	}
+
+	.base-input input,
+	.depth-input input {
+		width: 4em;
+		padding: 0;
+		border: 0.125em solid #c1cdcd;
+		border-radius: 3px;
+		/* font-size: 0.875em; */
+		text-align: center;
+		-moz-appearance: textfield;
+		appearance: textfield;
+	}
+
+	.base-input input:focus,
+	.depth-input input:focus {
+		border: 0.125em solid #088;
+		outline: none;
+	}
+
+	.base-input input::-webkit-outer-spin-button,
+	.base-input input::-webkit-inner-spin-button,
+	.depth-input input::-webkit-outer-spin-button,
+	.depth-input input::-webkit-inner-spin-button {
+		-webkit-appearance: none;
+		margin: 0;
+	}
+
+	/* .unit {
+		vertical-align: middle;
+	} */
 </style>
