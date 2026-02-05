@@ -1,5 +1,5 @@
 <script>
-	let { color = 'green' } = $props();
+	let { color = 'green' } = $props()
 </script>
 
 <a class="homelink" href="/" style="color: {color};">eduk8r.org</a>
@@ -15,7 +15,7 @@
 		padding-left: 0.375em;
 		padding-top: 0;
 		margin: 0;
-		// margin-top: -0.25em;
+		margin-top: -0.25em;
 		text-decoration: none;
 		position: absolute;
 		text-shadow: 0.025em 0.025em 0.025em black;

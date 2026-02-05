@@ -43,6 +43,8 @@
 	// width determined by the space taken up by inputs-row
 	.inner {
 		background-color: inherit;
+		// background-color: #f8f8f8;
+		// background: pink;
 		// display: flex;
 		// flex-direction: column;
 		font-size: 1em;
