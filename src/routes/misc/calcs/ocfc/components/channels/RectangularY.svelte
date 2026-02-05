@@ -1,5 +1,6 @@
 <script>
 	import RectangularCanvas from './RectangularCanvas.svelte'
+	import Card from '../Card.svelte'
 	import { ki, kd, sd, debounce } from '$lib/utilities/utils.js'
 
 	// initial values
@@ -44,6 +45,7 @@
 			</label>
 		</div>
 	</section>
+	<Card />
 </article>
 
 <style lang="scss">

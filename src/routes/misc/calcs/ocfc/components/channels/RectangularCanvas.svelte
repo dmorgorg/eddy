@@ -108,7 +108,9 @@
 						y={channelTop}
 						width={channelBase}
 						height={channelDepth}
-						fill="#088"
+						fillLinearGradientStartPoint={{ x: channelLeft, y: channelTop }}
+						fillLinearGradientEndPoint={{ x: channelLeft, y: channelBottom }}
+						fillLinearGradientColorStops={[0, '#0bb', 0.75, '#066']}
 					/>
 					<Line
 						x={0}
@@ -226,7 +228,7 @@
 
 	.base-input .unit,
 	.depth-input .unit {
-		font-size: 1em;
+		font-size: 0.925em;
 	}
 
 	.base-input input,
