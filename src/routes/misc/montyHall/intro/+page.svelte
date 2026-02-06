@@ -1,5 +1,5 @@
 <script>
-	import { ki, kd } from '$lib/utils';
+	import { ki, kd } from '$lib/utilities/utils'
 </script>
 
 <svelte:head>
@@ -60,8 +60,8 @@
 			"Dear Marilyn:<br /> <br />
 			Since you seem to enjoy coming straight to the point, I'll do the same. In the following question
 			and answer, you blew it! Let me explain. If one door is shown to be a loser, that information changes
-			the probability of either remaining choice, neither of which has any reason to be more likely,
-			to 1/2. As a professional mathematician, I'm very concerned with the general public's lack of mathematical
+			the probability of either remaining choice, neither of which has any reason to be more likely, to
+			1/2. As a professional mathematician, I'm very concerned with the general public's lack of mathematical
 			skills. Please help by confessing your error and in future being more careful."<br /> <br />
 			R. S., Ph.D., George Mason University
 		</blockquote>
@@ -117,8 +117,8 @@
 		</p>
 		<p>
 			<strong>Expected winnings with a 'DON'T&nbsp;SWITCH' strategy:</strong>
-			Guessing the door with the car behind occurs with a one in three chance. By not switching, you
-			win the car. You guess incorrectly with a two in three chance. By not switching, you win a goat.
+			Guessing the door with the car behind occurs with a one in three chance. By not switching, you win
+			the car. You guess incorrectly with a two in three chance. By not switching, you win a goat.
 			{@html kd(`
 				\\begin{aligned}
 					E[X] &= \\text{Car}\\cdot P_{\\text{guessing correctly}} \\\\
