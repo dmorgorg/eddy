@@ -1,6 +1,6 @@
 <script>
 	import { slide } from 'svelte/transition'
-	import { ki, sd } from '$lib/utils'
+	import { ki, sd } from '$lib/utilities/utils'
 	// global 'store' for precision
 	import { digits } from '../digits.svelte.js'
 
@@ -53,8 +53,8 @@
 		<p>
 			By default, this calculator uses {@html ki(`${defaultSdigs}`)} significant digits for input values
 			and answers (or {@html ki(`${digits.sdigs + 1}`)} significant digits if the first non-zero digit
-			is a one, e.g. {@html ki(`${sd(0.23456789, defaultSdigs)}`)} but {@html ki(
-				`${sd(0.123456789, defaultSdigs)}`
+			is a one, e.g. {@html ki(`${sd(0.23456789, defaultSdigs, true)}`)} but {@html ki(
+				`${sd(0.123456789, defaultSdigs, true)}`
 			)}). Interim working calculations default to {@html ki(`${defaultWdigs}`)} significant digits (or
 			{@html ki(`${defaultWdigs + 1}`)} in the case of a leading one) to avoid the accumulation of rounding
 			errors. Interim working precision may not be less than that for inputs and results. You can modify
@@ -80,13 +80,13 @@
 						max={defaultSdigsMax}
 						onchange={handleChange}
 					/>
-					e.g., <span> {@html ki(`${sd(0.023456789, digits.sdigs)}`)} </span>
+					e.g., <span> {@html ki(`${sd(0.023456789, digits.sdigs, true)}`)} </span>
 				</label>
 				<label>
 					Extra digit for leading one:
 					<input type="checkbox" bind:checked={digits.extraForSdigs} />
 					{#if digits.extraForSdigs}
-						e.g., <span>{@html ki(`${sd(0.123456789, digits.sdigs)}`)}</span>
+						e.g., <span>{@html ki(`${sd(0.123456789, digits.sdigs, true)}`)}</span>
 					{:else}
 						e.g., <span>{@html ki(`${sd(0.123456789, digits.sdigs, false)}`)}</span>
 					{/if}
@@ -99,13 +99,13 @@
 					({digits.sdigs}-8)
 					<input type="number" bind:value={digits.wdigs} min={digits.sdigs} max={defaultWdigsMax} />
 					<input type="range" bind:value={digits.wdigs} min={digits.sdigs} max={defaultWdigsMax} />
-					e.g., <span>{@html ki(`${sd(0.023456789, digits.wdigs)}`)}</span>
+					e.g., <span>{@html ki(`${sd(0.023456789, digits.wdigs, true)}`)}</span>
 				</label>
 				<label>
 					Extra digit for leading one:
 					<input type="checkbox" bind:checked={digits.extraForWdigs} />
 					{#if digits.extraForWdigs}
-						e.g., <span>{@html ki(`${sd(0.123456789, digits.wdigs)}`)}</span>
+						e.g., <span>{@html ki(`${sd(0.123456789, digits.wdigs, true)}`)}</span>
 					{:else}
 						e.g., <span>{@html ki(`${sd(0.123456789, digits.wdigs, false)}`)}</span>
 					{/if}
