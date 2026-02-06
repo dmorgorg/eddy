@@ -50,8 +50,8 @@
 		}
 
 		& > .solution {
-			border-top: 2px solid #088;
-			margin-block: 0.35em;
+			// border-top: 2px solid #088;
+			margin-block: 0.5em;
 		}
 	}
 </style>

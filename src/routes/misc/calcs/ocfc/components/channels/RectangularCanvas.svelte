@@ -1,10 +1,12 @@
 <script>
 	import { browser } from '$app/environment'
 	import { Stage, Layer, Rect, Line, Arrow } from 'svelte-konva'
-	import { ki } from '$lib/utilities/utils.js'
+	import { ki, debounce, sd } from '$lib/utilities/utils.js'
+	import { digits } from '../../digits.svelte.js'
+	import { rectY } from '../../rect.svelte'
 
-	let { aspectRatio, base = $bindable('1'), depth = $bindable('1') } = $props()
-	let stage
+	let { aspectRatio, base = $bindable(), depth = $bindable() } = $props()
+	let stage = $state()
 
 	const paddingTopEm = 1
 	// more space below for the Base input
@@ -92,10 +94,33 @@
 	let channelRight = $derived(channelLeft + channelBase)
 	let channelTop = $derived(paddingTop)
 	let channelBottom = $derived(paddingTop + channelDepth)
-</script>
 
-<!-- aspectRatio: {aspectRatio}, channelBase: {channelBase}, channelDepth: {channelDepth}, divWidth:
-{divWidth}, %: {Math.round((channelBase / divWidth) * 100) / 100} -->
+	// const processChange = debounce((e) => {
+	// 	if (e.target.id === 'base') {
+	// 		base = sd(Math.abs(Number(base)), digits.sdigs, digits.extraForSdigs)
+	// 	}
+	// 	if (e.target.id === 'depth') {
+	// 		depth = sd(Math.abs(Number(depth)), digits.sdigs, digits.extraForSdigs)
+	// 	}
+	// })
+
+	// @ts-ignore
+	const sds = (num) => {
+		return sd(num, digits.sdigs, digits.extraForSdigs)
+	}
+
+	const processChange = debounce((e) => {
+		if (e.target.id === 'base') {
+			base = sds(e.target.value)
+			// force binding back to input when backspacing/delete of trailing decimal zeros don't update
+			e.target.value = base
+		}
+		if (e.target.id === 'depth') {
+			depth = sds(e.target.value)
+			e.target.value = depth
+		}
+	})
+</script>
 
 {#if browser}
 	<div bind:clientWidth={divWidth} bind:clientHeight={divHeight}>
@@ -110,7 +135,7 @@
 						height={channelDepth}
 						fillLinearGradientStartPoint={{ x: channelLeft, y: channelTop }}
 						fillLinearGradientEndPoint={{ x: channelLeft, y: channelBottom }}
-						fillLinearGradientColorStops={[0, '#0bb', 0.75, '#066']}
+						fillLinearGradientColorStops={[0, '#0bb', 0.625, '#066']}
 					/>
 					<Line
 						x={0}
@@ -141,9 +166,9 @@
 						stroke="black"
 						fill="black"
 						pointerAtBeginning={true}
-						pointerLength={5}
-						pointerWidth={5}
-						strokeWidth={1.5}
+						pointerLength={4}
+						pointerWidth={3}
+						strokeWidth={1.25}
 					/>
 					<Arrow
 						x={0}
@@ -157,21 +182,10 @@
 						stroke="black"
 						fill="black"
 						pointerAtBeginning={true}
-						pointerLength={5}
-						pointerWidth={5}
-						strokeWidth={1.5}
+						pointerLength={4}
+						pointerWidth={3}
+						strokeWidth={1.25}
 					/>
-					<!-- <Line
-						x={20}
-						y={100}
-						points={[0, 0, 100, 0, 100, 100]}
-						tension={0.5}
-						closed
-						stroke="black"
-						fillLinearGradientStartPoint={{ x: -50, y: -50 }}
-						fillLinearGradientEndPoint={{ x: 50, y: 50 }}
-						fillLinearGradientColorStops={[0, 'red', 1, 'yellow']}
-					/> -->
 					<label
 						class="base-input"
 						style="left: {channelLeft + channelBase / 2}px; top: {channelBottom +
@@ -179,7 +193,14 @@
 					>
 						<!-- Base: -->
 						<span class="unit">{@html ki('b=')}</span>
-						<input type="number" bind:value={base} step="any" min="0" />
+						<input
+							type="number"
+							value={base}
+							step="any"
+							min="0"
+							id="base"
+							oninput={processChange}
+						/>
 						<span class="unit">{@html ki('\\mathsf{m}')}</span>
 					</label>
 					<label
@@ -188,7 +209,14 @@
 					>
 						<!-- Depth: -->
 						<span class="unit">{@html ki('y=')}</span>
-						<input type="number" bind:value={depth} step="any" min="0" />
+						<input
+							type="number"
+							value={depth}
+							step="any"
+							min="0"
+							id="depth"
+							oninput={processChange}
+						/>
 						<span class="unit">{@html ki('\\mathsf{ m}')}</span>
 					</label>
 				</Layer>

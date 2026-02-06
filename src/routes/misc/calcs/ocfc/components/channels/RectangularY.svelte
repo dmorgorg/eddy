@@ -1,8 +1,10 @@
 <script>
 	import RectangularCanvas from './RectangularCanvas.svelte'
 	import Card from '../Card.svelte'
-	import { ki, kd, sd } from '$lib/utilities/utils.js'
+	import { ki, kd, sd, debounce } from '$lib/utilities/utils.js'
 	import { digits } from '../../digits.svelte.js'
+	import { rectY } from '../../rect.svelte'
+	// let { test } = rectY
 
 	// initial values
 	const initBase = '3'
@@ -23,18 +25,35 @@
 		return sd(num, wdigs, extraForWdigs)
 	}
 
-	let bs = $state(sds(initBase))
-	let ys = $state(sds(initDepth))
+	let bs = $derived(sds(rectY.base))
+	let ys = $derived(sds(rectY.depth))
 	let aspectRatio = $derived(
 		Math.round(Math.min(Math.max(Number(bs) / Number(ys), 1 / 6), 8) * 100) / 100
 	)
 
-	let slope = $state(initSlope)
-	let n = $state(initN)
-	let g = $state(initG)
-	let ss = $derived(sds(initSlope))
-	let ns = $derived(sds(initN))
-	let gs = $derived(sds(initG))
+	// let bs = $state(+initBase)
+	// let y = $state(+initDepth)
+
+	let ss = $derived(sds(rectY.slope))
+	let ns = $derived(sds(rectY.n))
+	let gs = $derived(sds(rectY.g))
+
+	const processChange = debounce((e) => {
+		if (e.target.id === 'slope') {
+			// let slope = e.target.value
+			ss = sds(e.target.value)
+			// force binding back to input when backspacing/delete of trailing decimal zeros don't update
+			e.target.value = ss
+		}
+		if (e.target.id === 'n') {
+			ns = sds(e.target.value)
+			e.target.value = ns
+		}
+		if (e.target.id === 'g') {
+			gs = sds(e.target.value)
+			e.target.value = gs
+		}
+	})
 </script>
 
 <article>
@@ -46,10 +65,12 @@
 				<span class="var-name">{@html ki('S =')}</span>
 				<input
 					type="number"
-					bind:value={ss}
+					value={ss}
+					id="slope"
+					onkeydown={processChange}
 					min="0.001"
 					step="any"
-					style="width: {digits.sdigs > 3 ? '6em' : '4em'}"
+					style="width: {digits.sdigs > 3 ? '6em' : '5em'}"
 				/>
 				<span class="unit">{@html ki('\\%')}</span>
 			</label>
@@ -58,6 +79,8 @@
 				<input
 					type="number"
 					bind:value={ns}
+					id="n"
+					onkeydown={processChange}
 					min="0"
 					step="any"
 					style="width: {digits.sdigs > 3 ? '6em' : '4em'}"
@@ -68,6 +91,8 @@
 				<input
 					type="number"
 					bind:value={gs}
+					id="g"
+					oninput={processChange}
 					min="0"
 					step="any"
 					style="width: {digits.sdigs > 3 ? '6em' : '4em'}"
@@ -82,8 +107,7 @@
 		<div class="heading">Critical Flow</div>
 	</section>
 </article>
-
-<!-- slope: {sds(ss)}, n: {ns}, g: {gs}, test: {sds(1.2)}, test2: {sd(1.30000001, 4, true)}, {sdigs} -->
+{bs}, {ys}, {ss}, {ns}, {gs}
 
 <style lang="scss">
 	.inputs-row {
@@ -105,10 +129,10 @@
 		padding: 0.25em 0.625em;
 		border-radius: 3px;
 
-		&.shrink {
-			width: fit-content;
-			margin-inline: auto;
-		}
+		// &.shrink {
+		// 	width: fit-content;
+		// 	margin-inline: auto;
+		// }
 	}
 
 	input[type='number'] {
