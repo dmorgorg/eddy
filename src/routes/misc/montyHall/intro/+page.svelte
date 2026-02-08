@@ -22,16 +22,23 @@
 			It was popularized by Marilyn vos Savant in her "Ask Marilyn" column in 1990.
 		</p>
 		<blockquote>
-			Suppose you're on a game show, and you're given the choice of three doors: Behind one door is
-			a car; behind the others, goats. You pick a door, say No. 1, and the host, who knows what's
-			behind the doors, opens another door, say No. 3, which has a goat. He then says to you, "Do
-			you want to pick door No. 2?" Is it to your advantage to switch your choice?
+			<p>
+				Suppose you're on a game show, and you're given the choice of three doors: Behind one door
+				is a car; behind the others, goats. You pick a door, say No. 1, and the host, who knows
+				what's behind the doors, opens another door, say No. 3, which is chosen to <span
+					class="bold">always</span
+				> have a goat.
+			</p>
+			<p>
+				He then says to you, "Do you want to pick door No. 2?" Is it to your advantage to switch
+				your choice?
+			</p>
 		</blockquote>
 		<p>
 			Marilyn's answer was that you should switch doors, that in general you have a 2/3 chance of
 			winning if you switch, and only a 1/3 chance if you stick with your original choice. This
 			unleashed a torrent of critical responses (more than ten thousand in all, with about one
-			thousand coming from PhDs) &ndash; and just a few defenses.
+			thousand coming from PhDs) &ndash; and just a few defences.
 		</p>
 
 		<p>
@@ -174,7 +181,7 @@
 			}
 
 			p {
-				margin-block: 1rem;
+				margin-block: 0.5rem;
 			}
 
 			blockquote {
@@ -184,8 +191,24 @@
 				font-style: italic;
 				margin-inline: auto;
 				margin-block: 1rem;
-				padding: 0.5rem;
+				padding: 0.75rem;
 				padding-left: 1rem;
+
+				p {
+					margin-block: 0;
+
+					// & + p {
+					// 	margin-top: 0;
+					// }
+				}
+
+				span {
+					display: inline;
+
+					&.bold {
+						font-weight: bold;
+					}
+				}
 			}
 
 			h2 {
@@ -193,22 +216,28 @@
 			}
 
 			button {
-				border: 0.2vw solid var(--mutedTeal-7);
+				border: 0.2vw solid var(--terracotta);
+				border: 0.2vw solid var(--terracotta);
 				background-color: var(--lightBeige-3);
 				box-shadow: var(--shadow-4);
 				font-weight: 600;
 				font-size: clamp(16px, 1.75vw, 24px);
 				color: var(--mutedTeal-7);
+				color: var(--terracotta);
+				// color: black;
 				padding: 0.125rem;
 				padding-inline: 1rem;
 
 				text-align: right;
 
 				&:hover {
-					// text-shadow: 0.025vw 0.025vw 0.05vw purple;
-					color: white;
-					background-color: var(--mutedTeal-7);
-					border-color: var(--mutedTeal-8);
+					text-shadow: 0.025vw 0.025vw 0.05vw blue;
+					box-shadow: 0.25vw 0.25vw 0.5vw var(--terracotta);
+					color: var(--terracotta);
+					// color: black;
+					// background-color: var(--mutedTeal-7);
+					// border-color: var(--mutedTeal-8);
+					// border-color: var(--terracotta);
 				}
 
 				& a:link,

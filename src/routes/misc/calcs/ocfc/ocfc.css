@@ -16,14 +16,14 @@ html {
 
 .katex {
 	font-size: 110%;
-	color: var(--primaryColor);
+	/* color: var(--primaryColor); */
 	color: black;
 }
-.katex-display > .katex,
+/* .katex-display > .katex,
 .katex-inline > .katex {
 	color: var(--primaryColor);
 	color: blue;
-}
+} */
 
 .hide {
 	display: none;

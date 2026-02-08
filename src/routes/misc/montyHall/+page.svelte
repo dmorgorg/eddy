@@ -1,162 +1,163 @@
 <script>
-	import HomeLink from '$lib/components/HomeLink.svelte';
-	import { tick } from 'svelte';
+	import HomeLink from '$lib/components/HomeLink.svelte'
+	import { tick } from 'svelte'
 
-	let car = $state(0);
-	let guess = $state(0);
-	let open = $state(0);
-	let switchedGuess = $state(0);
-	let buttonsIndex = $state(1);
-	let gameComplete = $state(false);
-	let stickWins = $derived(car === guess && gameComplete);
-	let switchWins = $derived(car === switchedGuess && gameComplete);
-	let stickTotal = $state(0);
-	let switchTotal = $state(0);
-	let totalGames = $derived(stickTotal + switchTotal);
-	let runningSim = $state(false);
+	let car = $state(0)
+	let guess = $state(0)
+	let open = $state(0)
+	let switchedGuess = $state(0)
+	let buttonsIndex = $state(1)
+	let gameComplete = $state(false)
+	let stickWins = $derived(car === guess && gameComplete)
+	let switchWins = $derived(car === switchedGuess && gameComplete)
+	let stickTotal = $state(0)
+	let switchTotal = $state(0)
+	let totalGames = $derived(stickTotal + switchTotal)
+	let runningSim = $state(false)
 	// running various repeated simulations
-	let busy100 = $state(false);
-	let busy250 = $state(false);
-	let busy1000 = $state(false);
-	let busy = $state(false);
-	let stepThrough = $state(true);
+	let busy100 = $state(false)
+	let busy250 = $state(false)
+	let busy1000 = $state(false)
+	let busy = $state(false)
+	let stepThrough = $state(true)
 
-	let prefersReducedMotion = $state(false);
+	let prefersReducedMotion = $state(false)
 
 	if (typeof localStorage !== 'undefined') {
-		prefersReducedMotion = localStorage.getItem('prefersReducedMotion') === 'true';
+		prefersReducedMotion = localStorage.getItem('prefersReducedMotion') === 'true'
 	}
 
 	const toggleReducedMotion = () => {
-		prefersReducedMotion = !prefersReducedMotion;
+		prefersReducedMotion = !prefersReducedMotion
 		if (typeof localStorage !== 'undefined') {
-			localStorage.setItem('prefersReducedMotion', prefersReducedMotion.toString());
+			localStorage.setItem('prefersReducedMotion', prefersReducedMotion.toString())
 		}
-	};
+	}
 
 	const placeVehicle = () => {
-		car = Math.floor(Math.random() * 3) + 1;
-		buttonsIndex = 2;
+		car = Math.floor(Math.random() * 3) + 1
+		buttonsIndex = 2
 		// if (!busy) {
 		// 	stepThrough = true;
 		// }
-		stepThrough = busy ? false : true;
-	};
+		stepThrough = busy ? false : true
+	}
 	const chooseDoor = () => {
-		switchedGuess = guess = Math.floor(Math.random() * 3) + 1;
-		buttonsIndex = 3;
-	};
+		switchedGuess = guess = Math.floor(Math.random() * 3) + 1
+		buttonsIndex = 3
+	}
 	const openDoor = () => {
 		if (car === 1) {
 			if (guess === 1) {
 				// car === 1 and guess === 1 so open 2 or 3
-				open = Math.round(Math.random()) === 0 ? 2 : 3;
+				open = Math.round(Math.random()) === 0 ? 2 : 3
 			} else if (guess === 2) {
-				open = 3;
+				open = 3
 			} else {
-				open = 2;
+				open = 2
 			}
 		} else if (car === 2) {
 			if (guess === 1) {
-				open = 3;
+				open = 3
 			} else if (guess === 2) {
 				// car === 2 and guess === 2 so open 1 or 3
-				open = Math.round(Math.random()) === 0 ? 1 : 3;
+				open = Math.round(Math.random()) === 0 ? 1 : 3
 			} else {
-				open = 1;
+				open = 1
 			}
 		} else {
 			if (guess === 1) {
-				open = 2;
+				open = 2
 			} else if (guess === 2) {
-				open = 1;
+				open = 1
 			} else {
 				// car === 3, guess === 3 so open 1 or 2
-				open = Math.round(Math.random()) === 0 ? 1 : 2;
+				open = Math.round(Math.random()) === 0 ? 1 : 2
 			}
 		}
-		buttonsIndex = 4;
-	};
+		buttonsIndex = 4
+	}
 	const switchGuess = () => {
 		if (switchedGuess === 1) {
-			switchedGuess = open === 2 ? 3 : 2;
+			switchedGuess = open === 2 ? 3 : 2
 		} else if (switchedGuess === 2) {
-			switchedGuess = open === 1 ? 3 : 1;
+			switchedGuess = open === 1 ? 3 : 1
 		} else {
-			switchedGuess = open === 1 ? 2 : 1;
+			switchedGuess = open === 1 ? 2 : 1
 		}
-		buttonsIndex = 5;
-	};
+		buttonsIndex = 5
+	}
 	const isWinner = () => {
 		if (car === guess) {
-			stickTotal += 1;
+			stickTotal += 1
 		} else if (car === switchedGuess) {
-			switchTotal += 1;
+			switchTotal += 1
 		}
-		gameComplete = true;
-		buttonsIndex = 6;
-	};
+		gameComplete = true
+		buttonsIndex = 6
+	}
 	const reset = () => {
-		car = 0;
-		guess = 0;
-		open = 0;
-		switchedGuess = 0;
-		buttonsIndex = 1;
-		gameComplete = false;
-	};
+		car = 0
+		guess = 0
+		open = 0
+		switchedGuess = 0
+		buttonsIndex = 1
+		gameComplete = false
+	}
 	const zero = () => {
-		reset();
-		stickTotal = 0;
-		switchTotal = 0;
-	};
+		reset()
+		stickTotal = 0
+		switchTotal = 0
+	}
 
 	const easeInOutQuad = (/** @type {number} */ t) => {
-		return t < 0.5 ? 2 * t * t : -1 + (4 - 2 * t) * t;
-	};
+		return t < 0.5 ? 2 * t * t : -1 + (4 - 2 * t) * t
+	}
 
 	const runSimulation = async (/** @type {number} */ times) => {
 		// runningSim = true;
-		let delay = 5;
-		busy = true;
+		let delay = 5
+		busy = true
 		if (times === 100) {
-			busy100 = true;
-			delay = 37;
+			busy100 = true
+			delay = 37
 		} else if (times === 250) {
-			busy250 = true;
-			delay = 20;
+			busy250 = true
+			delay = 20
 		} else if (times === 1000) {
-			busy1000 = true;
-			delay = 5;
+			busy1000 = true
+			delay = 5
 		}
 		for (let i = 0; i < times; i++) {
-			placeVehicle();
-			chooseDoor();
-			openDoor();
-			switchGuess();
-			isWinner();
+			placeVehicle()
+			chooseDoor()
+			openDoor()
+			switchGuess()
+			isWinner()
 
 			if (!prefersReducedMotion) {
-				await new Promise((resolve) => setTimeout(resolve, delay));
+				await new Promise((resolve) => setTimeout(resolve, delay))
 			}
 		}
-		await new Promise((resolve) => setTimeout(resolve, 250));
+		await new Promise((resolve) => setTimeout(resolve, 250))
 		// runningSim = false;
 		if (times === 100) {
-			busy100 = false;
+			busy100 = false
 		} else if (times === 250) {
-			busy250 = false;
+			busy250 = false
 		} else if (times === 1000) {
-			busy1000 = false;
+			busy1000 = false
 		}
-		busy = false;
-	};
+		busy = false
+	}
 </script>
 
 <div class="outer">
-	<HomeLink color="black" />
-	<div class="wrapper">
+	<HomeLink color="var(--title)" />
+	<div class="inner">
 		<header class="title">Monty Hall Paradox &ndash; A Simul8r</header>
-		<a href="/misc/montyHall/intro"><button>What is the Monty Hall Paradox?</button></a>
+		<a href="/misc/montyHall/intro"><button class="what">What is the Monty Hall Paradox?</button></a
+		>
 
 		<div class="simWrap">
 			<div class="title">
@@ -396,6 +397,7 @@
 		</div>
 
 		<section class="buttonList">
+			<div class="title">Click to step through the simulation:</div>
 			<div>
 				<img
 					src="/montyHall/rightTransMed.png"
@@ -473,205 +475,141 @@
 </div>
 
 <style lang="scss">
-	// :root {
-	// 	scrollbar-color: unset;
-
-	// 	/* Handle */
-	// 	::-webkit-scrollbar-thumb {
-	// 		background: purple;
-	// 		border-radius: 10px;
-	// 		border: 4px solid #f8f9fa;
-	// 	}
-	// 	::-webkit-scrollbar-thumb:hover {
-	// 		background: blue;
-	// 		/* border-radius: 10px; */
-	// 		/* border: 4px solid var(--main-bg-color); */
-	// 	}
-	// 	::-webkit-scrollbar {
-	// 		width: 15px;
-	// 	}
-	// 	::-webkit-scrollbar-track {
-	// 		/* background-color: var(--scrollbar-track); */
-	// 		background-color: inherit;
-	// 	}
-	// }
 	.outer {
-		// background-color: var(--terracotta);
-		// background-color: red;
+		--bg: #afcfaf; // DarkSeaGreen --1
+		--paleBg: #ffe8cc; // DarkOrange --4
+		--title: #ff8c00; // DarkOrange
+		--darkBg: #437043; // DarkSeaGreen -3
+
+		background-color: #8fbc8f; //DarkSeaGreen
+		background-color: var(--bg); //DarkSeaGreen --primary--1
+		font-size: 0.875em;
 		min-height: 100vh;
 		max-width: 100%;
 		overflow-x: hidden; // disable overflow-x scrollbar
 		overflow-y: auto; // ensure vertical scrolling is still enabled
+		padding: 0;
 		padding-bottom: 1rem;
-		font-size: 0.75em;
+	}
 
-		button {
-			color: black;
-		}
-		.wrapper {
-			align-items: center;
-			background-color: var(--lightBeige-3);
-			background-color: #8fbc8f;
-			// background-color: red;
-			// border: 0.5vw solid var(--mutedTeal-6);
-			border-radius: 0.5vw;
-			display: flex;
-			flex-direction: column;
-			font-size: clamp(10px, 1.5vw, 24px);
-			width: min(95%, 40rem);
+	.inner {
+		align-items: center;
+		background-color: inherit;
+		display: flex;
+		flex-direction: column;
+		font-size: clamp(10px, 1.5vw, 24px);
+		margin-inline: auto;
+		padding-inline: 1.5vw;
+		padding-block: 2em;
+
+		.title {
+			color: var(--title);
+			display: inline-block;
+			font-family: 'AlkesRgIt';
+			font-weight: bold;
+			font-size: 2.5em;
+			line-height: 1;
 			margin-inline: auto;
-			padding-inline: 1.5vw;
-			padding-block: 1.5rem;
+			padding-block-start: 0.5em;
+			padding-block-end: 0.5em;
+			text-align: center;
+			text-shadow: 0.2vw 0.2vw 0.5vw #000;
+		}
 
-			.title {
-				// border: 1px solid white;
-				color: var(--mutedTeal-6);
-				color: #437043;
+		.simWrap {
+			width: 80%;
+
+			.title,
+			.result,
+			.totals {
+				// color: var(--mutedTeal-7);
+				// border: 2px solid black;
 				color: black;
-				display: inline-block;
-				font-family: 'AlkesRgIt';
-				font-weight: bold;
-				font-size: 2.5em;
+				display: flex;
+				font-family: var(--font-sans);
+				font-size: 16px;
+				font-weight: 700;
 				line-height: 1;
-				margin-inline: auto;
-				padding-block-start: 0.5em;
-				padding-block-end: 0.5em;
-				// padding-inline: 0;
+				margin: 0;
+				margin-top: 0.75rem;
+				margin-bottom: -0.75rem;
+				padding: 0;
 				text-align: center;
-				text-shadow: 0.05vw 0.1vw 0 #000;
-				// width: 100vw;
-				// border: 1px solid white;
+				text-shadow: none;
+				width: 100%;
+
+				.stick {
+					margin-inline-end: 5%;
+					width: 45%;
+				}
+				.switch {
+					margin-inline-start: 5%;
+					width: 45%;
+				}
+			}
+			// .title {
+			// 	justify-content: space-between;
+			// }
+
+			.totals {
+				min-height: 1.75rem;
+				margin-top: -4rem;
+				margin-bottom: 0.5rem;
+				text-align: center;
 			}
 
-			.simWrap {
-				// border: 2px solid red;
-				width: 70%;
-				// margin-bottom: -3em;
-
-				.title,
-				.result,
-				.totals {
-					// color: var(--mutedTeal-7);
-					// border: 2px solid black;
-					color: black;
-					display: flex;
-					font-family: var(--font-sans);
-					font-size: 16px;
-					font-weight: 700;
-					line-height: 1;
-					margin: 0;
-					margin-top: 0.75rem;
-					margin-bottom: -0.75rem;
-					padding: 0;
-					text-align: center;
-					text-shadow: none;
-					width: 100%;
-
-					.stick {
-						margin-inline-end: 5%;
-						// margin-top: -1em;
-						width: 45%;
-						// border: 1px solid yellow;
-					}
-					.switch {
-						margin-inline-start: 5%;
-						// margin-top: -1em;
-						width: 45%;
-					}
+			.result {
+				height: 3rem;
+				margin-bottom: 7rem;
+				margin-top: -7.5rem;
+				text-align: center;
+				text-shadow: 0.05vw 0.05vw 0.1vw white;
+				.stick {
+					animation: wiggle 0.5s 4;
+					margin-inline: 0;
+					width: 60%;
 				}
-				.title {
-					justify-content: space-between;
+				.switch {
+					animation: wiggle 0.5s 4;
+					margin-inline: 0;
+					width: 55%;
 				}
+			}
 
-				.totals {
-					min-height: 1.75rem;
-					margin-top: -4rem;
-					margin-bottom: 0.5rem;
-					text-align: center;
-				}
+			.simul8r {
+				display: flex;
+				gap: 10%;
+				justify-content: space-between;
+				margin-block-end: 2rem;
+				// margin-inline: 0.75vw;
+				// padding-inline: 3rem;
+				padding-block: 0;
 
-				.result {
-					height: 3rem;
-					margin-bottom: 7rem;
-					margin-top: -7.5rem;
-					text-align: center;
-					text-shadow: 0.05vw 0.05vw 0.1vw white;
-					.stick {
-						animation: wiggle 0.5s 4;
-						margin-inline: 0;
-						width: 60%;
-					}
-					.switch {
-						animation: wiggle 0.5s 4;
-						margin-inline: 0;
-						width: 55%;
-					}
-				}
+				.switch,
+				.dontSwitch {
+					background: white;
+					// background: var(--paleBg);
+					// border: 0.2vw solid var(--mutedTeal-6);
+					border: 0.3vw solid black;
+					border-radius: var(--radius-2);
+					box-shadow: var(--shadow-4);
+					column-gap: calc(0.75vw + 0.125rem);
+					display: grid;
+					grid-template-columns: 1fr 1fr 1fr;
+					grid-template-rows: 20% 30% 25% 25%;
+					margin-block-start: 1rem;
+					padding-inline: 0.2vw;
+					padding-block-start: 0.5vw;
 
-				.simul8r {
-					display: flex;
-					gap: 10%;
-					justify-content: space-between;
-					margin-block-end: 2rem;
-					// margin-inline: 0.75vw;
-					// padding-inline: 3rem;
-					padding-block: 0;
-
-					.switch,
-					.dontSwitch {
-						background: white;
-						// border: 0.2vw solid var(--mutedTeal-6);
-						border: 0.29vw solid black;
-						border-radius: var(--radius-2);
-						box-shadow: var(--shadow-4);
-						column-gap: calc(0.75vw + 0.125rem);
-						display: grid;
-						grid-template-columns: 1fr 1fr 1fr;
-						grid-template-rows: 20% 30% 25% 25%;
-						margin-block-start: 1rem;
-						padding-inline: 0.2vw;
-						padding-block-start: 0.5vw;
-
-						div {
-							margin-inline: auto;
-							text-align: center;
-						}
+					div {
+						margin-inline: auto;
+						text-align: center;
 					}
 				}
 			}
 		}
 	}
 
-	// #threeOne,
-	// #sThreeOne,
-	// #threeTwo,
-	// #sThreeTwo,
-	// #threeThree,
-	// #sThreeThree {
-	// 	border: 3px solid blue;
-	// 	// margin-top: -5.5rem;
-	// 	z-index: 0;
-	// 	.img {
-	// 		// border: 3px solid red;
-	// 	}
-	// }
-
-	.buttonList {
-		width: 100%;
-		div {
-			display: flex;
-			align-items: center;
-			img {
-				width: 6%;
-				margin-left: 1rem;
-			}
-			button {
-				text-align: center;
-				margin-right: 1rem;
-				// color: pink;
-			}
-		}
-	}
 	.win {
 		color: #437043;
 		font-family: 'awesome';
@@ -684,6 +622,45 @@
 		z-index: 1000;
 		&::before {
 			content: 'Win!';
+		}
+	}
+
+	.buttonList {
+		width: 80%;
+		// border: 1px solid black;
+		margin-block-start: 2rem;
+		margin-inline: auto;
+
+		.title {
+			color: black;
+			// display: flex;
+			font-family: var(--font-sans);
+			font-size: 16px;
+			// font-weight: 700;
+			// line-height: 1;
+			margin: 0;
+			margin-top: 0.75rem;
+			margin-bottom: 0.5rem;
+			padding: 0;
+			text-align: center;
+			text-shadow: none;
+			width: 100%;
+		}
+
+		div {
+			// border: 1px solid black;
+			display: flex;
+			align-items: center;
+			img {
+				width: 6%;
+				// margin-left: 1rem;
+			}
+			button {
+				width: 94%;
+				text-align: center;
+				margin-right: 1rem;
+				// color: var(--title);
+			}
 		}
 	}
 
@@ -714,14 +691,6 @@
 	img {
 		height: 100%;
 		width: 100%;
-		// z-index: 1000;
-		// &.raise {
-		// 	margin-top: -3vw;
-		// }
-
-		// &.scale50 {
-		// 	transform: scale(0.5);
-		// }
 	}
 
 	.hideTrans {
@@ -740,14 +709,14 @@
 	}
 
 	button {
-		border: 0.2vw solid black;
+		border: 0.3vw solid black;
 		background-color: #437043;
-		background-color: white;
+		background-color: var(--paleBg);
 		box-shadow: var(--shadow-4);
 		font-weight: normal;
 		// font-weight: bold;
-		font-size: 16px;
-		color: var(--mutedTeal-7);
+		font-size: 1.5em;
+		color: black;
 		padding: 0.125rem;
 		padding-inline: 1rem;
 		margin-block: 0.25rem;
@@ -757,9 +726,9 @@
 		width: 100%;
 
 		&:disabled {
-			background-color: var(--lightBeige-6);
-			background-color: #437043;
-			border: none;
+			background-color: var(--darkBg);
+			// background-color: #437043;
+			border: 0.3vw solid black;
 			box-shadow: none;
 			color: #8fbc8f;
 			cursor: default;
@@ -806,7 +775,7 @@
 				margin-top: 0.5rem;
 			}
 
-			.wrapper {
+			.inner {
 				// border: none;
 				width: 60%;
 				// background-color: inherit;
