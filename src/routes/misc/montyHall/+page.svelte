@@ -628,7 +628,7 @@
 	.buttonList {
 		width: 80%;
 		// border: 1px solid black;
-		margin-block-start: 2rem;
+		margin-block-start: 0.5em;
 		margin-inline: auto;
 
 		.title {
@@ -710,7 +710,7 @@
 
 	button {
 		border: 0.3vw solid black;
-		background-color: #437043;
+		// background-color: #437043;
 		background-color: var(--paleBg);
 		box-shadow: var(--shadow-4);
 		font-weight: normal;
@@ -789,12 +789,12 @@
 		// 	border: 1px solid black;
 		// }
 
-		.buttonList {
-			div {
-				button {
-					width: 100%;
-				}
-			}
-		}
+		// .buttonList {
+		// 	div {
+		// 		button {
+		// 			width: 100%;
+		// 		}
+		// 	}
+		// }
 	}
 </style>
