@@ -626,7 +626,7 @@
 	}
 
 	.buttonList {
-		width: 80%;
+		width: 90%;
 		// border: 1px solid black;
 		margin-block-start: 0.5em;
 		margin-inline: auto;
