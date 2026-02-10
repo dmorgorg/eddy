@@ -1,5 +1,5 @@
 <script>
-	import RectangularCanvas from './RectangularCanvas.svelte'
+	import RectangularYCanvas from './RectangularYCanvas.svelte'
 	import Card from '../Card.svelte'
 	import { ki, kd, sd, debounce } from '$lib/utilities/utils.js'
 	import { common, rect } from '$lib/fluids/openChannel/utils'
@@ -8,12 +8,12 @@
 	// let { test } = rectY
 
 	// initial values
-	const initBase = '3'
-	const initDepth = '1.5'
-	// const initDepth = '1'
-	const initSlope = '0.1'
-	const initN = '0.013'
-	const initG = '9.81'
+	// const initBase = '3'
+	// const initDepth = '1.5'
+	// // const initDepth = '1'
+	// const initSlope = '0.1'
+	// const initN = '0.013'
+	// const initG = '9.81'
 
 	let { sdigs, wdigs, extraForSdigs, extraForWdigs } = digits
 
@@ -71,14 +71,23 @@
 			e.target.value = ns
 		}
 		if (e.target.id === 'g') {
-			gs = sd(e.target.value, 4, false)
+			let value = e.target.value
+			// n.b. the string length counts the decimal point!
+			if (value.length > 4) {
+				console.log(value.length)
+				// allow g=9.806
+				gs = sd(value, 4)
+			} else {
+				gs = sds(value)
+			}
+			// gs = sd(e.target.value, 4, false)
 			e.target.value = gs
 		}
 	})
 </script>
 
 <article>
-	<section><RectangularCanvas {aspectRatio} bind:base={bs} bind:depth={ys} /></section>
+	<section><RectangularYCanvas {aspectRatio} bind:base={bs} bind:depth={ys} /></section>
 
 	<section>
 		<div class="inputs-row">
@@ -91,7 +100,7 @@
 					onkeydown={processChange}
 					min="0.001"
 					step="any"
-					style="width: {digits.sdigs > 3 ? '6em' : '5em'}"
+					style="width: {digits.sdigs > 3 ? '7em' : '6em'}"
 				/>
 				<span class="unit">{@html ki('\\%')}</span>
 			</label>
@@ -104,7 +113,7 @@
 					onkeydown={processChange}
 					min="0"
 					step="any"
-					style="width: {digits.sdigs > 3 ? '6em' : '4em'}"
+					style="width: {digits.sdigs > 3 ? '7em' : '6em'}"
 				/>
 			</label>
 			<label>
@@ -116,14 +125,14 @@
 					oninput={processChange}
 					min="0"
 					step="any"
-					style="width: {digits.sdigs > 3 ? '6em' : '4em'}"
+					style="width: 4em"
 				/>
 				<span class="unit">{@html ki('\\mathsf{m/s}^2')}</span>
 			</label>
 		</div>
 	</section>
 	<section class="results">
-		<div class="heading">Normal Flow</div>
+		<div class="heading">Normal (Uniform) Flow</div>
 		<Card
 			answer="Flow Area: {ki(`A = ${sds(A)}\\, \\mathsf{m^2}`)}"
 			solution={kd(`
@@ -229,7 +238,6 @@
 								bs
 							)}\\, \\mathsf{m} )^2(${gs}\\, \\mathsf{m/s^2})}}\\\\
 							&= ${yc}\\, \\mathsf{m}
-
 						\\end{aligned}
 					`)}
 		/>
@@ -274,7 +282,7 @@
 
 							\\Rightarrow S_c &= \\left(\\frac { nv_c }{ R_c^{2/3} }\\right)^2 \\\\
 							&= \\left(\\frac{${n}\\times ${vc}\\, \\mathsf{m/s} }{ (${Rc}\\, \\mathsf{m})^{2/3} }\\right)^2\\\\
-							&= ${Number(Sc) / 100} \\\\
+							&= ${sdw(Number(Sc) / 100)} \\\\
 							&= ${Sc}\\% 								
 						\\end{aligned}
 					`)}
@@ -304,11 +312,6 @@
 		box-shadow: 2px 2px 4px #c1cdcd;
 		padding: 0.25em 0.625em;
 		border-radius: 3px;
-
-		// &.shrink {
-		// 	width: fit-content;
-		// 	margin-inline: auto;
-		// }
 	}
 
 	input[type='number'] {
@@ -345,7 +348,6 @@
 		width: 38em;
 	}
 	.results {
-		// background: green;
 		margin-inline: auto;
 		width: 80%;
 	}

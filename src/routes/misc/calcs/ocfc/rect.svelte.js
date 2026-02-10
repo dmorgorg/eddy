@@ -6,3 +6,10 @@ export const rectY = $state({
 	n: 0.013,
 	g: 9.81
 })
+export const rectQ = $state({
+	base: 4,
+	Q: 1.25,
+	slope: 0.1,
+	n: 0.013,
+	g: 9.81
+})

@@ -3,7 +3,7 @@
 	import { Stage, Layer, Rect, Line, Arrow } from 'svelte-konva'
 	import { ki, debounce, sd } from '$lib/utilities/utils.js'
 	import { digits } from '../../digits.svelte.js'
-	import { rectY } from '../../rect.svelte'
+	import { rectY } from '../../rect.svelte.js'
 
 	let { aspectRatio, base = $bindable(), depth = $bindable() } = $props()
 	let stage = $state()
@@ -38,71 +38,12 @@
 	})
 	let channelDepth = $derived(Math.round(channelBase / aspectRatio))
 
-	// TWEENING CODE - COMMENTED OUT
-	// Animated values
-	// let animatedBase = $state(channelBase)
-	// let animatedDepth = $state(channelDepth)
-	// let isInitialRender = $state(true)
-	// let animationFrameId = $state(null)
-
-	// Watch for changes and animate
-	// $effect(() => {
-	// 	const targetBase = channelBase
-	// 	const targetDepth = channelDepth
-
-	// 	// Skip animation on initial render
-	// 	if (isInitialRender) {
-	// 		animatedBase = targetBase
-	// 		animatedDepth = targetDepth
-	// 		isInitialRender = false
-	// 		return
-	// 	}
-
-	// 	// Cancel any ongoing animation
-	// 	if (animationFrameId !== null) {
-	// 		cancelAnimationFrame(animationFrameId)
-	// 	}
-
-	// 	const startBase = animatedBase
-	// 	const startDepth = animatedDepth
-	// 	const duration = 500
-	// 	const startTime = performance.now()
-
-	// 	const animate = () => {
-	// 		const elapsed = performance.now() - startTime
-	// 		const progress = Math.min(elapsed / duration, 1)
-	// 		const easedProgress = easeInOutCubic(progress)
-
-	// 		animatedBase = startBase + (targetBase - startBase) * easedProgress
-	// 		animatedDepth = startDepth + (targetDepth - startDepth) * easedProgress
-
-	// 		if (progress < 1) {
-	// 			// @ts-ignore
-	// 			animationFrameId = requestAnimationFrame(animate)
-	// 		} else {
-	// 			animationFrameId = null
-	// 		}
-	// 	}
-
-	// 	// @ts-ignore
-	// 	animationFrameId = requestAnimationFrame(animate)
-	// })
-
 	let stageWidth = $derived(Math.round(channelBase + 2 * paddingInlineEm * emToPx))
 	let stageHeight = $derived(Math.round(channelDepth + paddingTop + paddingBottom))
 	let channelLeft = $derived(paddingInline)
 	let channelRight = $derived(channelLeft + channelBase)
 	let channelTop = $derived(paddingTop)
 	let channelBottom = $derived(paddingTop + channelDepth)
-
-	// const processChange = debounce((e) => {
-	// 	if (e.target.id === 'base') {
-	// 		base = sd(Math.abs(Number(base)), digits.sdigs, digits.extraForSdigs)
-	// 	}
-	// 	if (e.target.id === 'depth') {
-	// 		depth = sd(Math.abs(Number(depth)), digits.sdigs, digits.extraForSdigs)
-	// 	}
-	// })
 
 	// @ts-ignore
 	const sds = (num) => {
@@ -207,8 +148,8 @@
 						class="depth-input"
 						style="left: {channelLeft + channelBase / 2}px; top: {channelTop + channelDepth / 2}px;"
 					>
-						<!-- Depth: -->
-						<span class="unit">{@html ki('y=')}</span>
+						<!-- Q: -->
+						<span class="unit">{@html ki('Q=')}</span>
 						<input
 							type="number"
 							value={depth}
@@ -217,7 +158,7 @@
 							id="depth"
 							oninput={processChange}
 						/>
-						<span class="unit">{@html ki('\\mathsf{ m}')}</span>
+						<span class="unit">{@html ki('\\mathsf{ m^3/s}')}</span>
 					</label>
 				</Layer>
 			</Stage>
