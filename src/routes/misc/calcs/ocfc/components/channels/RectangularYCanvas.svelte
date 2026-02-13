@@ -13,12 +13,6 @@
 	const paddingBottomEm = 3
 	const paddingInlineEm = 1
 
-	// TWEENING CODE - COMMENTED OUT
-	// easeInOutCubic function
-	// function easeInOutCubic(t) {
-	// 	return t < 0.5 ? 4 * t * t * t : 1 - Math.pow(-2 * t + 2, 3) / 2
-	// }
-
 	let emToPx = $state(16)
 	let paddingTop = $derived(paddingTopEm * emToPx)
 	let paddingBottom = $derived(paddingBottomEm * emToPx)
@@ -38,71 +32,12 @@
 	})
 	let channelDepth = $derived(Math.round(channelBase / aspectRatio))
 
-	// TWEENING CODE - COMMENTED OUT
-	// Animated values
-	// let animatedBase = $state(channelBase)
-	// let animatedDepth = $state(channelDepth)
-	// let isInitialRender = $state(true)
-	// let animationFrameId = $state(null)
-
-	// Watch for changes and animate
-	// $effect(() => {
-	// 	const targetBase = channelBase
-	// 	const targetDepth = channelDepth
-
-	// 	// Skip animation on initial render
-	// 	if (isInitialRender) {
-	// 		animatedBase = targetBase
-	// 		animatedDepth = targetDepth
-	// 		isInitialRender = false
-	// 		return
-	// 	}
-
-	// 	// Cancel any ongoing animation
-	// 	if (animationFrameId !== null) {
-	// 		cancelAnimationFrame(animationFrameId)
-	// 	}
-
-	// 	const startBase = animatedBase
-	// 	const startDepth = animatedDepth
-	// 	const duration = 500
-	// 	const startTime = performance.now()
-
-	// 	const animate = () => {
-	// 		const elapsed = performance.now() - startTime
-	// 		const progress = Math.min(elapsed / duration, 1)
-	// 		const easedProgress = easeInOutCubic(progress)
-
-	// 		animatedBase = startBase + (targetBase - startBase) * easedProgress
-	// 		animatedDepth = startDepth + (targetDepth - startDepth) * easedProgress
-
-	// 		if (progress < 1) {
-	// 			// @ts-ignore
-	// 			animationFrameId = requestAnimationFrame(animate)
-	// 		} else {
-	// 			animationFrameId = null
-	// 		}
-	// 	}
-
-	// 	// @ts-ignore
-	// 	animationFrameId = requestAnimationFrame(animate)
-	// })
-
 	let stageWidth = $derived(Math.round(channelBase + 2 * paddingInlineEm * emToPx))
 	let stageHeight = $derived(Math.round(channelDepth + paddingTop + paddingBottom))
 	let channelLeft = $derived(paddingInline)
 	let channelRight = $derived(channelLeft + channelBase)
 	let channelTop = $derived(paddingTop)
 	let channelBottom = $derived(paddingTop + channelDepth)
-
-	// const processChange = debounce((e) => {
-	// 	if (e.target.id === 'base') {
-	// 		base = sd(Math.abs(Number(base)), digits.sdigs, digits.extraForSdigs)
-	// 	}
-	// 	if (e.target.id === 'depth') {
-	// 		depth = sd(Math.abs(Number(depth)), digits.sdigs, digits.extraForSdigs)
-	// 	}
-	// })
 
 	// @ts-ignore
 	const sds = (num) => {

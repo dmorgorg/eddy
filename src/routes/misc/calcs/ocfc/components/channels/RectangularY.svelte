@@ -1,5 +1,6 @@
 <script>
 	import RectangularYCanvas from './RectangularYCanvas.svelte'
+	import RYC from './RYC.svelte'
 	import Card from '../Card.svelte'
 	import { ki, kd, sd, debounce } from '$lib/utilities/utils.js'
 	import { common, rect } from '$lib/fluids/openChannel/utils'
@@ -88,6 +89,7 @@
 
 <article>
 	<section><RectangularYCanvas {aspectRatio} bind:base={bs} bind:depth={ys} /></section>
+	<section><RYC bind:base={bs} bind:depth={ys} /></section>
 
 	<section>
 		<div class="inputs-row">

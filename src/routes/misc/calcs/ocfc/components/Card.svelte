@@ -89,6 +89,10 @@
 		padding: 0.25em 0.625em;
 		padding-bottom: 0;
 
+		&:hover {
+			cursor: pointer;
+		}
+
 		// &:hover {
 		// 	box-shadow: 2px 2px 4px #8aa;
 		// 	box-shadow: 2px 2px 4px red;

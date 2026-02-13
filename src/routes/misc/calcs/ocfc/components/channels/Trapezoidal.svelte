@@ -1,5 +1,5 @@
 <script>
-	import Intro from '../Intro.svelte';
+	import Intro from '../Intro.svelte'
 </script>
 
 <Intro channelType="trapezoidal" />

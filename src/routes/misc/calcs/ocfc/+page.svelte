@@ -1,3 +1,7 @@
+<!-- <script context="module">
+	export const ssr = false
+</script> -->
+
 <script>
 	// import { digits } from './digits.svelte.js'
 	import HomeLink from '$lib/components/HomeLink.svelte'

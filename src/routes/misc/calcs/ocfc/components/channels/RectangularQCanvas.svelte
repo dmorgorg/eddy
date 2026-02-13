@@ -3,21 +3,14 @@
 	import { Stage, Layer, Rect, Line, Arrow } from 'svelte-konva'
 	import { ki, debounce, sd } from '$lib/utilities/utils.js'
 	import { digits } from '../../digits.svelte.js'
-	import { rectY } from '../../rect.svelte.js'
 
 	let { aspectRatio, base = $bindable(), depth = $bindable() } = $props()
-	let stage = $state()
+	let stage
 
 	const paddingTopEm = 1
 	// more space below for the Base input
 	const paddingBottomEm = 3
 	const paddingInlineEm = 1
-
-	// TWEENING CODE - COMMENTED OUT
-	// easeInOutCubic function
-	// function easeInOutCubic(t) {
-	// 	return t < 0.5 ? 4 * t * t * t : 1 - Math.pow(-2 * t + 2, 3) / 2
-	// }
 
 	let emToPx = $state(16)
 	let paddingTop = $derived(paddingTopEm * emToPx)
@@ -28,16 +21,14 @@
 	let channelBase = $derived.by(() => {
 		if (aspectRatio < 1) {
 			// maps aspectRatio of 1/6 to 15% of divWidth, 1 to 50% of divWidth
-			// return (Math.round(-6 / aspectRatio + 46) * (divWidth - 2 * paddingInline)) / 100
-			let depth = 20 / aspectRatio + 130
-			return depth * aspectRatio
+			let y = 20 / aspectRatio + 130
+			return y * aspectRatio
 		} else {
-			// maps aspectRatio of 1 to 6, 2 to 7, etc.
+			// maps ... todo
 			return Math.round(((60 * aspectRatio + 220) / 7) * (divWidth - 2 * paddingInline)) / 100
 		}
 	})
 	let channelDepth = $derived(Math.round(channelBase / aspectRatio))
-
 	let stageWidth = $derived(Math.round(channelBase + 2 * paddingInlineEm * emToPx))
 	let stageHeight = $derived(Math.round(channelDepth + paddingTop + paddingBottom))
 	let channelLeft = $derived(paddingInline)
@@ -164,6 +155,7 @@
 			</Stage>
 		</div>
 	</div>
+	<!-- [{channelLeft}, {channelTop}], [{channelRight}, {channelBottom}] -->
 {/if}
 
 <style>

@@ -1,10 +1,12 @@
 <script>
 	import RectangularQCanvas from './RectangularQCanvas.svelte'
+	import KonvaLerp from './RectQCanvas.svelte'
 	import Card from '../Card.svelte'
 	import { ki, kd, sd, debounce } from '$lib/utilities/utils.js'
 	import { common, rect } from '$lib/fluids/openChannel/utils'
 	import { digits } from '../../digits.svelte.js'
 	import { rectQ } from '../../rect.svelte'
+	import RectQCanvas from './RectQCanvas.svelte'
 
 	let { sdigs, wdigs, extraForSdigs, extraForWdigs } = digits
 
@@ -26,7 +28,7 @@
 	const getYFromQ = (low = 0, high = 100) => {
 		let delta = 1 / 10 ** (wdigs + 1),
 			mid = (low + high) / 2
-		console.log(delta + ', ' + low + ', ' + high)
+		// console.log(delta + ', ' + low + ', ' + high)
 		if (Math.abs(low - high) < delta) {
 			return (low + high) * 0.5
 		}
@@ -98,6 +100,7 @@
 
 <article>
 	<section><RectangularQCanvas {aspectRatio} bind:base={bs} bind:depth={Qs} /></section>
+	<!-- <section><RectQCanvas  /></section> -->
 
 	<section>
 		<div class="inputs-row">
@@ -157,7 +160,7 @@
 				`y`
 			)}. It may be solved using trial-and-error methods but it is generally more convenient to find {ki(
 				'y'
-			)} using a numerical solver on a scientific calculator or in a spreadsheet app.<br/><br/> (This calculator uses an automated type of trial-and-error called a binary search, probably similar to how your calculator does it.)</div>
+			)} using a numerical solver on a scientific calculator or with Goal Seek in a spreadsheet app.<br/><br/> (This calculator uses an automated type of trial-and-error called a binary search, probably similar to how your calculator does it.)</div>
 							{kd(`
 							y=${y}\\, \\mathsf{m}
 							`)}"
