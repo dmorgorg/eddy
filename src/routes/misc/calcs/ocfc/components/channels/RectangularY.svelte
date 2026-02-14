@@ -1,24 +1,17 @@
 <script>
-	import RectangularYCanvas from './RectangularYCanvas.svelte'
-	import RYC from './RYC.svelte'
+	// @ts-nocheck
+
+	import RectYCanvas from './RectYCanvas.svelte'
+	// import RectangularYCanvas from './RectangularYCanvas.svelte'
+	// import RYC from './RYCb.svelte'
 	import Card from '../Card.svelte'
 	import { ki, kd, sd, debounce } from '$lib/utilities/utils.js'
 	import { common, rect } from '$lib/fluids/openChannel/utils'
 	import { digits } from '../../digits.svelte.js'
 	import { rectY } from '../../rect.svelte'
-	// let { test } = rectY
-
-	// initial values
-	// const initBase = '3'
-	// const initDepth = '1.5'
-	// // const initDepth = '1'
-	// const initSlope = '0.1'
-	// const initN = '0.013'
-	// const initG = '9.81'
 
 	let { sdigs, wdigs, extraForSdigs, extraForWdigs } = digits
 
-	// @ts-ignore
 	const sds = (num) => {
 		return sd(num, sdigs, extraForSdigs)
 	}
@@ -88,8 +81,9 @@
 </script>
 
 <article>
-	<section><RectangularYCanvas {aspectRatio} bind:base={bs} bind:depth={ys} /></section>
-	<section><RYC bind:base={bs} bind:depth={ys} /></section>
+	<!-- <section><RectangularYCanvas {aspectRatio} bind:base={bs} bind:depth={ys} /></section> -->
+	<!-- <section><RYC bind:base={bs} bind:depth={ys} /></section> -->
+	<section><RectYCanvas bind:base={bs} bind:depth={ys} /></section>
 
 	<section>
 		<div class="inputs-row">

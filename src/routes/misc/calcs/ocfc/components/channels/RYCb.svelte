@@ -7,17 +7,45 @@
 
 	let { base = $bindable(), depth = $bindable() } = $props()
 	let canvas = $state()
-	let divWidth = $state(0)
-	let divHeight = $state(0)
+	// let divWidth = $state(0)
+	// let divHeight = $state(0)
 	let widthInPixels = $state()
+	let bpx = $state(150)
+	let ypx = $state(150)
 
-	let aR = $derived(
+	let aspectRatio = $derived(
 		Math.round(Math.min(Math.max(Number(base) / Number(depth), 1 / 6), 8) * 100) / 100
 	)
+	aspectRatio = 1
 
 	const sds = (num) => {
 		return sd(num, digits.sdigs, digits.extraForSdigs)
 	}
+
+	$effect(() => {
+		const context = canvas.getContext('2d')
+		// get base and depth in pixels from aspectRatio
+		bpx = (() => {
+			let d
+			if (aspectRatio < 1) {
+				d = 36 * aspectRatio + 4
+			} else {
+				// maps ... 1 to 40, 8 to 89
+				d = 7 * aspectRatio + 33
+			}
+			return Math.round((d / 100) * widthInPixels)
+		})()
+		ypx = Math.round(bpx / aspectRatio)
+		if (ypx > 150) {
+			ypx = 150
+			bpx = ypx * aspectRatio
+		}
+
+		// context.clearRect(0, 0, canvas.width, canvas.height)
+		context.fillStyle = '#008888'
+		// context.fillRect(0, 0, bpx, ypx)
+		context.fillRect(0, 0, 150, 150)
+	})
 
 	const processChange = debounce((e) => {
 		if (e.target.id === 'base') {
@@ -32,22 +60,42 @@
 	})
 </script>
 
-<!-- {aR}
-<input type="range" bind:value={aR} min="0.167" max="8" step="any" /> -->
-<div class="tempLabels">
-	<label class="base-input">
-		<!-- Base: -->
-		<span class="unit">{@html ki('b=')}</span>
-		<input type="number" bind:value={base} step="any" min="0" id="base" oninput={processChange} />
-		<span class="unit">{@html ki('\\mathsf{m}')}</span>
-	</label>
-	<label class="depth-input">
-		<!-- Depth: -->
-		<span class="unit">{@html ki('y=')}</span>
-		<input type="number" bind:value={depth} step="any" min="0" id="depth" oninput={processChange} />
-		<span class="unit">{@html ki('\\mathsf{ m}')}</span>
-	</label>
-</div>
+{#if browser}
+	<!-- {base}, {bpx}, {depth}, {ypx}, {aspectRatio} -->
+	<!-- , {canvas.width}, {canvas.height} -->
+	<div class="full-width" bind:clientWidth={widthInPixels}>
+		<div class="canvas">
+			<div class="tempLabels">
+				<label class="base-input">
+					<!-- Base: -->
+					<span class="unit">{@html ki('b=')}</span>
+					<input
+						type="number"
+						bind:value={base}
+						step="any"
+						min="0"
+						id="base"
+						oninput={processChange}
+					/>
+					<span class="unit">{@html ki('\\mathsf{m}')}</span>
+				</label>
+				<label class="depth-input">
+					<!-- Depth: -->
+					<span class="unit">{@html ki('y=')}</span>
+					<input
+						type="number"
+						bind:value={depth}
+						step="any"
+						min="0"
+						id="depth"
+						oninput={processChange}
+					/>
+					<span class="unit">{@html ki('\\mathsf{ m}')}</span>
+				</label>
+			</div>
+		</div>
+	</div>
+{/if}
 
 <style>
 	.tempLabels {

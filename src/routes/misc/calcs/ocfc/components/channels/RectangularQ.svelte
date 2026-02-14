@@ -1,12 +1,12 @@
 <script>
 	import RectangularQCanvas from './RectangularQCanvas.svelte'
-	import KonvaLerp from './RectQCanvas.svelte'
+	import KonvaLerp from './RectYCanvas.svelte'
 	import Card from '../Card.svelte'
 	import { ki, kd, sd, debounce } from '$lib/utilities/utils.js'
 	import { common, rect } from '$lib/fluids/openChannel/utils'
 	import { digits } from '../../digits.svelte.js'
 	import { rectQ } from '../../rect.svelte'
-	import RectQCanvas from './RectQCanvas.svelte'
+	import RectQCanvas from './RectYCanvas.svelte'
 
 	let { sdigs, wdigs, extraForSdigs, extraForWdigs } = digits
 
