@@ -10,6 +10,7 @@ function ease(x) {
 
 export class RectangleBTween {
 	value = $state()
+	_rafId = null
 
 	constructor(value) {
 		this.value = value
@@ -40,8 +41,11 @@ export class RectangleBTween {
 		}
 	}
 
-	to(target) {
-		const duration = 2000
+	to(target, { onUpdate, onComplete, duration = 1000 } = {}) {
+		if (this._rafId) {
+			cancelAnimationFrame(this._rafId)
+			this._rafId = null
+		}
 		const start = performance.now()
 		const interpolator = this.interpolator(this.value, target)
 
@@ -49,13 +53,17 @@ export class RectangleBTween {
 		const frame = () => {
 			const now = performance.now()
 			const elapsed = now - start
-			if (elapsed > duration) {
+			if (duration <= 0 || elapsed > duration) {
 				this.value = target
+				if (onUpdate) onUpdate(this.value)
+				if (onComplete) onComplete(this.value)
+				this._rafId = null
 				return true // when finished
 			}
 			this.value = interpolator(ease(elapsed / duration))
-			requestAnimationFrame(frame)
+			if (onUpdate) onUpdate(this.value)
+			this._rafId = requestAnimationFrame(frame)
 		}
-		requestAnimationFrame(frame)
+		this._rafId = requestAnimationFrame(frame)
 	}
 }
