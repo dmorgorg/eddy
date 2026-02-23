@@ -1,11 +1,13 @@
 <script>
+	// @ts-nocheck
+
 	import { browser } from '$app/environment'
 	import { Stage, Layer, Rect, Line, Arrow } from 'svelte-konva'
 	import { ki, debounce, sd } from '$lib/utilities/utils.js'
 	import { digits } from '../../digits.svelte.js'
 
 	let { aspectRatio, base = $bindable(), depth = $bindable() } = $props()
-	let stage
+	// let stage
 
 	const paddingTopEm = 1
 	// more space below for the Base input

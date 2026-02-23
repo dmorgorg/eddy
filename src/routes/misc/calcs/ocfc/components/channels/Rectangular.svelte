@@ -5,7 +5,7 @@
 	import RectangularQ from './RectangularQ.svelte'
 	import RectangularY from './RectangularY.svelte'
 	// let { sdigs, wdigs, extraForSdigs, extraForWdigs } = digits;
-	let yorq = 'rectangularY'
+	let yorq = 'rectangularQ'
 	let channelType = 'rectangular'
 </script>
 

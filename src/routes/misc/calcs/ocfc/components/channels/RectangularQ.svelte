@@ -1,12 +1,10 @@
 <script>
-	import RectangularQCanvas from './RectangularQCanvas.svelte'
-	import KonvaLerp from './RectYCanvas.svelte'
+	import RQC from './RQC.svelte'
 	import Card from '../Card.svelte'
 	import { ki, kd, sd, debounce } from '$lib/utilities/utils.js'
 	import { common, rect } from '$lib/fluids/openChannel/utils'
 	import { digits } from '../../digits.svelte.js'
-	import { rectQ } from '../../rect.svelte'
-	import RectQCanvas from './RectYCanvas.svelte'
+	import { rectQ } from '../../store.svelte.js'
 
 	let { sdigs, wdigs, extraForSdigs, extraForWdigs } = digits
 
@@ -99,8 +97,9 @@
 </script>
 
 <article>
-	<section><RectangularQCanvas {aspectRatio} bind:base={bs} bind:depth={Qs} /></section>
+	<!-- <section><RectangularQCanvas {aspectRatio} bind:base={bs} bind:depth={Qs} /></section> -->
 	<!-- <section><RectQCanvas  /></section> -->
+	<section><RQC bind:base={bs} bind:depth={ys} /></section>
 
 	<section>
 		<div class="inputs-row">

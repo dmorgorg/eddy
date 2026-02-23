@@ -136,7 +136,7 @@
 				<canvas bind:this={canvas} width="100" height="100"> </canvas>
 				<label class="depth-label" style="top: {waterTopY + ypx / 2 - 1}px;">
 					<!-- Depth: -->
-					<span class="unit">{@html ki('\\large y=')}</span>
+					<span class="unit">{@html ki('\\large Q=')}</span>
 					<input
 						type="number"
 						bind:value={depth}
@@ -145,7 +145,7 @@
 						id="depth"
 						oninput={processChange}
 					/>
-					<span class="unit">{@html ki('\\mathsf{ m}')}</span>
+					<span class="unit">{@html ki('\\mathsf{ m^3/s}')}</span>
 				</label>
 				<label class="base-label" style="top: {baseDimensionYPixels}px;">
 					<!-- Base: -->

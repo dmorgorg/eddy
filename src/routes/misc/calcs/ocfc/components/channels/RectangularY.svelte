@@ -1,14 +1,12 @@
 <script>
 	// @ts-nocheck
 
-	// import RectYCanvas from './RectYCanvas.svelte'
-	// import RectangularYCanvas from './RectangularYCanvas.svelte'
 	import RYC from './RYC.svelte'
 	import Card from '../Card.svelte'
 	import { ki, kd, sd, debounce } from '$lib/utilities/utils.js'
 	import { common, rect } from '$lib/fluids/openChannel/utils'
 	import { digits } from '../../digits.svelte.js'
-	import { rectY } from '../../rect.svelte'
+	import { rectY } from '../../store.svelte.js'
 
 	let { sdigs, wdigs, extraForSdigs, extraForWdigs } = digits
 
