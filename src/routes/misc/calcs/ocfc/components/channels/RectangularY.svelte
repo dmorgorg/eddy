@@ -1,9 +1,9 @@
 <script>
 	// @ts-nocheck
 
-	import RectYCanvas from './RectYCanvas.svelte'
+	// import RectYCanvas from './RectYCanvas.svelte'
 	// import RectangularYCanvas from './RectangularYCanvas.svelte'
-	// import RYC from './RYCb.svelte'
+	import RYC from './RYC.svelte'
 	import Card from '../Card.svelte'
 	import { ki, kd, sd, debounce } from '$lib/utilities/utils.js'
 	import { common, rect } from '$lib/fluids/openChannel/utils'
@@ -83,7 +83,7 @@
 <article>
 	<!-- <section><RectangularYCanvas {aspectRatio} bind:base={bs} bind:depth={ys} /></section> -->
 	<!-- <section><RYC bind:base={bs} bind:depth={ys} /></section> -->
-	<section><RectYCanvas bind:base={bs} bind:depth={ys} /></section>
+	<section><RYC bind:base={bs} bind:depth={ys} /></section>
 
 	<section>
 		<div class="inputs-row">
@@ -341,11 +341,12 @@
 	article {
 		// border: 2px solid green;
 		margin-inline: auto;
-		width: 38em;
+		width: 34em;
+		// width: fit-content;
 	}
 	.results {
 		margin-inline: auto;
-		width: 80%;
+		width: 90%;
 	}
 	.heading {
 		color: #088;

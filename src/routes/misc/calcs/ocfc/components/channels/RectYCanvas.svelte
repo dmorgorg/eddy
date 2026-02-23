@@ -14,6 +14,7 @@
 
 	let canvas = $state()
 	let canvasWrap = $state()
+	let ctx
 	// let divWidth = $state(0)
 	// let divHeight = $state(0)
 	let widthInPixels = $state()
@@ -30,9 +31,34 @@
 	let canvasTopPaddingPx = $derived(1 * emToPx)
 	let canvasBottomPaddingPx = $derived(3 * emToPx)
 
+	const availableWidth = widthInPixels || canvasWrap?.clientWidth || 0
+
 	let aspectRatio = $derived(
 		Math.round(Math.min(Math.max(Number(base) / Number(depth), 1 / 6), 8) * 100) / 100
 	)
+
+	$effect(() => {
+		setChannelPixels(base, depth)
+	})
+
+	const setChannelPixels = (baseInput, depthInput) => {
+		bpx = (() => {
+			let d
+			if (aspectRatio < 1) {
+				// maps aspectRatio of 1/6 to 10% of divWidth, 1 to 40% of divWidth
+				d = 36 * aspectRatio + 4
+			} else {
+				// maps ... 1 to 40, 8 to 89
+				d = 7 * aspectRatio + 33
+			}
+			return Math.round((d / 100) * availableWidth)
+		})()
+		ypx = Math.round(bpx / aspectRatio)
+		if (ypx > maxDepthPx) {
+			ypx = maxDepthPx
+			bpx = Math.round(ypx * aspectRatio)
+		}
+	}
 	const computeRatio = (baseValue, depthValue) => {
 		const rawRatio = Number(baseValue) / Number(depthValue)
 		return Math.min(Math.max(rawRatio, 1 / 6), 8)
@@ -79,29 +105,29 @@
 
 	const DrawRectangular = (baseValue, depthValue, ratioOverride) => {
 		if (!canvas) return
-		const availableWidth = widthInPixels || canvasWrap?.clientWidth || 0
+		// const availableWidth = widthInPixels || canvasWrap?.clientWidth || 0
 		if (!availableWidth) return
 		const ratio = Number.isFinite(ratioOverride)
 			? ratioOverride
 			: computeRatio(baseValue, depthValue)
 
 		// https://www.geeksforgeeks.org/javascript/javascript-anonymous-functions/
-		bpx = (() => {
-			let d
-			if (ratio < 1) {
-				// maps aspectRatio of 1/6 to 10% of divWidth, 1 to 40% of divWidth
-				d = 36 * ratio + 4
-			} else {
-				// maps ... 1 to 40, 8 to 89
-				d = 7 * ratio + 33
-			}
-			return Math.round((d / 100) * availableWidth)
-		})()
-		ypx = Math.round(bpx / ratio)
-		if (ypx > maxDepthPx) {
-			ypx = maxDepthPx
-			bpx = Math.round(ypx * ratio)
-		}
+		// bpx = (() => {
+		// 	let d
+		// 	if (ratio < 1) {
+		// 		// maps aspectRatio of 1/6 to 10% of divWidth, 1 to 40% of divWidth
+		// 		d = 36 * ratio + 4
+		// 	} else {
+		// 		// maps ... 1 to 40, 8 to 89
+		// 		d = 7 * ratio + 33
+		// 	}
+		// 	return Math.round((d / 100) * availableWidth)
+		// })()
+		// ypx = Math.round(bpx / ratio)
+		// if (ypx > maxDepthPx) {
+		// 	ypx = maxDepthPx
+		// 	bpx = Math.round(ypx * ratio)
+		// }
 		const xOffset = Math.round((availableWidth - bpx) / 2)
 		const waterTop = canvasTopPaddingPx + wallRisePx
 		const waterBottom = waterTop + ypx
@@ -132,35 +158,6 @@
 		context.lineTo(wallSnap(xOffset + bpx), wallSnap(wallTop))
 		context.stroke()
 
-		// Draw dimension lines (b and y) with arrowheads
-		const drawDirectedLine = (x1, y1, x2, y2, both = true, size = 6) => {
-			context.beginPath()
-			context.moveTo(x1, y1)
-			context.lineTo(x2, y2)
-			context.stroke()
-
-			const angle = Math.atan2(y2 - y1, x2 - x1)
-			const drawHead = (x, y, theta) => {
-				context.beginPath()
-				context.moveTo(x, y)
-				context.lineTo(
-					x - size * Math.cos(theta - Math.PI / 6),
-					y - size * Math.sin(theta - Math.PI / 6)
-				)
-				context.lineTo(
-					x - size * Math.cos(theta + Math.PI / 6),
-					y - size * Math.sin(theta + Math.PI / 6)
-				)
-				context.closePath()
-				context.fill()
-			}
-
-			if (both) {
-				drawHead(x1, y1, angle + Math.PI)
-			}
-			drawHead(x2, y2, angle)
-		}
-
 		context.strokeStyle = '#111'
 		context.fillStyle = '#111'
 		const dimLineWidth = 1
@@ -172,12 +169,12 @@
 		const yLineTop = snap(waterTop)
 		const yLineBottom = snap(waterBottom - dimensionInsetPx)
 		const yLineX = snap(xOffset + bpx / 2)
-		drawDirectedLine(yLineX, yLineTop, yLineX, yLineBottom)
+		drawDirectedLineSegment(context, yLineX, yLineTop, yLineX, yLineBottom)
 
 		baseLineY = snap(waterBottom + baseLineOffsetPx)
 		const bLineLeft = snap(xOffset + dimensionInsetPx)
 		const bLineRight = snap(xOffset + bpx - dimensionInsetPx)
-		drawDirectedLine(bLineLeft, baseLineY, bLineRight, baseLineY)
+		drawDirectedLineSegment(context, bLineLeft, baseLineY, bLineRight, baseLineY)
 	}
 
 	$effect(() => {
@@ -241,10 +238,6 @@
 			</div>
 		</div>
 	</div>
-	<!-- {canvasWrap?.clientWidth ?? ''}
-	{canvas ? `${canvas.width}x${canvas.height}` : ''}
-	{bpx}
-	{ypx} -->
 {/if}
 
 <style>
@@ -262,15 +255,9 @@
 		position: relative;
 		display: inline-block;
 	}
-	canvas {
-		/* background: pink; */
-		/* margin-inline: auto; */
-		width: fit-content;
-	}
+
 	.full-width {
 		display: flex;
-		/* flex-direction: column; */
-		/* border: 3px solid black; */
 		justify-content: center;
 		align-items: center;
 	}
@@ -312,7 +299,6 @@
 		padding: 0;
 		border: 0.125em solid #c1cdcd;
 		border-radius: 3px;
-		/* font-size: 0.875em; */
 		text-align: center;
 		-moz-appearance: textfield;
 		appearance: textfield;
