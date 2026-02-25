@@ -9,11 +9,11 @@
 
 <section class="radios">
 	<label for="" class="yQLayout">
-		<input type="radio" name="Yorq" bind:group={yorq} value={y} />
+		<input type="radio" name="yorq" bind:group={yorq} value={y} />
 		<span class="radio__label">Specify {@html ki(`y`)}</span>
 	</label>
 	<label for="" class="yQLayout">
-		<input type="radio" name="yorQ" bind:group={yorq} value={q} />
+		<input type="radio" name="yorq" bind:group={yorq} value={q} />
 		<span class="radio__label">Specify {@html ki(`Q`)}</span>
 	</label>
 </section>

@@ -81,7 +81,7 @@
 <article>
 	<!-- <section><RectangularYCanvas {aspectRatio} bind:base={bs} bind:depth={ys} /></section> -->
 	<!-- <section><RYC bind:base={bs} bind:depth={ys} /></section> -->
-	<section><RYC bind:base={bs} bind:depth={ys} /></section>
+	<section><RYC bind:base={rectY.base} bind:depth={rectY.depth} /></section>
 
 	<section>
 		<div class="inputs-row">

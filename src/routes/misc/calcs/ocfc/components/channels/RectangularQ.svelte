@@ -99,7 +99,7 @@
 <article>
 	<!-- <section><RectangularQCanvas {aspectRatio} bind:base={bs} bind:depth={Qs} /></section> -->
 	<!-- <section><RectQCanvas  /></section> -->
-	<section><RQC bind:base={bs} bind:depth={ys} /></section>
+	<section><RQC bind:base={rectQ.base} bind:Qflow={rectQ.Q} bind:depth={y} /></section>
 
 	<section>
 		<div class="inputs-row">

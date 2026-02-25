@@ -6,7 +6,7 @@
 	// import { RectangleBTween } from '../../RectangleBTween.svelte.js'
 	import { digits } from '../../digits.svelte.js'
 	import { drawDirectedLineSegment, snap } from '$lib/utilities/canvasUtils.js'
-	let { base = $bindable(), depth = $bindable() } = $props()
+	let { base = $bindable(), Qflow = $bindable(), depth = $bindable() } = $props()
 
 	let canvas = $state()
 	let canvasWrap = $state()
@@ -121,9 +121,9 @@
 			// force binding back to input when backspacing/delete of trailing decimal zeros don't update
 			e.target.value = base
 		}
-		if (e.target.id === 'depth') {
-			depth = sds(e.target.value)
-			e.target.value = depth
+		if (e.target.id === 'Qflow') {
+			Qflow = sds(e.target.value)
+			e.target.value = Qflow
 		}
 	})
 </script>
@@ -139,10 +139,10 @@
 					<span class="unit">{@html ki('\\large Q=')}</span>
 					<input
 						type="number"
-						bind:value={depth}
+						value={Qflow}
 						step="any"
 						min="0"
-						id="depth"
+						id="Qflow"
 						oninput={processChange}
 					/>
 					<span class="unit">{@html ki('\\mathsf{ m^3/s}')}</span>
@@ -152,7 +152,7 @@
 					<span class="unit">{@html ki('\\large b=')}</span>
 					<input
 						type="number"
-						bind:value={base}
+						value={base}
 						step="any"
 						min="0"
 						id="base"

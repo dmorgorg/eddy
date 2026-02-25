@@ -6,6 +6,7 @@
 	// import { RectangleBTween } from '../../RectangleBTween.svelte.js'
 	import { digits } from '../../digits.svelte.js'
 	import { drawDirectedLineSegment, snap } from '$lib/utilities/canvasUtils.js'
+	import { rectY } from '../../store.svelte.js'
 	let { base = $bindable(), depth = $bindable() } = $props()
 
 	let canvas = $state()
@@ -27,16 +28,15 @@
 	let bpx = $state(0)
 	let ypx = $state(0)
 
-	let aspectRatio = $derived(
-		Math.round(Math.min(Math.max(Number(base) / Number(depth), 1 / 6), 8) * 100) / 100
-	)
+	let aspectRatio = $derived(Math.min(Math.max(Number(base) / Number(depth), 1 / 6), 8))
 
 	$effect(() => {
-		setChannelPixels(aspectRatio)
+		const { b, y } = setChannelPixels(aspectRatio)
+		draw(b, y)
 	})
 
 	const setChannelPixels = (aspectRatio) => {
-		bpx = (() => {
+		let b = (() => {
 			let d
 			if (aspectRatio < 1) {
 				// maps aspectRatio of 1/6 to 10% of divWidth, 1 to 40% of divWidth
@@ -47,11 +47,14 @@
 			}
 			return Math.round((d / 100) * widthInPixels.toFixed(2))
 		})()
-		ypx = Math.round(bpx / aspectRatio)
-		if (ypx > maxDepthPixels) {
-			ypx = maxDepthPixels
-			bpx = Math.round(ypx * aspectRatio)
+		let y = Math.round(b / aspectRatio)
+		if (y > maxDepthPixels) {
+			y = maxDepthPixels
+			b = Math.round(y * aspectRatio)
 		}
+		bpx = b
+		ypx = y
+		return { b, y }
 	}
 
 	const draw = (basePixels, depthPixels) => {
@@ -69,7 +72,6 @@
 		ctx.fillStyle = gradient
 		// ctx.fillStyle = 'yellow'
 		ctx.fillRect(waterLeftX, waterTopY, basePixels, depthPixels)
-
 		//draw walls
 		ctx.beginPath()
 		ctx.lineWidth = lineWidth + 2
@@ -88,9 +90,7 @@
 		ctx.lineTo(snap(waterLeftX + bpx, lineWidth), snap(waterBottomY, lineWidth))
 		ctx.lineTo(snap(waterRightX, lineWidth), snap(channelExtensionY, lineWidth))
 		ctx.strokeStyle = '#c1cdcd'
-		// ctx.lineCap = 'round'
 		ctx.stroke()
-
 		// draw directed line segment from top-center to bottom-center of rectangle
 		const midX = waterLeftX + basePixels / 2
 		drawDirectedLineSegment(ctx, midX, waterTopY, midX, waterBottomY - 3, 'black', 2, 7)
@@ -105,27 +105,22 @@
 		)
 	}
 
-	$effect(() => {
-		// void bpx
-		// void ypx
-		draw(bpx, ypx)
-	})
-
 	const sds = (num) => {
 		return sd(num, digits.sdigs, digits.extraForSdigs)
 	}
 
 	const processChange = debounce((e) => {
 		if (e.target.id === 'base') {
-			base = sds(e.target.value)
-			// force binding back to input when backspacing/delete of trailing decimal zeros don't update
-			e.target.value = base
+			const formatted = sds(e.target.value)
+			base = Number(formatted)
+			e.target.value = formatted
 		}
 		if (e.target.id === 'depth') {
-			depth = sds(e.target.value)
-			e.target.value = depth
+			const formatted = sds(e.target.value)
+			depth = Number(formatted)
+			e.target.value = formatted
 		}
-	})
+	}, 1000)
 </script>
 
 {#if browser}
@@ -139,7 +134,7 @@
 					<span class="unit">{@html ki('\\large y=')}</span>
 					<input
 						type="number"
-						bind:value={depth}
+						value={sds(depth)}
 						step="any"
 						min="0"
 						id="depth"
@@ -152,7 +147,7 @@
 					<span class="unit">{@html ki('\\large b=')}</span>
 					<input
 						type="number"
-						bind:value={base}
+						value={sds(base)}
 						step="any"
 						min="0"
 						id="base"
@@ -163,10 +158,6 @@
 			</div>
 		</div>
 	</div>
-	<!-- {bpx}, {ypx},{aspectRatio} <br />
-	{widthInPixels}, {base}, {depth}, {(bpx / widthInPixels).toFixed(2)}, {(
-		ypx / widthInPixels
-	).toFixed(2)} <br /> -->
 {/if}
 
 <style>
@@ -206,7 +197,7 @@
 		border-radius: 3px;
 		box-shadow: 2px 2px 4px #c1cdcd;
 		display: flex;
-		font-size: 0.95em;
+		font-size: 0.9em;
 		gap: 0.125em;
 		justify-content: center;
 		margin-inline: auto;
