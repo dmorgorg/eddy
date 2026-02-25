@@ -51,31 +51,30 @@
 	let Emin = $derived(sdw(common.getE(yc, vc, g)))
 	let Sc = $derived(sdw(common.getCriticalSlope(n, vc, Rc)))
 
+	// Handles slope, n, g input changes; stores as numbers, updates input with formatted value
 	const processChange = debounce((e) => {
 		if (e.target.id === 'slope') {
-			// let slope = e.target.value
-			ss = sds(e.target.value)
-			// force binding back to input when backspacing/delete of trailing decimal zeros don't update
-			e.target.value = ss
+			const formatted = sds(e.target.value)
+			ss = Number(formatted)
+			e.target.value = formatted
 		}
 		if (e.target.id === 'n') {
-			ns = sds(e.target.value)
-			e.target.value = ns
+			const formatted = sds(e.target.value)
+			ns = Number(formatted)
+			e.target.value = formatted
 		}
 		if (e.target.id === 'g') {
 			let value = e.target.value
-			// n.b. the string length counts the decimal point!
+			let formatted
 			if (value.length > 4) {
-				console.log(value.length)
-				// allow g=9.806
-				gs = sd(value, 4)
+				formatted = sd(value, 4)
 			} else {
-				gs = sds(value)
+				formatted = sds(value)
 			}
-			// gs = sd(e.target.value, 4, false)
-			e.target.value = gs
+			gs = Number(formatted)
+			e.target.value = formatted
 		}
-	})
+	}, 1000)
 </script>
 
 <article>
@@ -89,38 +88,41 @@
 				<span class="var-name">{@html ki('S =')}</span>
 				<input
 					type="number"
-					value={ss}
+					value={sds(ss)}
 					id="slope"
-					onkeydown={processChange}
+					oninput={processChange}
 					min="0.001"
 					step="any"
 					style="width: {digits.sdigs > 3 ? '7em' : '6em'}"
 				/>
+				<!-- slope input: always formatted -->
 				<span class="unit">{@html ki('\\%')}</span>
 			</label>
 			<label>
 				<span class="var-name">{@html ki('n =')}</span>
 				<input
 					type="number"
-					value={ns}
+					value={sds(ns)}
 					id="n"
-					onkeydown={processChange}
+					oninput={processChange}
 					min="0"
 					step="any"
 					style="width: {digits.sdigs > 3 ? '7em' : '6em'}"
 				/>
+				<!-- n input: always formatted -->
 			</label>
 			<label>
 				<span class="var-name">{@html ki('g =')}</span>
 				<input
 					type="number"
-					value={gs}
+					value={sds(gs)}
 					id="g"
 					oninput={processChange}
 					min="0"
 					step="any"
 					style="width: 4em"
 				/>
+				<!-- g input: always formatted -->
 				<span class="unit">{@html ki('\\mathsf{m/s}^2')}</span>
 			</label>
 		</div>

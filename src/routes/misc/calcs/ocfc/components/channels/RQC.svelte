@@ -117,13 +117,14 @@
 
 	const processChange = debounce((e) => {
 		if (e.target.id === 'base') {
-			base = sds(e.target.value)
-			// force binding back to input when backspacing/delete of trailing decimal zeros don't update
-			e.target.value = base
+			const formatted = sds(e.target.value)
+			base = Number(formatted)
+			e.target.value = formatted
 		}
 		if (e.target.id === 'Qflow') {
-			Qflow = sds(e.target.value)
-			e.target.value = Qflow
+			const formatted = sds(e.target.value)
+			Qflow = Number(formatted)
+			e.target.value = formatted
 		}
 	})
 </script>
@@ -139,7 +140,7 @@
 					<span class="unit">{@html ki('\\large Q=')}</span>
 					<input
 						type="number"
-						value={Qflow}
+						value={sds(Qflow)}
 						step="any"
 						min="0"
 						id="Qflow"
@@ -152,7 +153,7 @@
 					<span class="unit">{@html ki('\\large b=')}</span>
 					<input
 						type="number"
-						value={base}
+						value={sds(base)}
 						step="any"
 						min="0"
 						id="base"

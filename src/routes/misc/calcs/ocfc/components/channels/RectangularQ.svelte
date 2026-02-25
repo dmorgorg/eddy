@@ -44,11 +44,11 @@
 	let ns = $derived(sds(rectQ.n))
 	let gs = $derived(sd(rectQ.g, 3, extraForSdigs))
 
-	let b = $derived(Number(bs))
-	let Q = $derived(Number(Qs))
-	let s = $derived(Number(ss))
-	let n = $derived(Number(ns))
-	let g = $derived(Number(gs))
+	let b = $derived(Number(rectQ.base))
+	let Q = $derived(Number(rectQ.Q))
+	let s = $derived(Number(rectQ.slope))
+	let n = $derived(Number(rectQ.n))
+	let g = $derived(Number(rectQ.g))
 
 	let y = $derived(sdw(getYFromQ()))
 	let ys = $derived(sdw(y))
