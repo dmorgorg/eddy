@@ -250,7 +250,7 @@
 			solution={kd(`
 						\\begin{aligned}
 							A &= by \\\\
-							&= ${sds(b)}\\, \\mathsf{m}\\times ${ys}\\, \\mathsf{m} \\\\							
+							&= ${sds(b)}\\, \\mathsf{m}\\times ${sdw(y)}\\, \\mathsf{m} \\\\							
 							&= ${A} \\, \\mathsf{m^2}
 						\\end{aligned}
 					`)}
