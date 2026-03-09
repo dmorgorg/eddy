@@ -1,6 +1,7 @@
 <script>
 	import RQC from './RQC.svelte'
 	import Card from '../Card.svelte'
+	import Carrd from '../Carrd.svelte'
 	import { ki, kd, sd, debounce } from '$lib/utilities/utils.js'
 	import { common, rect } from '$lib/fluids/openChannel/utils'
 	import { digits } from '../../digits.svelte.js'
@@ -38,12 +39,6 @@
 		}
 	}
 
-	let bs = $derived(sds(rectQ.base))
-	let Qs = $derived(sds(rectQ.Q))
-	let ss = $derived(sds(rectQ.slope))
-	let ns = $derived(sds(rectQ.n))
-	let gs = $derived(sd(rectQ.g, 3, extraForSdigs))
-
 	let b = $derived(Number(rectQ.base))
 	let Q = $derived(Number(rectQ.Q))
 	let s = $derived(Number(rectQ.slope))
@@ -65,20 +60,60 @@
 	let Rc = $derived(sdw(common.getR(Ac, Pc)))
 	let Sc = $derived(sdw(common.getCriticalSlope(n, vc, Rc)))
 
-	let aspectRatio = $derived(
-		Math.round(Math.min(Math.max(Number(bs) / Number(ys), 1 / 6), 8) * 100) / 100
-	)
+	let coeff = $derived(Math.pow((n * Q) / b / Math.pow(s / 100, 0.5), 3 / 5))
+	/** @type {Array<Number> | null} */
+	let iteratedY = $state([1])
+
+	// $effect(() => {
+	// 	b = rectQ.base
+	// 	console.log(rectQ.base + ', ' + b)
+	// })
+
+	const setIterationPoints = () => {
+		let current = 1,
+			next = 0,
+			it = 0
+		iteratedY.length = 0
+
+		while (current != next) {
+			it++
+			current = next
+			next = Number(sdw(coeff * Math.pow(1 + (2 * current) / b, 0.4)))
+			iteratedY.push(next)
+			console.log(
+				'n=' +
+					n +
+					', Q=' +
+					Q +
+					', b=' +
+					b +
+					', b2=' +
+					rectQ.base +
+					', s=' +
+					s +
+					', y=' +
+					y +
+					', g=' +
+					g
+			)
+			// console.log(coeff)
+			// if (current === next) break
+			if (it > 20) break
+		}
+	}
+
+	setIterationPoints()
 
 	const processChange = debounce((e) => {
 		if (e.target.id === 'slope') {
 			// let slope = e.target.value
-			ss = sds(e.target.value)
+			rectQ.slope = Number(sds(e.target.value))
 			// force binding back to input when backspacing/delete of trailing decimal zeros don't update
-			e.target.value = ss
+			e.target.value = rectQ.slope
 		}
 		if (e.target.id === 'n') {
-			ns = sds(e.target.value)
-			e.target.value = ns
+			rectQ.n = Number(sds(e.target.value))
+			e.target.value = rectQ.n
 		}
 		if (e.target.id === 'g') {
 			let value = e.target.value
@@ -86,20 +121,21 @@
 			if (value.length > 4) {
 				console.log(value.length)
 				// allow g=9.806
-				gs = sd(value, 4)
+				rectQ.g = Number(sd(value, 4))
 			} else {
-				gs = sds(value)
+				rectQ.g = Number(sds(value))
 			}
-			// gs = sd(e.target.value, 4, false)
-			e.target.value = gs
+			e.target.value = rectQ.g
 		}
+		setIterationPoints()
 	})
 </script>
 
 <article>
-	<!-- <section><RectangularQCanvas {aspectRatio} bind:base={bs} bind:depth={Qs} /></section> -->
-	<!-- <section><RectQCanvas  /></section> -->
 	<section><RQC bind:base={rectQ.base} bind:Qflow={rectQ.Q} bind:depth={y} /></section>
+
+	{coeff}<br />{iteratedY.length}<br />
+	{iteratedY[0]}, {iteratedY[1]}, {iteratedY[2]}, {iteratedY[3]}, {iteratedY[4]}, {iteratedY[5]},
 
 	<section>
 		<div class="inputs-row">
@@ -107,7 +143,7 @@
 				<span class="var-name">{@html ki('S =')}</span>
 				<input
 					type="number"
-					value={ss}
+					value={s}
 					id="slope"
 					onkeydown={processChange}
 					min="0.001"
@@ -120,7 +156,7 @@
 				<span class="var-name">{@html ki('n =')}</span>
 				<input
 					type="number"
-					value={ns}
+					value={n}
 					id="n"
 					onkeydown={processChange}
 					min="0"
@@ -132,7 +168,7 @@
 				<span class="var-name">{@html ki('g =')}</span>
 				<input
 					type="number"
-					value={gs}
+					value={g}
 					id="g"
 					oninput={processChange}
 					min="0"
@@ -146,30 +182,75 @@
 	<section class="results">
 		<!-- <section class="normal"> -->
 		<div class="heading">Normal (Uniform) Flow</div>
-		<Card
-			answer="Depth of flow: {ki(`${sds(ys)}\\, \\mathsf{m}`)}"
-			solution="{kd(`
+		<Carrd>
+			{#snippet answer()}
+				Depth of flow: {@html ki(`${sds(y)}\\, \\mathsf{m}`)}
+			{/snippet}
+			{#snippet solution()}
+				{@html kd(`
+								\\begin{aligned}
+									Q &= \\frac 1n AR^{2/3}S^{1/2} \\\\
+									&= \\frac 1n \\cdot by\\cdot\\left(\\frac{by}{b+2y}\\right)^{2/3}\\!\\!\\cdot S^{ 1/2 } \\\\
+									\\Rightarrow ${sds(Q)} &= \\frac 1{${sds(n)}} \\cdot ${sds(b)}y\\\\
+									&\\qquad\\times\\left(\\frac{${sds(b)}y}{${sds(b)}y+2y}\\right)^{2/3}\\!\\!\\cdot\\! (${sdw(s / 100)})^{ 1/2 } 
+								\\end{aligned}`)}
+				<p>
+					The expression above cannot be solved directly (analytically) for {@html ki(`y`)} but may be
+					found using iterative methods. (Or, more conveniently, by using the numerical solver available
+					on a scientific calculator)
+				</p>
+
+				<p>This calculator uses an automated iterative method called a binary search.</p>
+
+				{@html kd(`
+							y=${sdw(y)}\\, \\mathsf{m}
+							`)}
+				<Carrd>
+					{#snippet answer()}
+						<strong>Fixed-Point Iterative Solution</strong>
+					{/snippet}
+					{#snippet solution()}
+						{@html kd(`										
+								Q = \\frac 1n \\cdot by\\cdot\\left(\\frac{by}{b+2y}\\right)^{2/3}\\!\\!\\cdot \\sqrt{S} `)}
+						Isolate a single {@html ki(`y`)} on the left hand side of the equation:
+						{@html kd(`
 							\\begin{aligned}
-								Q &= \\frac 1n AR^{2/3}S^{1/2} \\\\
-								&= \\frac 1n \\cdot by\\cdot\\left(\\frac{by}{b+2y}\\right)^{2/3}\\!\\!\\cdot S^{ 1/2 } \\\\
-								\\Rightarrow ${Qs}\\, \\mathsf{m^3\\!/s} &= \\frac 1{${ns}} \\cdot (${bs}\\, \\mathsf{m})y\\\\
-								&\\qquad\\times\\left(\\frac{${bs}y}{${bs}+2y}\\right)^{2/3}\\!\\!\\cdot\\! (${sdw(s / 100)})^{ 1/2 } 
-							\\end{aligned}`)}
-							<div style='width: 85%; margin-left: 7.5%; '>The expression above cannot be solved directly (analytically) for {ki(
-				`y`
-			)}. It may be solved using trial-and-error methods but it is generally more convenient to find {ki(
-				'y'
-			)} using a numerical solver on a scientific calculator or with Goal Seek in a spreadsheet app.<br/><br/> (This calculator uses an automated type of trial-and-error called a binary search, probably similar to how your calculator does it.)</div>
-							{kd(`
-							y=${y}\\, \\mathsf{m}
-							`)}"
-		/>
+							Q &= \\frac 1n \\cdot by\\cdot\\left(\\frac{by}{b+2y}\\right)^{2/3}\\!\\!\\cdot \\sqrt{S}	\\\\
+								\\Rightarrow y^{5/3} &= \\frac{nQ}{b\\sqrt{S}}\\cdot\\left(\\frac{b+2y}{b}\\right)^{2/3}\\\\
+								&= \\frac{nQ}{b\\sqrt{S}}\\cdot\\left(1+\\frac{2y}{b}\\right)^{2/3} \\\\
+								\\Rightarrow y &= \\left(\\frac{nQ}{b\\sqrt{S}}\\right)^{3/5}\\cdot\\left(1+\\frac{2y}{b}\\right)^{2/5}  \\\\
+								 &= \\left(\\frac{${n}\\cdot${Q}}{${sds(b)}\\sqrt{${s / 100}}}\\right)^{3/5}\\cdot\\left(1+\\frac{2y}{${sds(b)}}\\right)^{2/5}  \\\\
+								y &= ${sdw(coeff)}\\cdot\\left(1+\\frac{2y}{${sds(b)}}\\right)^{2/5}  \\\\
+							\\end{aligned}
+								 `)}
+						Now, the fixed-point iterative process is to guess a starting value for the depth {@html ki(
+							'y_0'
+						)}, evaluate the function for input {@html ki('y_0')} and get {@html ki('y_1')} on the left.
+						Then repeat, evaluating at {@html ki('y_1')} to get {@html ki('y_2')} on the left,... Then
+						{@html ki('y_n')} will converge on {@html ki('y_{n+1}')}. Continue the iteration until
+						you have the desired accuracy, i.e. until the value of {@html ki(
+							'\\left|y_{n+1}-y_n\\right|'
+						)} is sufficiently small.
+						<p class="green">
+							<br />
+							[More precisely, fixed-point iteration theory states that the function will converge if
+							the absolute value of its derivative is less than {@html ki('1')}. In our case, it is
+							easier just to perform the iteration and note that it does converge than to prove that
+							the derivative satisfies {@html ki(`\\left|f'(y)\\right|<1`)} for all values of {@html ki(
+								`y,\\,b,\\,S`
+							)} and {@html ki(`n`)}]
+						</p>
+					{/snippet}
+				</Carrd>
+			{/snippet}
+		</Carrd>
+
 		<Card
 			answer="Flow Area: {ki(`${sds(A)}\\, \\mathsf{m^2}`)} "
 			solution={kd(`
 						\\begin{aligned}
 							A &= by \\\\
-							&= ${bs}\\, \\mathsf{m}\\times ${ys}\\, \\mathsf{m} \\\\							
+							&= ${sds(b)}\\, \\mathsf{m}\\times ${ys}\\, \\mathsf{m} \\\\							
 							&= ${A} \\, \\mathsf{m^2}
 						\\end{aligned}
 					`)}
@@ -179,7 +260,7 @@
 			solution={kd(`
 						\\begin{aligned} 
 							v &= Q/A \\\\
-						 	&= \\frac{${Qs}\\, \\mathsf{m^3\\!/s}}{${A}\\, \\mathsf{m^2}} \\\\					
+						 	&= \\frac{${sds(Q)}\\, \\mathsf{m^3\\!/s}}{${A}\\, \\mathsf{m^2}} \\\\					
 							&= ${v} \\, \\mathsf{m/s}
 						\\end{aligned}`)}
 		/>
@@ -230,9 +311,9 @@
 								&= b^2y_c^3 \\\\
 								\\Rightarrow y_c^3 &= \\frac{Q^2}{b^2g} \\\\
 								\\Rightarrow y_c &= \\sqrt[3]{\\frac{Q^2}{b^2g}} \\\\
-								\\Rightarrow y_c &= \\sqrt[3]{\\frac{(${Qs}\\, \\mathsf{m^3\\!/s})^2}{(${sds(
-									bs
-								)}\\, \\mathsf{m} )^2(${gs}\\, \\mathsf{m/s^2})}}\\\\
+								\\Rightarrow y_c &= \\sqrt[3]{\\frac{(${sds(Q)}\\, \\mathsf{m^3\\!/s})^2}{(${sds(
+									b
+								)}\\, \\mathsf{m} )^2(${g}\\, \\mathsf{m/s^2})}}\\\\
 								&= ${yc}\\, \\mathsf{m}
 
                             \\end{aligned}
@@ -243,10 +324,10 @@
 			solution={kd(`
 							\\begin{aligned}
 								A_c &= by_c \\\\
-								&= ${sds(bs)}\\, \\mathsf{m}\\times ${yc}\\, \\mathsf{m} \\\\
+								&= ${sds(b)}\\, \\mathsf{m}\\times ${yc}\\, \\mathsf{m} \\\\
 								&= ${Ac}\\, \\mathsf{m^2}\\\\\\\\
 								v_c &= Q/A_c \\\\
-								&= \\frac{${Qs}\\, \\mathsf{m^3\\!/s}}{${Ac}\\, \\mathsf{m^2}} \\\\
+								&= \\frac{${sds(Q)}\\, \\mathsf{m^3\\!/s}}{${Ac}\\, \\mathsf{m^2}} \\\\
 								&= ${vc} \\,\\mathsf{m/s}
 							\\end{aligned}	`)}
 		/>
@@ -255,7 +336,7 @@
 			solution={kd(`
 							\\begin{aligned}
 								E_{min} &= y_c+\\frac{ v_c^2 }{ 2g } \\\\
-								&= ${yc}\\, \\mathsf{m}+\\frac{ (${vc}\\, \\mathsf{m/s})^2 }{ 2(${gs}\\, \\mathsf{m/s^2}) } \\\\
+								&= ${yc}\\, \\mathsf{m}+\\frac{ (${vc}\\, \\mathsf{m/s})^2 }{ 2(${g}\\, \\mathsf{m/s^2}) } \\\\
 								&= ${Emin} \\,\\mathsf{m}
 							\\end{aligned}
 						`)}
