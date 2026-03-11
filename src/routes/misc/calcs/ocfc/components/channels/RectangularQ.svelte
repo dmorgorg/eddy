@@ -18,6 +18,8 @@
 		return sd(num, wdigs, extraForWdigs)
 	}
 
+	let initQuess = sdw(1)
+
 	const getQFromY = (y = 0) => {
 		var A = b * y
 		let v = common.getV(n, common.getR(rect.getArea(b, y), rect.getP(b, y)), s)
@@ -46,7 +48,7 @@
 	let g = $derived(Number(rectQ.g))
 
 	let y = $derived(sdw(getYFromQ()))
-	let ys = $derived(sdw(y))
+	// let ys = $derived(sdw(y))
 	let A = $derived(sdw(rect.getArea(b, y)))
 	let v = $derived(sdw(common.getVfromQandA(Q, A)))
 	let E = $derived(sdw(common.getE(y, v, g)))
@@ -61,48 +63,38 @@
 	let Sc = $derived(sdw(common.getCriticalSlope(n, vc, Rc)))
 
 	let coeff = $derived(Math.pow((n * Q) / b / Math.pow(s / 100, 0.5), 3 / 5))
-	/** @type {Array<Number> | null} */
-	let iteratedY = $state([1])
+	/** @type {Array<Number>} */
+	let iteratedY = $state([Number(initQuess)])
 
-	// $effect(() => {
-	// 	b = rectQ.base
-	// 	console.log(rectQ.base + ', ' + b)
-	// })
+	$effect(() => {
+		b = rectQ.base
+		Q = rectQ.Q
+		// console.log(b + ', ' + Q + ', ' + sdw(coeff))
+		setIterationPoints()
+		// console.log(iteratedY.length)
+	})
 
 	const setIterationPoints = () => {
-		let current = 1,
-			next = 0,
-			it = 0
-		iteratedY.length = 0
+		let next = Number(initQuess),
+			// make current different from current to guarantee that the loop is entered initially
+			current = next + 1,
+			iterations = 0
+		// when the $effect sees iteratedY change it refires each time, causing a loop. Store the		results in points and assign it once outside the loop
+		const points = []
 
 		while (current != next) {
-			it++
+			++iterations
 			current = next
 			next = Number(sdw(coeff * Math.pow(1 + (2 * current) / b, 0.4)))
-			iteratedY.push(next)
-			console.log(
-				'n=' +
-					n +
-					', Q=' +
-					Q +
-					', b=' +
-					b +
-					', b2=' +
-					rectQ.base +
-					', s=' +
-					s +
-					', y=' +
-					y +
-					', g=' +
-					g
-			)
-			// console.log(coeff)
-			// if (current === next) break
-			if (it > 20) break
+			points.push(next)
+
+			// in case of non convergence
+			if (iterations > 20) break
 		}
+		iteratedY = points || []
 	}
 
-	setIterationPoints()
+	// setIterationPoints()
 
 	const processChange = debounce((e) => {
 		if (e.target.id === 'slope') {
@@ -119,7 +111,7 @@
 			let value = e.target.value
 			// n.b. the string length counts the decimal point!
 			if (value.length > 4) {
-				console.log(value.length)
+				// console.log(value.length)
 				// allow g=9.806
 				rectQ.g = Number(sd(value, 4))
 			} else {
@@ -133,9 +125,6 @@
 
 <article>
 	<section><RQC bind:base={rectQ.base} bind:Qflow={rectQ.Q} bind:depth={y} /></section>
-
-	{coeff}<br />{iteratedY.length}<br />
-	{iteratedY[0]}, {iteratedY[1]}, {iteratedY[2]}, {iteratedY[3]}, {iteratedY[4]}, {iteratedY[5]},
 
 	<section>
 		<div class="inputs-row">
@@ -212,7 +201,11 @@
 					{#snippet solution()}
 						{@html kd(`										
 								Q = \\frac 1n \\cdot by\\cdot\\left(\\frac{by}{b+2y}\\right)^{2/3}\\!\\!\\cdot \\sqrt{S} `)}
-						Isolate a single {@html ki(`y`)} on the left hand side of the equation:
+						We need to solve this equation for {@html ki('y')}, for the given values of {@html ki(
+							'Q'
+						)}, {@html ki('n')}, {@html ki('b')} and {@html ki('S')}. Isolate a single {@html ki(
+							`y`
+						)} on the left hand side of the equation:
 						{@html kd(`
 							\\begin{aligned}
 							Q &= \\frac 1n \\cdot by\\cdot\\left(\\frac{by}{b+2y}\\right)^{2/3}\\!\\!\\cdot \\sqrt{S}	\\\\
@@ -225,13 +218,13 @@
 								 `)}
 						Now, the fixed-point iterative process is to guess a starting value for the depth {@html ki(
 							'y_0'
-						)}, evaluate the function for input {@html ki('y_0')} and get {@html ki('y_1')} on the left.
+						)}, evaluate the function for input {@html ki('y_0')} to get {@html ki('y_1')} on the left.
 						Then repeat, evaluating at {@html ki('y_1')} to get {@html ki('y_2')} on the left,... Then
 						{@html ki('y_n')} will converge on {@html ki('y_{n+1}')}. Continue the iteration until
 						you have the desired accuracy, i.e. until the value of {@html ki(
 							'\\left|y_{n+1}-y_n\\right|'
 						)} is sufficiently small.
-						<p class="green">
+						<p>
 							<br />
 							[More precisely, fixed-point iteration theory states that the function will converge if
 							the absolute value of its derivative is less than {@html ki('1')}. In our case, it is
@@ -240,6 +233,22 @@
 								`y,\\,b,\\,S`
 							)} and {@html ki(`n`)}]
 						</p>
+						<p>
+							<br />
+							Start with a guess of {@html ki(`y_0=${initQuess}`)}:
+						</p>
+						<!-- {iteratedY.length} -->
+						{#each iteratedY as pt, i}
+							<!-- don't print out an equation with the last element as independent variable with calculated value not defined -->
+							{#if !isNaN(iteratedY[i + 1])}
+								{@html kd(
+									`y_${i + 1}=${sdw(iteratedY[i + 1])}= ${sdw(coeff)}\\cdot\\left(1+\\frac{2\\times ${sdw(iteratedY[i])}}{${sds(b)}}\\right)^{2/5} `
+								)}
+							{/if}
+						{/each}
+						Notice that now {@html ki(`y=f(y)`)}, that is {@html ki(`f(${y})=${y}`)}, and {@html ki(
+							`\\bm{y=${y}\\,\\mathsf{m}}`
+						)} is the fixed-point solution to the depth of flow equation derived above.
 					{/snippet}
 				</Carrd>
 			{/snippet}
@@ -425,5 +434,8 @@
 		font-weight: bold;
 		margin-top: 1em;
 		margin-bottom: 0.5em;
+	}
+	p {
+		font-size: inherit;
 	}
 </style>
