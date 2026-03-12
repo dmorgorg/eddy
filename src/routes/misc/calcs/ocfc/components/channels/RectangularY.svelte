@@ -3,6 +3,7 @@
 
 	import RYC from './RYC.svelte'
 	import Card from '../Card.svelte'
+	import Carrd from '../Carrd.svelte'
 	import { ki, kd, sd, debounce } from '$lib/utilities/utils.js'
 	import { common, rect } from '$lib/fluids/openChannel/utils'
 	import { digits } from '../../digits.svelte.js'
@@ -18,21 +19,17 @@
 		return sd(num, wdigs, extraForWdigs)
 	}
 
-	let bs = $derived(sds(rectY.base))
-	let ys = $derived(sds(rectY.depth))
-	let ss = $derived(sds(rectY.slope))
-	let ns = $derived(sds(rectY.n))
-	let gs = $derived(sd(rectY.g, 4, extraForSdigs))
+	// let bs = $derived(sds(rectY.base))
+	// let ys = $derived(sds(rectY.depth))
+	// let ss = $derived(sds(rectY.slope))
+	// let ns = $derived(sds(rectY.n))
+	// let gs = $derived(sd(rectY.g, 4, extraForSdigs))
 
-	let aspectRatio = $derived(
-		Math.round(Math.min(Math.max(Number(bs) / Number(ys), 1 / 6), 8) * 100) / 100
-	)
-
-	let b = $derived(Number(bs))
-	let y = $derived(Number(ys))
-	let s = $derived(Number(ss))
-	let n = $derived(Number(ns))
-	let g = $derived(Number(gs))
+	let b = $derived(Number(rectY.base))
+	let y = $derived(Number(rectY.depth))
+	let s = $derived(Number(rectY.slope))
+	let n = $derived(Number(rectY.n))
+	let g = $derived(Number(rectY.g))
 
 	// calculations for rectangular channel with y specified
 	let A = $derived(sdw(rect.getArea(b, y)))
@@ -54,25 +51,27 @@
 	// Handles slope, n, g input changes; stores as numbers, updates input with formatted value
 	const processChange = debounce((e) => {
 		if (e.target.id === 'slope') {
-			const formatted = sds(e.target.value)
-			ss = Number(formatted)
-			e.target.value = formatted
+			rectY.slope = e.target.value
+			e.target.value = sds(rectY.slope)
 		}
 		if (e.target.id === 'n') {
-			const formatted = sds(e.target.value)
-			ns = Number(formatted)
-			e.target.value = formatted
+			rectY.n = Number(e.target.value)
+			e.target.value = sds(rectY.n)
 		}
 		if (e.target.id === 'g') {
-			let value = e.target.value
 			let formatted
-			if (value.length > 4) {
-				formatted = sd(value, 4)
+			if (e.target.value.length > 4) {
+				// formatted = sd(e.target.value, 5)
+				console.log(e.target.value)
+				rectY.g = Number(e.target.value)
+				console.log(rectY.g)
+				e.target.value = sd(rectY.g, 4)
 			} else {
-				formatted = sds(value)
+				formatted = sds(e.target.value)
+				console.log(formatted)
+				rectY.g = Number(formatted)
+				e.target.value = sds(rectY.g)
 			}
-			gs = Number(formatted)
-			e.target.value = formatted
 		}
 	}, 1000)
 </script>
@@ -88,7 +87,7 @@
 				<span class="var-name">{@html ki('S =')}</span>
 				<input
 					type="number"
-					value={sds(ss)}
+					value={sds(s)}
 					id="slope"
 					oninput={processChange}
 					min="0.001"
@@ -102,7 +101,7 @@
 				<span class="var-name">{@html ki('n =')}</span>
 				<input
 					type="number"
-					value={sds(ns)}
+					value={sds(n)}
 					id="n"
 					oninput={processChange}
 					min="0"
@@ -115,7 +114,7 @@
 				<span class="var-name">{@html ki('g =')}</span>
 				<input
 					type="number"
-					value={sds(gs)}
+					value={sds(g)}
 					id="g"
 					oninput={processChange}
 					min="0"
@@ -129,160 +128,217 @@
 	</section>
 	<section class="results">
 		<div class="heading">Normal (Uniform) Flow</div>
-		<Card
-			answer="Flow Area: {ki(`A = ${sds(A)}\\, \\mathsf{m^2}`)}"
-			solution={kd(`
-						\\begin{aligned}
-							A &= by \\\\
-							&= ${bs}\\, \\mathsf{m} \\times ${ys}\\, \\mathsf{m} \\\\
-							&= ${A}\\, \\mathsf{m^2}
-						\\end{aligned}
-					`)}
-		/>
-		<Card
-			answer="Wetted Perimeter: {ki(`P = ${sds(P)}\\, \\mathsf{m}`)}"
-			solution={kd(`
-						\\begin{aligned}
-							P &= b+2y \\\\
-							&= ${bs}\\, \\mathsf{m} + 2\\times ${ys}\\, \\mathsf{m} \\\\
-							&= ${P}\\, \\mathsf{m}
-						\\end{aligned}
-					`)}
-		/>
-		<Card
-			answer="Hydraulic Radius: {ki(`R = ${sds(R)}\\, \\mathsf m`)}  "
-			solution={kd(`
-						\\begin{aligned}
-							R &= A/P \\\\
-							&= ${A}\\, \\mathsf{m^2} / ${P}\\, \\mathsf{m} \\\\
-							&= ${R} \\mathsf{m}
-						\\end{aligned}
-					`)}
-		/>
-		<Card
-			answer="Average Flow Velocity: {ki(`v = ${sds(v)}\\, \\mathsf{m/s}`)}  "
-			solution={kd(`
-						\\begin{aligned}
-							v &= \\frac 1n R^{2/3} S^{1/2} \\\\
-							&= \\frac{1}{${ns}} \\left(${R}\\right)^{2/3} \\left(${sdw(s / 100)}\\right)^{1/2} \\\\
-							&= ${v} \\, \\mathsf{m/s}
-						\\end{aligned}
-					`)}
-		/>
-		<Card
-			answer="Flow Rate: {ki(`Q = ${sds(Q)}\\, \\mathsf{m^3/s}`)}  "
-			solution={kd(`
-						\\begin{aligned}
-							Q &= Av \\\\
-							&= ${A}\\, \\mathsf{m^2}\\times ${v}\\, \\mathsf{m/s} \\\\
-							&= ${Q} \\, \\mathsf{m^3/s}
-						\\end{aligned}
-					`)}
-		/>
-		<Card
-			answer="Specific Energy: {ki(`E = ${sds(E)}\\, \\mathsf{m}`)}  "
-			solution={kd(`
-						\\begin{aligned}
-							E &= y+\\frac{v^2}{2g} \\\\
-							&= ${ys}\\, \\mathsf{m}+\\frac{(${v} \\, \\mathsf{m/s)^2} }
-								{2(${gs}\\, \\mathsf{m/s^2}) } \\\\
-							&= ${E}\\,\\mathsf{m}
-						\\end{aligned}
-					`)}
-		/>
-		<Card
-			answer="Free Surface: {ki(`T = ${sds(T)}\\, \\mathsf{m}`)}  "
-			solution={kd(`
-						\\begin{aligned}
-							T &= b \\\\
-							&= ${sds(b)}\\, \\mathsf{m} \\\\
-							
-						\\end{aligned}
-					`)}
-		/>
-		<Card
-			answer="Froude Number: {ki(`N_F = ${sds(NF)}`)}  "
-			solution={kd(`
-						\\begin{aligned}
-							N_F &=  \\frac{v}{\\sqrt{g(A/T)}} \\\\							   
-							&=  \\frac{${v}\\, \\mathsf{m/s}}{\\sqrt{(${gs}\\, \\mathsf{m/s^2})\\cdot(${sdw(
-								A
-							)}\\, \\mathsf{m^2}/${sds(T)}\\, \\mathsf{m})}} \\\\
-							&= ${sdw(NF)}
-						\\end{aligned}
-					`)}
-		/>
+
+		<Carrd>
+			{#snippet answer()}
+				Flow Area: {@html ki(`A = ${sds(A)}\\, \\mathsf{m^2}`)}
+			{/snippet}
+			{#snippet solution()}
+				{@html kd(`
+					\\begin{aligned}
+						A &= by \\\\
+						&= ${bs}\\, \\mathsf{m} \\times ${sdw(y)}\\, \\mathsf{m} \\\\
+						&= ${A}\\, \\mathsf{m^2}
+					\\end{aligned}
+				`)}
+			{/snippet}
+		</Carrd>
+		<Carrd>
+			{#snippet answer()}
+				Wetted Perimeter: {@html ki(`P = ${sds(P)}\\, \\mathsf{m}`)}
+			{/snippet}
+			{#snippet solution()}
+				{@html kd(`
+					\\begin{aligned}
+						P &= b+2y \\\\
+						&= ${bs}\\, \\mathsf{m} + 2\\times ${sds(y)}\\, \\mathsf{m} \\\\
+						&= ${P}\\, \\mathsf{m}
+					\\end{aligned}
+				`)}
+			{/snippet}
+		</Carrd>
+		<Carrd>
+			{#snippet answer()}
+				Hydraulic Radius: {@html ki(`R = ${sds(R)}\\, \\mathsf m`)}
+			{/snippet}
+			{#snippet solution()}
+				{@html kd(`
+					\\begin{aligned}
+						R &= A/P \\\\
+						&= ${A}\\, \\mathsf{m^2} / ${P}\\, \\mathsf{m} \\\\
+						&= ${R} \\mathsf{m}
+					\\end{aligned}
+				`)}
+			{/snippet}
+		</Carrd>
+		<Carrd>
+			{#snippet answer()}
+				Average Flow Velocity: {@html ki(`v = ${sds(v)}\\, \\mathsf{m/s}`)}
+			{/snippet}
+			{#snippet solution()}
+				{@html kd(`
+					\\begin{aligned}
+						v &= \\frac 1n R^{2/3} S^{1/2} \\\\
+						&= \\frac{1}{${sds(n)}} \\left(${R}\\right)^{2/3} \\left(${sdw(s / 100)}\\right)^{1/2} \\\\
+						&= ${v} \\, \\mathsf{m/s}
+					\\end{aligned}
+				`)}
+			{/snippet}
+		</Carrd>
+		<Carrd>
+			{#snippet answer()}
+				Flow Rate: {@html ki(`Q = ${sds(Q)}\\, \\mathsf{m^3/s}`)}
+			{/snippet}
+			{#snippet solution()}
+				{@html kd(`
+					\\begin{aligned}
+						Q &= Av \\\\
+						&= ${A}\\, \\mathsf{m^2}\\times ${v}\\, \\mathsf{m/s} \\\\
+						&= ${Q} \\, \\mathsf{m^3/s}
+					\\end{aligned}
+				`)}
+			{/snippet}
+		</Carrd>
+		<Carrd>
+			{#snippet answer()}
+				Specific Energy: {@html ki(`E = ${sds(E)}\\, \\mathsf{m}`)}
+			{/snippet}
+			{#snippet solution()}
+				{@html kd(`
+					\\begin{aligned}
+						E &= y+\\frac{v^2}{2g} \\\\
+						&= ${sds(y)}\\, \\mathsf{m}+\\frac{(${v} \\, \\mathsf{m/s)^2} }
+							{2(${sds(g)}\\, \\mathsf{m/s^2}) } \\\\
+						&= ${E}\\,\\mathsf{m}
+					\\end{aligned}
+				`)}
+			{/snippet}
+		</Carrd>
+		<Carrd>
+			{#snippet answer()}
+				Free Surface: {@html ki(`T = ${sds(T)}\\, \\mathsf{m}`)}
+			{/snippet}
+			{#snippet solution()}
+				{@html kd(`
+					\\begin{aligned}
+						T &= b \\\\
+						&= ${sds(b)}\\, \\mathsf{m}
+					\\end{aligned}
+				`)}
+			{/snippet}
+		</Carrd>
+		<Carrd>
+			{#snippet answer()}
+				Froude Number: {@html ki(`N_F = ${sds(NF)}`)}
+			{/snippet}
+			{#snippet solution()}
+				{@html kd(`
+					\\begin{aligned}
+						N_F &=  \\frac{v}{\\sqrt{g(A/T)}} \\\\							   
+						&=  \\frac{${v}\\, \\mathsf{m/s}}{\\sqrt{(${sds(g)}\\, \\mathsf{m/s^2})\\cdot(${sdw(
+							A
+						)}\\, \\mathsf{m^2}/${sds(T)}\\, \\mathsf{m})}} \\\\
+						&= ${sdw(NF)}
+					\\end{aligned}
+				`)}
+			{/snippet}
+		</Carrd>
 	</section>
 
 	<section class="results">
 		<div class="heading">Critical Flow</div>
-		<Card
-			answer="For {ki(`Q=${sdw(Q)} \\, \\mathsf{m^3\\!/s}`)}, Critical Depth {ki(
-				`y_c=${sds(yc)} \\, \\mathsf{m}`
-			)}"
-			solution={kd(`
-						\\begin{aligned}
-							N_F &= 1 \\\\
-							\\Rightarrow v_c &= \\sqrt{ g(A_c/T_c)} \\\\
-							\\Rightarrow \\left(\\frac{Q}{A_c}\\right)^2 &= g(A_c/T_c) \\\\
-							\\Rightarrow \\frac{Q^2}{g} &= \\frac{A_c^3}{T_c} \\\\
-							&= \\frac{\\left(by_c\\right)^3}{b}	\\\\
-							&= b^2y_c^3 \\\\
-							\\Rightarrow y_c^3 &= \\frac{Q^2}{b^2g} \\\\
-							\\Rightarrow y_c &= \\sqrt[3]{\\frac{Q^2}{b^2g}} \\\\
-							\\Rightarrow y_c &= \\sqrt[3]{\\frac{(${Q}\\, \\mathsf{m^3\\!/s})^2}{(${sds(
-								bs
-							)}\\, \\mathsf{m} )^2(${gs}\\, \\mathsf{m/s^2})}}\\\\
-							&= ${yc}\\, \\mathsf{m}
-						\\end{aligned}
-					`)}
-		/>
-		<Card
-			answer="Critical Velocity: {ki(` v_c = ${sds(vc)}  \\,\\mathsf{m/s}`)}  "
-			solution={kd(`
-						\\begin{aligned}
-							A_c &= by_c \\\\
-							&= ${bs}\\, \\mathsf{m}\\times ${yc}\\, \\mathsf{m} \\\\
-							&= ${Ac}\\, \\mathsf{m^2}\\\\\\\\
-							v_c &= Q/A_c \\\\
-							&= \\frac{${Q}\\, \\mathsf{m^3\\!/s}}{${Ac}\\, \\mathsf{m^2}} \\\\
-							&= ${vc} \\,\\mathsf{m/s}
-						\\end{aligned}	
-					`)}
-		/>
-		<Card
-			answer="Minimum Specific Energy: {ki(`E_{min} = ${sds(Emin)}\\, \\mathsf{m}`)}"
-			solution={kd(`
-						\\begin{aligned}
-							E_{min} &= y_c+\\frac{ v_c^2 }{ 2g } \\\\
-							&= ${yc}\\, \\mathsf{m}+\\frac{ (${vc}\\, \\mathsf{m/s})^2 }{ 2(${gs}\\, \\mathsf{m/s^2}) } \\\\
-							&= ${Emin} \\,\\mathsf{m}
-						\\end{aligned}
-					`)}
-		/>
-		<Card
-			answer="Slope for Critical Flow: {ki(`S_c = ${sds(Sc)}\\%`)}"
-			solution={kd(`
-						\\begin{aligned}
-							A_c &= by_c \\\\
-							&= ${bs}\\, \\mathsf{m}\\times ${yc}\\, \\mathsf{m} \\\\
-							&= ${Ac} \\,\\mathsf{m^2} \\\\ \\\\
+		<Carrd>
+			{#snippet answer()}
+				For {@html ki(`Q=${sdw(Q)} \\, \\mathsf{m^3\\!/s}`)}, Critical Depth {@html ki(
+					`y_c=${sds(yc)} \\, \\mathsf{m}`
+				)}
+			{/snippet}
+			{#snippet solution()}
+				{@html kd(`
+					\\begin{aligned}
+						N_F &= 1 \\\\
+						\\Rightarrow v_c &= \\sqrt{ g(A_c/T_c)} \\\\
+						\\Rightarrow \\left(\\frac{Q}{A_c}\\right)^2 &= g(A_c/T_c) \\\\
+						\\Rightarrow \\frac{Q^2}{g} &= \\frac{A_c^3}{T_c} \\\\
+						&= \\frac{\\left(by_c\\right)^3}{b}	\\\\
+						&= b^2y_c^3 \\\\
+						\\Rightarrow y_c^3 &= \\frac{Q^2}{b^2g} \\\\
+						\\Rightarrow y_c &= \\sqrt[3]{\\frac{Q^2}{b^2g}} \\\\
+						\\Rightarrow y_c &= \\sqrt[3]{\\frac{(${Q}\\, \\mathsf{m^3\\!/s})^2}{(${sds(
+							bs
+						)}\\, \\mathsf{m} )^2(${sds(g)}\\, \\mathsf{m/s^2})}}\\\\
+						&= ${yc}\\, \\mathsf{m}
+					\\end{aligned}
+				`)}
+			{/snippet}
+		</Carrd>
+		<Carrd>
+			{#snippet answer()}
+				Critical Velocity: {@html ki(` v_c = ${sds(vc)}  \\,\\mathsf{m/s}`)}
+			{/snippet}
+			{#snippet solution()}
+				{@html kd(`
+					\\begin{aligned}
+						A_c &= by_c \\\\
+						&= ${bs}\\, \\mathsf{m}\\times ${yc}\\, \\mathsf{m} \\\\
+						&= ${Ac}\\, \\mathsf{m^2}\\\\\\\\
+						v_c &= Q/A_c \\\\
+						&= \\frac{${Q}\\, \\mathsf{m^3\\!/s}}{${Ac}\\, \\mathsf{m^2}} \\\\
+						&= ${vc} \\,\\mathsf{m/s}
+					\\end{aligned}	
+				`)}
+			{/snippet}
+		</Carrd>
+		<Carrd>
+			{#snippet answer()}
+				Minimum Specific Energy: {@html ki(`E_{min} = ${sds(Emin)}\\, \\mathsf{m}`)}
+			{/snippet}
+			{#snippet solution()}
+				{@html kd(`
+					\\begin{aligned}
+						E_{min} &= y_c+\\frac{ v_c^2 }{ 2g } \\\\
+						&= ${yc}\\, \\mathsf{m}+\\frac{ (${vc}\\, \\mathsf{m/s})^2 }{ 2(${sds(g)}\\, \\mathsf{m/s^2}) } \\\\
+						&= ${Emin} \\,\\mathsf{m}
+					\\end{aligned}
+				`)}
+			{/snippet}
+		</Carrd>
 
-							P_c &= b + 2y_c \\\\
-							&= ${bs}\\, \\mathsf{m}+2(${yc}\\, \\mathsf{m}) \\\\
-							&= ${Pc}\\, \\mathsf{m}\\\\\\\\
+		<Carrd>
+			{#snippet answer()}
+				Slope for Critical Flow: {@html ki(`S_c = ${sds(Sc)}\\%`)}
+			{/snippet}
+			{#snippet solution()}
+				{@html kd(`
+					\\begin{aligned}
+						A_c &= by_c \\\\
+						&= ${bs}\\, \\mathsf{m}\\times ${yc}\\, \\mathsf{m} \\\\
+						&= ${Ac} \\,\\mathsf{m^2} \\\\ \\\\
 
-							R_c &= A_c/P_c \\\\
-							&= \\frac{${Ac}\\, \\mathsf{m^2}}{${Pc}\\, \\mathsf{m}} \\\\
-							&= ${Rc}\\,\\mathsf{m}\\\\\\\\
+						P_c &= b + 2y_c \\\\
+						&= ${bs}\\, \\mathsf{m}+2(${yc}\\, \\mathsf{m}) \\\\
+						&= ${Pc}\\, \\mathsf{m}\\\\\\\\
 
-							\\Rightarrow S_c &= \\left(\\frac { nv_c }{ R_c^{2/3} }\\right)^2 \\\\
-							&= \\left(\\frac{${n}\\times ${vc}\\, \\mathsf{m/s} }{ (${Rc}\\, \\mathsf{m})^{2/3} }\\right)^2\\\\
-							&= ${sdw(Number(Sc) / 100)} \\\\
-							&= ${Sc}\\% 								
-						\\end{aligned}
-					`)}
-		/>
+						R_c &= A_c/P_c \\\\
+						&= \\frac{${Ac}\\, \\mathsf{m^2}}{${Pc}\\, \\mathsf{m}} \\\\
+						&= ${Rc}\\,\\mathsf{m}\\\\\\\\
+
+						\\Rightarrow S_c &= \\left(\\frac { nv_c }{ R_c^{2/3} }\\right)^2 \\\\
+						&= \\left(\\frac{${n}\\times ${vc}\\, \\mathsf{m/s} }{ (${Rc}\\, \\mathsf{m})^{2/3} }\\right)^2\\\\
+						&= ${sdw(Number(Sc) / 100)} \\\\
+						&= ${Sc}\\% 								
+					\\end{aligned}
+				`)}
+			{/snippet}
+		</Carrd>
+		<!-- <Carrd>
+			{#snippet answer()}
+				stuff
+			{/snippet}
+			{#snippet solution()}
+				more
+			{/snippet}
+		</Carrd> -->
 	</section>
 </article>
 
