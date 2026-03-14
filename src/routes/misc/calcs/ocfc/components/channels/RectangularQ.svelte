@@ -186,10 +186,9 @@
 				<p>
 					The expression above cannot be solved directly (analytically) for {@html ki(`y`)} but may be
 					found using iterative methods. (Or, more conveniently, by using the numerical solver available
-					on a scientific calculator)
+					on a scientific calculator). This calculator uses an automated iterative method called a binary
+					search.
 				</p>
-
-				<p>This calculator uses an automated iterative method called a binary search.</p>
 
 				{@html kd(`
 							y=${sdw(y)}\\, \\mathsf{m}

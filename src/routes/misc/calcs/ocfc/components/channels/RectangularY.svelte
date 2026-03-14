@@ -137,7 +137,7 @@
 				{@html kd(`
 					\\begin{aligned}
 						A &= by \\\\
-						&= ${bs}\\, \\mathsf{m} \\times ${sdw(y)}\\, \\mathsf{m} \\\\
+						&= ${sds(b)}\\, \\mathsf{m} \\times ${sdw(y)}\\, \\mathsf{m} \\\\
 						&= ${A}\\, \\mathsf{m^2}
 					\\end{aligned}
 				`)}
@@ -151,7 +151,7 @@
 				{@html kd(`
 					\\begin{aligned}
 						P &= b+2y \\\\
-						&= ${bs}\\, \\mathsf{m} + 2\\times ${sds(y)}\\, \\mathsf{m} \\\\
+						&= ${sds(b)}\\, \\mathsf{m} + 2\\times ${sds(y)}\\, \\mathsf{m} \\\\
 						&= ${P}\\, \\mathsf{m}
 					\\end{aligned}
 				`)}
@@ -265,7 +265,7 @@
 						\\Rightarrow y_c^3 &= \\frac{Q^2}{b^2g} \\\\
 						\\Rightarrow y_c &= \\sqrt[3]{\\frac{Q^2}{b^2g}} \\\\
 						\\Rightarrow y_c &= \\sqrt[3]{\\frac{(${Q}\\, \\mathsf{m^3\\!/s})^2}{(${sds(
-							bs
+							b
 						)}\\, \\mathsf{m} )^2(${sds(g)}\\, \\mathsf{m/s^2})}}\\\\
 						&= ${yc}\\, \\mathsf{m}
 					\\end{aligned}
@@ -280,7 +280,7 @@
 				{@html kd(`
 					\\begin{aligned}
 						A_c &= by_c \\\\
-						&= ${bs}\\, \\mathsf{m}\\times ${yc}\\, \\mathsf{m} \\\\
+						&= ${sds(b)}\\, \\mathsf{m}\\times ${yc}\\, \\mathsf{m} \\\\
 						&= ${Ac}\\, \\mathsf{m^2}\\\\\\\\
 						v_c &= Q/A_c \\\\
 						&= \\frac{${Q}\\, \\mathsf{m^3\\!/s}}{${Ac}\\, \\mathsf{m^2}} \\\\
@@ -312,11 +312,11 @@
 				{@html kd(`
 					\\begin{aligned}
 						A_c &= by_c \\\\
-						&= ${bs}\\, \\mathsf{m}\\times ${yc}\\, \\mathsf{m} \\\\
+						&= ${sds(b)}\\, \\mathsf{m}\\times ${yc}\\, \\mathsf{m} \\\\
 						&= ${Ac} \\,\\mathsf{m^2} \\\\ \\\\
 
 						P_c &= b + 2y_c \\\\
-						&= ${bs}\\, \\mathsf{m}+2(${yc}\\, \\mathsf{m}) \\\\
+						&= ${sds(b)}\\, \\mathsf{m}+2(${yc}\\, \\mathsf{m}) \\\\
 						&= ${Pc}\\, \\mathsf{m}\\\\\\\\
 
 						R_c &= A_c/P_c \\\\

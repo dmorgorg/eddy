@@ -1,14 +1,12 @@
 <script>
-	import { slide } from 'svelte/transition'
 	let { answer, solution } = $props()
 	let displayContent = $state(false)
-	/** @param {Event} e */
-	function toggleDisplay(e) {
-		e.stopPropagation()
-		displayContent = !displayContent
-	}
-	/** @type {HTMLElement | null} */
+	/** @type {HTMLDetailsElement | null} */
 	let cardElement = $state(null)
+
+	function handleToggle() {
+		displayContent = cardElement?.open ?? false
+	}
 
 	// AI magic code generated to scroll up when dropdowns go out of view. I don't really understand it...
 	$effect(() => {
@@ -45,83 +43,48 @@
 	})
 </script>
 
-<!-- svelte-ignore a11y_click_events_have_key_events -->
-<!-- svelte-ignore a11y_no_noninteractive_element_interactions -->
-<article class="card" bind:this={cardElement} onclick={(e) => toggleDisplay(e)}>
-	<section class="answer">
+<details class="card" bind:this={cardElement} ontoggle={handleToggle}>
+	<summary class="answer">
 		<div>{@render answer()}</div>
 		<span>
 			{@html displayContent ? '&#9650;' : '&#9660;'}
 		</span>
-	</section>
-	{#if displayContent}
-		<section class="solution" transition:slide={{ duration: 500, axis: 'y' }}>
+	</summary>
+	<div class="solution-wrapper">
+		<section class="solution">
 			<div>{@render solution()}</div>
 		</section>
-	{/if}
-</article>
+	</div>
+</details>
 
-<style>
-	.card {
+<style lang="scss">
+	details.card {
 		background-color: white;
 		border: 1px solid black;
-		box-shadow: 2px 2px 4px #c1cdcd;
 		border-radius: 3px;
-		cursor: pointer;
-		display: flex;
-		flex-direction: column;
-		font-weight: normal;
-		gap: 0;
-		margin-block: 0.5em;
-		padding: 0.5em 0.625em;
-		padding-bottom: 0;
-		width: 100%;
-
-		/* nested card styling */
-		:global(.card) {
-			/* background-color: #ebefef; */
-			border: none;
-			/* border: 2px solid black; */
-			border-radius: 13px;
-			box-shadow: none;
-			font-size: 0.93em;
-			margin-bottom: 2em;
-			margin-inline: 0;
-			padding-inline: 0;
-			padding-top: 0;
-		}
-		:global(.card > .answer) {
-			background-color: #cfd8d8;
-			/* background-color: red; */
-			padding: 0.25em 1em;
-		}
-		:global(.card > .solution) {
-			background-color: #ebefef;
-			border-top: none;
-			padding-inline: 1em;
-		}
+		box-shadow: 2px 2px 4px #c1cdcd;
+		margin-block: 0.75em;
 	}
-	.answer {
-		align-items: center;
-		background: none;
-		border: none;
+	summary.answer {
+		background: white;
+		border-radius: 3px;
 		display: flex;
-		font: inherit;
 		justify-content: space-between;
-		margin-block: 0;
-		padding-bottom: 0.375em;
-		text-align: left;
-		width: 100%;
+		padding: 1em;
 		span {
 			color: #088;
 		}
 	}
+	.solution-wrapper {
+		display: grid;
+		grid-template-rows: 0fr;
+		transition: grid-template-rows 500ms ease;
+	}
+	details[open] .solution-wrapper {
+		grid-template-rows: 1fr;
+	}
 	.solution {
+		overflow: hidden;
 		border-top: 2px solid #088;
-		/* margin-top: 0; */
-		padding-block: 0.65em;
-		padding-inline: 5%;
-		text-align: left;
-		width: 100%;
 	}
 </style>
