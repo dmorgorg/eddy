@@ -64,11 +64,11 @@
 				// formatted = sd(e.target.value, 5)
 				console.log(e.target.value)
 				rectY.g = Number(e.target.value)
-				console.log(rectY.g)
+				// console.log(rectY.g)
 				e.target.value = sd(rectY.g, 4)
 			} else {
 				formatted = sds(e.target.value)
-				console.log(formatted)
+				// console.log(formatted)
 				rectY.g = Number(formatted)
 				e.target.value = sds(rectY.g)
 			}

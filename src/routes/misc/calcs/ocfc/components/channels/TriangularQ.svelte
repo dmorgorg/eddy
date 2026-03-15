@@ -1,1 +1,1 @@
-triangular
+triangular Q
