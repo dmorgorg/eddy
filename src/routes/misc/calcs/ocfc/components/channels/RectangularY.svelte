@@ -14,16 +14,9 @@
 	const sds = (num) => {
 		return sd(num, sdigs, extraForSdigs)
 	}
-	// @ts-ignore
 	const sdw = (num) => {
 		return sd(num, wdigs, extraForWdigs)
 	}
-
-	// let bs = $derived(sds(rectY.base))
-	// let ys = $derived(sds(rectY.depth))
-	// let ss = $derived(sds(rectY.slope))
-	// let ns = $derived(sds(rectY.n))
-	// let gs = $derived(sd(rectY.g, 4, extraForSdigs))
 
 	let b = $derived(Number(rectY.base))
 	let y = $derived(Number(rectY.depth))

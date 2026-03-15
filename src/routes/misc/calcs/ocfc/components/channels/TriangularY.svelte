@@ -68,60 +68,61 @@
 	}, 1000)
 </script>
 
-<section>
-	<div class="inputs-row">
-		<label>
-			<span class="var-name">{@html ki('S =')}</span>
-			<input
-				type="number"
-				value={sds(s)}
-				id="slope"
-				oninput={processChange}
-				min="0.001"
-				step="any"
-				style="width: {digits.sdigs > 3 ? '7em' : '6em'}"
-			/>
-			<!-- slope input: always formatted -->
-			<span class="unit">{@html ki('\\%')}</span>
-		</label>
-		<label>
-			<span class="var-name">{@html ki('n =')}</span>
-			<input
-				type="number"
-				value={sds(n)}
-				id="n"
-				oninput={processChange}
-				min="0"
-				step="any"
-				style="width: {digits.sdigs > 3 ? '7em' : '6em'}"
-			/>
-			<!-- n input: always formatted -->
-		</label>
-		<label>
-			<span class="var-name">{@html ki('g =')}</span>
-			<input
-				type="number"
-				value={sds(g)}
-				id="g"
-				oninput={processChange}
-				min="0"
-				step="any"
-				style="width: 4em"
-			/>
-			<!-- g input: always formatted -->
-			<span class="unit">{@html ki('\\mathsf{m/s}^2')}</span>
-		</label>
-	</div>
-</section>
-<section class="results">
-	<div class="heading">Normal (Uniform) Flow</div>
+<article>
+	<section>
+		<div class="inputs-row">
+			<label>
+				<span class="var-name">{@html ki('S =')}</span>
+				<input
+					type="number"
+					value={sds(s)}
+					id="slope"
+					oninput={processChange}
+					min="0.001"
+					step="any"
+					style="width: {digits.sdigs > 3 ? '7em' : '6em'}"
+				/>
+				<!-- slope input: always formatted -->
+				<span class="unit">{@html ki('\\%')}</span>
+			</label>
+			<label>
+				<span class="var-name">{@html ki('n =')}</span>
+				<input
+					type="number"
+					value={sds(n)}
+					id="n"
+					oninput={processChange}
+					min="0"
+					step="any"
+					style="width: {digits.sdigs > 3 ? '7em' : '6em'}"
+				/>
+				<!-- n input: always formatted -->
+			</label>
+			<label>
+				<span class="var-name">{@html ki('g =')}</span>
+				<input
+					type="number"
+					value={sds(g)}
+					id="g"
+					oninput={processChange}
+					min="0"
+					step="any"
+					style="width: 4em"
+				/>
+				<!-- g input: always formatted -->
+				<span class="unit">{@html ki('\\mathsf{m/s}^2')}</span>
+			</label>
+		</div>
+	</section>
+	<section class="results">
+		<div class="heading">Normal (Uniform) Flow</div>
 
-	<Carrd>
-		{#snippet answer()}
-			Flow Area: {@html ki(`A = ${sds(A)}\\, \\mathsf{m^2}`)}
-		{/snippet}
-		{#snippet solution()}
-			{@html kd(`
+		<Carrd>
+			{#snippet answer()}
+				Flow Area: {@html ki(`A = ${sds(A)}\\, \\mathsf{m^2}`)}
+			{/snippet}
+			{#snippet solution()}
+				{@html kd(`
 					\\begin{aligned}
 							A &= \\frac{\\left(z_L\\cdot y\\right) y}{2} + \\frac{\\left(z_R \\cdot y\\right)\\cdot y}{2} \\\\
 							&= \\frac{\\left(z_L+z_R\\right)y^2}{2} \\\\
@@ -129,15 +130,15 @@
 							A &= ${A}\\, \\mathsf{m^2}
 						\\end{aligned}
 				`)}
-		{/snippet}
-	</Carrd>
+			{/snippet}
+		</Carrd>
 
-	<Carrd>
-		{#snippet answer()}
-			Wetted Perimeter: {@html ki(`P = ${sds(P)}\\, \\mathsf{m}`)}
-		{/snippet}
-		{#snippet solution()}
-			{@html kd(`
+		<Carrd>
+			{#snippet answer()}
+				Wetted Perimeter: {@html ki(`P = ${sds(P)}\\, \\mathsf{m}`)}
+			{/snippet}
+			{#snippet solution()}
+				{@html kd(`
 						\\begin{aligned}
 							P &= \\sqrt{y^2+(z_L\\!\\cdot\\!y)^2} + \\sqrt{y^2+(z_R\\!\\cdot\\!y)^2} \\\\
 								&= \\left(\\sqrt{(1+z_L^2)} + \\sqrt{(1+z_R^2)}\\right)\\cdot y \\\\
@@ -146,60 +147,60 @@
 							P &= ${P}\\, \\mathsf{m}
 						\\end{aligned}
 					`)}
-		{/snippet}
-	</Carrd>
+			{/snippet}
+		</Carrd>
 
-	<Carrd>
-		{#snippet answer()}
-			Hydraulic Radius: {@html ki(`R = ${sds(R)}\\, \\mathsf m`)}
-		{/snippet}
-		{#snippet solution()}
-			{@html kd(`
+		<Carrd>
+			{#snippet answer()}
+				Hydraulic Radius: {@html ki(`R = ${sds(R)}\\, \\mathsf m`)}
+			{/snippet}
+			{#snippet solution()}
+				{@html kd(`
 						\\begin{aligned}
 							R &= A/P \\\\
 							&= \\frac{${A}\\, \\mathsf{m^2}}{ ${P}\\, \\mathsf{m}} \\\\\\\\
 							R&= ${R} \\mathsf{m}
 						\\end{aligned}
 					`)}
-		{/snippet}
-	</Carrd>
+			{/snippet}
+		</Carrd>
 
-	<Carrd>
-		{#snippet answer()}
-			Average Flow Velocity: {@html ki(`v = ${sds(v)}\\, \\mathsf{m/s}`)}
-		{/snippet}
-		{#snippet solution()}
-			{@html kd(`
+		<Carrd>
+			{#snippet answer()}
+				Average Flow Velocity: {@html ki(`v = ${sds(v)}\\, \\mathsf{m/s}`)}
+			{/snippet}
+			{#snippet solution()}
+				{@html kd(`
         \\begin{aligned}
           v &= \\frac 1n R^{2/3} S^{1/2} \\\\
           &= \\frac{1}{${sds(n)}} \\left(${R}\\right)^{2/3} \\left(${sds(s / 100)}\\right)^{1/2} \\\\\\\\
           v &= ${v} \\, \\mathsf{m/s}
         \\end{aligned}
       `)}
-		{/snippet}
-	</Carrd>
+			{/snippet}
+		</Carrd>
 
-	<Carrd>
-		{#snippet answer()}
-			Flow Rate: {@html ki(`Q = ${sds(Q)}\\, \\mathsf{m^3/s}`)}
-		{/snippet}
-		{#snippet solution()}
-			{@html kd(`
+		<Carrd>
+			{#snippet answer()}
+				Flow Rate: {@html ki(`Q = ${sds(Q)}\\, \\mathsf{m^3/s}`)}
+			{/snippet}
+			{#snippet solution()}
+				{@html kd(`
         \\begin{aligned}
           Q &= Av \\\\
           &= ${A}\\, \\mathsf{m^2}\\times ${v}\\, \\mathsf{m/s} \\\\\\\\
           Q &= ${Q} \\, \\mathsf{m^3/s}
         \\end{aligned}
       `)}
-		{/snippet}
-	</Carrd>
+			{/snippet}
+		</Carrd>
 
-	<Carrd>
-		{#snippet answer()}
-			Specific Energy: {@html ki(`E = ${sds(E)}\\, \\mathsf{m}`)}
-		{/snippet}
-		{#snippet solution()}
-			{@html kd(`
+		<Carrd>
+			{#snippet answer()}
+				Specific Energy: {@html ki(`E = ${sds(E)}\\, \\mathsf{m}`)}
+			{/snippet}
+			{#snippet solution()}
+				{@html kd(`
         \\begin{aligned}
             E &= y+\\frac{v^2}{2g} \\\\
             &= ${sds(y)}\\, \\mathsf{m}+\\frac{(${v} \\, \\mathsf{m/s)^2} }
@@ -207,15 +208,15 @@
             E &= ${E}\\,\\mathsf{m}
         \\end{aligned}
     `)}
-		{/snippet}
-	</Carrd>
+			{/snippet}
+		</Carrd>
 
-	<Carrd>
-		{#snippet answer()}
-			Free Surface: {@html ki(`T = ${sds(T)}\\, \\mathsf{m}`)}
-		{/snippet}
-		{#snippet solution()}
-			{@html kd(`
+		<Carrd>
+			{#snippet answer()}
+				Free Surface: {@html ki(`T = ${sds(T)}\\, \\mathsf{m}`)}
+			{/snippet}
+			{#snippet solution()}
+				{@html kd(`
         \\begin{aligned}
             T &= z_L\\!\\cdot\\!y + z_R\\!\\cdot\\!y \\\\
             &= (z_L + z_R)\\!\\cdot\\!y \\\\
@@ -223,34 +224,34 @@
             T &= ${T}\\, \\mathsf{m}  							   
         \\end{aligned}
     `)}
-		{/snippet}
-	</Carrd>
+			{/snippet}
+		</Carrd>
 
-	<Carrd>
-		{#snippet answer()}
-			Froude Number: {@html ki(`N_F = ${sds(NF)}`)}
-		{/snippet}
-		{#snippet solution()}
-			{@html kd(`
+		<Carrd>
+			{#snippet answer()}
+				Froude Number: {@html ki(`N_F = ${sds(NF)}`)}
+			{/snippet}
+			{#snippet solution()}
+				{@html kd(`
         \\begin{aligned}
           N_F &=  \\frac{v}{\\sqrt{g(A/T)}} \\\\							   
           &=  \\frac{${v}\\, \\mathsf{m/s}}{\\sqrt{(${g}\\, \\mathsf{m/s^2})\\cdot(${A}\\, \\mathsf{m^2}/${sds(T)}\\, \\mathsf{m})}} \\\\\\\\
           N_F &= ${NF}
         \\end{aligned}
       `)}
-		{/snippet}
-	</Carrd>
+			{/snippet}
+		</Carrd>
 
-	<div class="heading">Critical Flow</div>
+		<div class="heading">Critical Flow</div>
 
-	<Carrd>
-		{#snippet answer()}
-			For {@html ki(`Q=${Q} \\, \\mathsf{m^3\\!/s}`)}, Critical Depth {@html ki(
-				`y_c=${sds(yc)} \\, \\mathsf{m}`
-			)}
-		{/snippet}
-		{#snippet solution()}
-			{@html kd(`
+		<Carrd>
+			{#snippet answer()}
+				For {@html ki(`Q=${Q} \\, \\mathsf{m^3\\!/s}`)}, Critical Depth {@html ki(
+					`y_c=${sds(yc)} \\, \\mathsf{m}`
+				)}
+			{/snippet}
+			{#snippet solution()}
+				{@html kd(`
         \\begin{aligned}
           A &=  \\frac{(z_L+z_R)y^2}{2} \\\\
           T &= (z_L+z_R)y \\\\
@@ -268,69 +269,80 @@
           y_c &= ${yc}\\, \\mathsf{m}
         \\end{aligned}
       `)}
-		{/snippet}
-	</Carrd>
+			{/snippet}
+		</Carrd>
 
-	<Carrd>
-		{#snippet answer()}
-			stuff
-		{/snippet}
-		{#snippet solution()}
-			more
-		{/snippet}
-	</Carrd>
+		<Carrd>
+			{#snippet answer()}
+				Critical Velocity: {@html ki(` v_c = ${sds(vc)}  \\,\\mathsf{m/s}`)}
+			{/snippet}
+			{#snippet solution()}
+				{@html kd(`
+        \\begin{aligned}
+          A_c &= \\frac{\\left(z_L+z_R\\right)y_c^2}{2} \\\\
+          &= \\frac{\\left(${sds(zl)}+${sds(zr)}\\right)(${yc}\\, \\mathsf{m})^2}{2} \\\\
+          &= ${Ac}\\, \\mathsf{m^2} \\\\\\\\          
+          v_c &= Q/A_c \\\\
+          &= \\frac{${Q}\\, \\mathsf{m^3\\!/s}}{${Ac}\\, \\mathsf{m^2}} \\\\\\\\
+          v_c &= ${vc}\\, \\mathsf{m/s}          
+        \\end{aligned}	
+      `)}
+			{/snippet}
+		</Carrd>
 
-	<Carrd>
-		{#snippet answer()}
-			stuff
-		{/snippet}
-		{#snippet solution()}
-			more
-		{/snippet}
-	</Carrd>
+		<Carrd>
+			{#snippet answer()}
+				Minimum Specific Energy: {@html ki(`E_{min} = ${sds(Emin)}\\, \\mathsf{m}`)}
+			{/snippet}
+			{#snippet solution()}
+				{@html kd(`
+        \\begin{aligned}
+          E_{min} &= y_c+\\frac{ v_c^2 }{ 2g } \\\\
+          &= ${yc}\\, \\mathsf{m}+\\frac{ (${vc}\\, \\mathsf{m/s})^2 }{ 2(${g}\\, \\mathsf{m/s^2}) } \\\\\\\\
+          E_{min} &= ${Emin} \\,\\mathsf{m}
+        \\end{aligned}
+      `)}
+			{/snippet}
+		</Carrd>
 
-	<Carrd>
-		{#snippet answer()}
-			stuff
-		{/snippet}
-		{#snippet solution()}
-			more
-		{/snippet}
-	</Carrd>
+		<Carrd>
+			{#snippet answer()}
+				Slope for Critical Flow: {@html ki(`S_c = ${sds(Sc)}\\%`)}
+			{/snippet}
+			{#snippet solution()}
+				{@html kd(`
+        \\begin{aligned}
+          A_c &= \\frac{\\left(z_L+z_R\\right)y_c^2}{2} \\\\
+          &= \\frac{\\left(${sds(zl)}+${sds(zr)}\\right)(${yc}\\, \\mathsf{m})^2}{2} \\\\
+          &= ${Ac}\\, \\mathsf{m^2} \\\\
 
-	<Carrd>
+          P_c &= \\left(\\sqrt{1+z_L^2}+\\sqrt{1+z_R^2} \\right)y_c \\\\
+          &= \\left(\\sqrt{1+(${sds(zl)})^2}+\\sqrt{1+(${sds(zr)})^2} \\right)(${yc}\\, \\mathsf{m}) \\\\								
+          &= ${Pc}\\, \\mathsf{m}\\\\\\\\
+
+          R_c &= A_c/P_c \\\\
+          &= \\frac{${Ac}\\, \\mathsf{m^2}}{${Pc}\\, \\mathsf{m}} \\\\
+          &= ${Rc}\\,\\mathsf{m}\\\\\\\\
+
+          \\Rightarrow S_c &= \\left(\\frac { nv_c }{ R_c^{2/3} }\\right)^2 \\\\
+          &= \\left(\\frac{${sds(n)}\\times ${vc}\\, \\mathsf{m/s} }{ (${Rc}\\, \\mathsf{m})^{2/3} }\\right)^2\\\\
+          &= ${sdw(Sc / 100)} \\\\
+          &= ${Sc}\\% 								
+        \\end{aligned}
+      `)}
+			{/snippet}
+		</Carrd>
+
+		<!-- <Carrd>
 		{#snippet answer()}
 			stuff
 		{/snippet}
 		{#snippet solution()}
 			more
 		{/snippet}
-	</Carrd>
-	<Carrd>
-		{#snippet answer()}
-			stuff
-		{/snippet}
-		{#snippet solution()}
-			more
-		{/snippet}
-	</Carrd>
-	<Carrd>
-		{#snippet answer()}
-			stuff
-		{/snippet}
-		{#snippet solution()}
-			more
-		{/snippet}
-	</Carrd>
-	<Carrd>
-		{#snippet answer()}
-			stuff
-		{/snippet}
-		{#snippet solution()}
-			more
-		{/snippet}
-	</Carrd>
-</section>
+	</Carrd> -->
+	</section>
+</article>
 
 <style lang="scss">
 	.inputs-row {
