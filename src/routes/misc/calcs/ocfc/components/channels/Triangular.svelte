@@ -5,18 +5,18 @@
 	import TriangularQ from './TriangularQ.svelte'
 	import TriangularY from './TriangularY.svelte'
 	// let { sdigs, wdigs, extraForSdigs, extraForWdigs } = digits;
-	let yorq = 'rectangularQ'
-	let channelType = 'rectangular'
+	let yorq = 'triangularY'
+	let channelType = 'triangular'
 </script>
 
 <Intro {channelType} />
 
 {#if !digits.isIntroVisible}
 	<YorQ bind:yorq {channelType} />
-	<div class:hide={yorq !== 'rectangularY'}>
+	<div class:hide={yorq !== 'triangularY'}>
 		<TriangularY />
 	</div>
-	<div class:hide={yorq !== 'rectangularQ'}>
+	<div class:hide={yorq !== 'triangularQ'}>
 		<TriangularQ />
 	</div>
 {/if}

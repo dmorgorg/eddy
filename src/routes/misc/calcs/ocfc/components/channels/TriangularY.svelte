@@ -1,7 +1,7 @@
 <script>
 	// @ts-nocheck
 
-	import RYC from './RYC.svelte'
+	import TriYCanvas from './TriYCanvas.svelte'
 	import Carrd from '../Carrd.svelte'
 	import { ki, kd, sd, debounce } from '$lib/utilities/utils.js'
 	import { common, tri } from '$lib/fluids/openChannel/utils'
@@ -69,6 +69,7 @@
 </script>
 
 <article>
+	<section><TriYCanvas bind:zl={triY.zl} bind:zr={triY.zr} bind:depth={triY.depth} /></section>
 	<section>
 		<div class="inputs-row">
 			<label>
@@ -365,13 +366,13 @@
 		border-radius: 3px;
 	}
 
-	input[type='number'] {
+	input {
 		width: 4em;
 		padding: 0;
 		border: 1px solid #ccc;
 		border: 0.125em solid #c1cdcd;
 		border-radius: 3px;
-		font-size: 0.625rem;
+		font-size: 0.9em;
 		text-align: center;
 		-moz-appearance: textfield;
 		appearance: textfield;
