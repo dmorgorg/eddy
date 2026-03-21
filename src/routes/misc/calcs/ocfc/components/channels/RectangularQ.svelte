@@ -1,6 +1,5 @@
 <script>
 	import RQC from './RQC.svelte'
-	import Card from '../Card.svelte'
 	import Carrd from '../Carrd.svelte'
 	import { ki, kd, sd, debounce } from '$lib/utilities/utils.js'
 	import { common, rect } from '$lib/fluids/openChannel/utils'

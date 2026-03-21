@@ -93,7 +93,7 @@
 
 		// draw directed line segment from top-center to bottom-center of rectangle
 		const midX = waterLeftX + basePixels / 2
-		drawDirectedLineSegment(ctx, midX, waterTopY, midX, waterBottomY - 3, 'black', 2, 7)
+		// drawDirectedLineSegment(ctx, midX, waterTopY, midX, waterBottomY - 3, 'black', 2, 7)
 		// draw directed line segment for base width dimension
 		drawDirectedLineSegment(
 			ctx,

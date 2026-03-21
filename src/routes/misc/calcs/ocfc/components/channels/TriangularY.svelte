@@ -7,8 +7,13 @@
 	import { common, tri } from '$lib/fluids/openChannel/utils'
 	import { digits } from '../../digits.svelte.js'
 	import { triY } from '../../store.svelte.js'
+	import { slide } from 'svelte/transition'
+	// import { isTypeQueryNode } from 'typescript'
 
 	let { sdigs, wdigs, extraForSdigs, extraForWdigs } = digits
+
+	let verticalError = $state(false)
+	let noSlopeError = $state(false)
 
 	const sds = (num) => {
 		return sd(num, sdigs, extraForSdigs)
@@ -19,8 +24,8 @@
 
 	let zl = $derived(Number(triY.zl))
 	let zr = $derived(Number(triY.zr))
-	let y = $derived(Number(triY.depth))
-	let s = $derived(Number(triY.slope))
+	let y = $derived(Number(triY.y))
+	let s = $derived(Number(triY.s))
 	let n = $derived(Number(triY.n))
 	let g = $derived(Number(triY.g))
 
@@ -41,49 +46,111 @@
 	let Rc = $derived(sdw(common.getR(Ac, Pc)))
 	let Sc = $derived(sdw(common.getCriticalSlope(n, vc, Rc)))
 
-	// Handles slope, n, g input changes; stores as numbers, updates input with formatted value
+	// Handles s, n, g input changes; stores as numbers, updates input with formatted value
 	const processChange = debounce((e) => {
-		if (e.target.id === 'slope') {
-			triY.slope = e.target.value
-			e.target.value = sds(triY.slope)
+		noSlopeError = false
+		verticalError = false
+		if (e.target.id === 's') {
+			// no flow with zero slope so don't allow it
+			if (Number(e.target.value) == 0) {
+				noSlopeError = true
+				e.target.value = Math.pow(10, -sdigs)
+			}
+			triY.s = Math.abs(Number(e.target.value))
+			e.target.value = sds(triY.s)
 		}
 		if (e.target.id === 'n') {
-			triY.n = Number(e.target.value)
+			triY.n = Math.abs(Number(e.target.value))
 			e.target.value = sds(triY.n)
 		}
 		if (e.target.id === 'g') {
-			let formatted
-			if (e.target.value.length > 4) {
-				// formatted = sd(e.target.value, 5)
-				triY.g = Number(e.target.value)
-				console.log(triY.g)
+			let value = e.target.value
+			if (value[0] === '-') {
+				value = value.slice(1)
+			}
+			// console.log(value)
+			if (value.length > 4) {
+				triY.g = Math.abs(Number(value))
 				e.target.value = sd(triY.g, 4)
 			} else {
-				formatted = sds(e.target.value)
-				// console.log(formatted)
-				triY.g = Number(formatted)
+				triY.g = Math.abs(Number(value))
 				e.target.value = sds(triY.g)
 			}
+		}
+
+		if (e.target.id === 'zl') {
+			let prev = triY.zl
+			// toFixed in sd chokes on 0 so deal with it here
+			if (Number(e.target.value) == 0) {
+				// if zr is already 0, don't change zl to 0 but keep at previous value
+				if (triY.zr === 0) {
+					verticalError = true
+					// console.log('true')
+					e.target.value = sds(prev)
+				} else {
+					e.target.value = triY.zl = 0
+				}
+			} else {
+				triY.zl = Number(sds(e.target.value))
+				e.target.value = sds(e.target.value)
+			}
+		}
+		if (e.target.id === 'zr') {
+			let prev = triY.zr
+			if (Number(e.target.value) == 0) {
+				if (triY.zl === 0) {
+					verticalError = true
+					console.log('true')
+					e.target.value = sds(prev)
+				} else {
+					e.target.value = triY.zr = 0
+				}
+			} else {
+				triY.zr = Number(sds(e.target.value))
+				e.target.value = sds(e.target.value)
+			}
+		}
+		if (e.target.id === 'y') {
+			const formatted = sds(e.target.value)
+			triY.y = Number(formatted)
+			e.target.value = formatted
 		}
 	}, 1000)
 </script>
 
 <article>
-	<section><TriYCanvas bind:zl={triY.zl} bind:zr={triY.zr} bind:depth={triY.depth} /></section>
+	<section><TriYCanvas bind:zl={triY.zl} bind:zr={triY.zr} bind:y={triY.y} /></section>
+	<!-- {triY.zl}, {triY.y}, {triY.zr} -->
 	<section>
+		<div class="inputs-row">
+			<label class="zl-label">
+				<span class="unit">{@html ki(' z_L=')}</span>
+				<input type="number" value={sds(zl)} step="any" min="0" id="zl" oninput={processChange} />
+			</label>
+			<label class="depth-label">
+				<span class="unit">{@html ki(' y=')}</span>
+				<input type="number" value={sds(y)} step="any" min="0" id="y" oninput={processChange} />
+				<span class="unit">{@html ki('\\mathsf{ m}')}</span>
+			</label>
+
+			<label class="zr-label">
+				<span class="unit">{@html ki(' z_R=')}</span>
+				<input type="number" value={sds(zr)} step="any" min="0" id="zr" oninput={processChange} />
+			</label>
+		</div>
 		<div class="inputs-row">
 			<label>
 				<span class="var-name">{@html ki('S =')}</span>
 				<input
 					type="number"
 					value={sds(s)}
-					id="slope"
+					id="s"
 					oninput={processChange}
 					min="0.001"
 					step="any"
 					style="width: {digits.sdigs > 3 ? '7em' : '6em'}"
 				/>
-				<!-- slope input: always formatted -->
+				<!-- s input: always formatted -->
 				<span class="unit">{@html ki('\\%')}</span>
 			</label>
 			<label>
@@ -115,6 +182,19 @@
 			</label>
 		</div>
 	</section>
+
+	{#if verticalError}
+		<div class="error" transition:slide={{ duration: 1000, axis: 'y' }}>
+			No, a triangular channel with two vertical walls is just too weird for this calculator. Just
+			sayin'
+		</div>
+	{/if}
+	{#if noSlopeError}
+		<div class="error" transition:slide={{ duration: 1000, axis: 'y' }}>
+			No slope, no flow. That's just how it is.
+		</div>
+	{/if}
+
 	<section class="results">
 		<div class="heading">Normal (Uniform) Flow</div>
 
@@ -236,7 +316,7 @@
 				{@html kd(`
         \\begin{aligned}
           N_F &=  \\frac{v}{\\sqrt{g(A/T)}} \\\\							   
-          &=  \\frac{${v}\\, \\mathsf{m/s}}{\\sqrt{(${g}\\, \\mathsf{m/s^2})\\cdot(${A}\\, \\mathsf{m^2}/${sds(T)}\\, \\mathsf{m})}} \\\\\\\\
+          &=  \\frac{${v}\\, \\mathsf{m/s}}{\\sqrt{(${g}\\, \\mathsf{m/s^2})\\cdot(${A}\\, \\mathsf{m^2}/${T}\\, \\mathsf{m})}} \\\\\\\\
           N_F &= ${NF}
         \\end{aligned}
       `)}
@@ -350,24 +430,28 @@
 		// font-size: 80%;
 		display: flex;
 		gap: 0.5em;
-		justify-content: center;
-		margin: 0 auto;
+		justify-content: space-between;
+		margin: 0.625em auto;
 		// border: 1px solid black;
+		width: 90%;
 	}
 	label {
 		display: flex;
 		align-items: center;
 		gap: 0.25em;
+		justify-content: center;
 		white-space: nowrap;
 		background: white;
 		border: 1px solid black;
 		box-shadow: 2px 2px 4px #c1cdcd;
 		padding: 0.25em 0.625em;
 		border-radius: 3px;
+		width: 32%;
 	}
 
 	input {
 		width: 4em;
+
 		padding: 0;
 		border: 1px solid #ccc;
 		border: 0.125em solid #c1cdcd;
@@ -410,5 +494,18 @@
 		font-weight: bold;
 		margin-top: 1em;
 		margin-bottom: 0.5em;
+	}
+	.error {
+		align-items: center;
+		border: 2px solid red;
+		box-shadow: 2px 2px 4px red;
+		color: red;
+		display: flex;
+		font-weight: bold;
+		justify-content: center;
+		margin: 2em auto;
+		padding: 1em;
+		text-align: center;
+		width: 90%;
 	}
 </style>

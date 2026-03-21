@@ -16,8 +16,8 @@ export const rectQ = $state({
 export const triY = $state({
 	zl: 1.5,
 	zr: 0.75,
-	depth: 1.75,
-	slope: 0.1,
+	y: 1.75,
+	s: 0.1,
 	n: 0.013,
 	g: 9.81
 })

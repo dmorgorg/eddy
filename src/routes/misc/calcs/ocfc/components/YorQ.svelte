@@ -20,7 +20,6 @@
 
 <style lang="scss">
 	.radios {
-		// border: 1px solid black;
 		display: flex;
 		font-size: 120;
 		gap: 3em;
@@ -28,14 +27,10 @@
 		margin-inline: auto;
 		margin-top: -1.5rem;
 		width: fit-content;
-		// .radio__label {
-		// 	font-weight: bold;
-		// }
+
 		.yQLayout {
 			display: flex;
-			// align-items: flex-end;
 			gap: 0.25rem;
-			// background: green;
 			margin-bottom: -1em;
 		}
 
@@ -45,9 +40,9 @@
 			-moz-appearance: none;
 			border: none;
 			background-color: inherit;
-			// box-shadow: 2px 2px 4px #c1cdcd;
 			position: absolute;
 		}
+
 		label input[type='radio'] + *::before {
 			content: '';
 			color: white;
@@ -60,7 +55,6 @@
 			margin-bottom: 0.25em;
 			border-style: solid;
 			border-width: 1px;
-			// border-color: var(--primaryColor);
 			border-color: black;
 			box-shadow: 1px 1px 2px #c1cdcd;
 		}
