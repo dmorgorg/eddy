@@ -66,14 +66,16 @@
 		const ctx = canvas.getContext('2d')
 		ctx.clearRect(0, 0, canvas.width, canvas.height)
 		ctx.canvas.height = canvasHeightPixels
-		ctx.canvas.width = canvasWidthPixels
+		// ctx.canvas.width = canvasWidthPixels
+		ctx.canvas.width = widthInPixels
 		ctx.fillStyle = '#c1cdcd'
-		ctx.fillRect(
-			0,
-			channelTopY,
-			channelWidthPixels + 2 * canvasPaddingInline,
-			channelDepthPixels + canvasPaddingBottom
-		)
+		// ctx.fillRect(
+		// 	0,
+		// 	channelTopY,
+		// 	channelWidthPixels + 2 * canvasPaddingInline,
+		// 	channelDepthPixels + canvasPaddingBottom
+		// )
+		ctx.fillRect(0, channelTopY, widthInPixels, channelDepthPixels + canvasPaddingBottom)
 		ctx.fillStyle = 'white'
 		ctx.beginPath()
 		ctx.moveTo(channelLeftX, channelTopY)
@@ -109,7 +111,7 @@
 </script>
 
 {#if browser}
-	<div class="full-width" bind:clientWidth={widthInPixels}>
+	<div class="w-90" bind:clientWidth={widthInPixels}>
 		<!-- bind:this binds canvasWrap var to this DOM element -->
 		<div class="canvas-wrap" bind:this={canvasWrap}>
 			<div class="rect-wrap">
@@ -120,11 +122,11 @@
 {/if}
 
 <style>
-	.full-width {
+	.w-90 {
 		/* background: pink; */
 		margin-block: 1em;
 		margin-inline: auto;
-		/* width: 90%; */
+		width: 90%;
 	}
 	canvas {
 		/* width: 100%; */

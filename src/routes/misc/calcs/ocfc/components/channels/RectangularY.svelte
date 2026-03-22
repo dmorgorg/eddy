@@ -369,9 +369,16 @@
 		text-align: center;
 		-moz-appearance: textfield;
 		appearance: textfield;
+
+		&:focus,
+		&:hover {
+			border: 0.125em solid #088;
+			outline: none;
+		}
 	}
 
-	input[type='number']:focus {
+	input[type='number']:focus,
+	input[type='number']:hover {
 		// box-shadow: 1px 1px black;
 		// background: #088;
 		border: 0.125em solid #088;

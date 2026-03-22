@@ -449,11 +449,12 @@
 		text-align: center;
 		-moz-appearance: textfield;
 		appearance: textfield;
-	}
 
-	input[type='number']:focus {
-		border: 0.125em solid #088;
-		outline: none;
+		&:focus,
+		&:hover {
+			border: 0.125em solid #088;
+			outline: none;
+		}
 	}
 
 	input[type='number']::-webkit-outer-spin-button,

@@ -49,7 +49,7 @@
 	.inner {
 		background-color: inherit;
 		font-size: 1em;
-		overflow-y: scroll;
+		// overflow-y: scroll;
 		padding: 1em;
 		padding: 0;
 		padding-bottom: 2em;

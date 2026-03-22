@@ -20,9 +20,3 @@
 		<RectangularQ />
 	</div>
 {/if}
-
-<style>
-	.hide {
-		display: none !important;
-	}
-</style>

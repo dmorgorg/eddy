@@ -449,28 +449,48 @@
 		width: 32%;
 	}
 
+	// input {
+	// 	width: 4em;
+	// 	padding: 0;
+	// 	border: 1px solid #ccc;
+	// 	border: 0.125em solid #c1cdcd;
+	// 	border-radius: 3px;
+	// 	font-size: 0.9em;
+	// 	text-align: center;
+	// 	-moz-appearance: textfield;
+	// 	appearance: textfield;
+
+	// 	&:hover {
+	// 		border: 0.125em solid #088;
+	// 	}
+	// }
+
+	// input[type='number']:focus {
+	// 	// box-shadow: 1px 1px black;
+	// 	// background: #088;
+	// 	border: 0.125em solid #088;
+	// 	// box-sizing: border-box;
+	// 	outline: none;
+	// 	// outline: 1px #000 solid;
+	// 	// color: white;
+	// 	// border-color: #088;
+	// }
+
 	input {
 		width: 4em;
-
 		padding: 0;
-		border: 1px solid #ccc;
 		border: 0.125em solid #c1cdcd;
 		border-radius: 3px;
-		font-size: 0.9em;
+		/* font-size: 0.875em; */
 		text-align: center;
 		-moz-appearance: textfield;
 		appearance: textfield;
-	}
 
-	input[type='number']:focus {
-		// box-shadow: 1px 1px black;
-		// background: #088;
-		border: 0.125em solid #088;
-		// box-sizing: border-box;
-		outline: none;
-		// outline: 1px #000 solid;
-		// color: white;
-		// border-color: #088;
+		&:focus,
+		&:hover {
+			border: 0.125em solid #088;
+			outline: none;
+		}
 	}
 
 	input[type='number']::-webkit-outer-spin-button,

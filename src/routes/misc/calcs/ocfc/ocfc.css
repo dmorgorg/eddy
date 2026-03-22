@@ -5,8 +5,13 @@
 
 /* apply a natural box layout model to all elements, but allowing components to change */
 html {
+	overflow-y: scroll;
+	/* scrollbar-width: thin; */
+}
+
+body {
 	box-sizing: border-box;
-	overflow-y: visible;
+	/* overflow-y: visible; */
 }
 
 *,
@@ -26,7 +31,7 @@ html {
 } */
 
 .hide {
-	display: none;
+	display: none !important;
 }
 
 input[type='range'],
@@ -34,15 +39,4 @@ input[type='checkbox'],
 input[type='number'] {
 	accent-color: var(--primaryColor);
 	background: #c1cdcd;
-	/* background: red; */
 }
-
-/* label.yQlayout input[type='radio'] {
-	appearance: none;
-	-webkit-appearance: none;
-	-moz-appearance: none;
-	border: none;
-	opacity: 0;
-	width: 0;
-	height: 0;
-} */
