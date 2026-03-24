@@ -70,8 +70,6 @@
 </script>
 
 <article>
-	<!-- <section><RectangularYCanvas {aspectRatio} bind:base={bs} bind:depth={ys} /></section> -->
-	<!-- <section><RYC bind:base={bs} bind:depth={ys} /></section> -->
 	<section><RYC bind:base={rectY.base} bind:depth={rectY.depth} /></section>
 
 	<section>
@@ -83,6 +81,7 @@
 					value={sds(s)}
 					id="slope"
 					oninput={processChange}
+					onkeydown={processChange}
 					min="0.001"
 					step="any"
 					style="width: {digits.sdigs > 3 ? '7em' : '6em'}"
@@ -97,6 +96,7 @@
 					value={sds(n)}
 					id="n"
 					oninput={processChange}
+					onkeydown={processChange}
 					min="0"
 					step="any"
 					style="width: {digits.sdigs > 3 ? '7em' : '6em'}"
@@ -110,6 +110,7 @@
 					value={sds(g)}
 					id="g"
 					oninput={processChange}
+					onkeydown={processChange}
 					min="0"
 					step="any"
 					style="width: 4em"

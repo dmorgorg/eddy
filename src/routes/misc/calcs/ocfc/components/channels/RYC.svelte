@@ -139,6 +139,7 @@
 						min="0"
 						id="depth"
 						oninput={processChange}
+						onkeydown={processChange}
 					/>
 					<span class="unit">{@html ki('\\mathsf{ m}')}</span>
 				</label>
@@ -152,6 +153,7 @@
 						min="0"
 						id="base"
 						oninput={processChange}
+						onkeydown={processChange}
 					/>
 					<span class="unit">{@html ki('\\mathsf{m}')}</span>
 				</label>

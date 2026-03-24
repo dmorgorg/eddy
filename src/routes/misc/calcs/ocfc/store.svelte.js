@@ -16,15 +16,15 @@ export const rectQ = $state({
 export const triY = $state({
 	zl: 1.5,
 	zr: 0.75,
-	y: 1.75,
+	y: 1.7,
 	s: 0.1,
 	n: 0.013,
 	g: 9.81
 })
 export const triQ = $state({
-	zl: 0.85,
-	zr: 1.25,
-	Q: 1.5,
+	zl: 0.75,
+	zr: 1.5,
+	Q: 5.79,
 	s: 0.1,
 	n: 0.013,
 	g: 9.81

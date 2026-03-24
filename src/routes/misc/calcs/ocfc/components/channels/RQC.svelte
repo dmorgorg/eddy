@@ -145,6 +145,7 @@
 						min="0"
 						id="Qflow"
 						oninput={processChange}
+						onkeydown={processChange}
 					/>
 					<span class="unit">{@html ki('\\mathsf{ m^3/s}')}</span>
 				</label>
@@ -158,6 +159,7 @@
 						min="0"
 						id="base"
 						oninput={processChange}
+						onkeydown={processChange}
 					/>
 					<span class="unit">{@html ki('\\mathsf{m}')}</span>
 				</label>

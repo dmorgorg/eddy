@@ -61,38 +61,37 @@
 		verticalError = false
 		noFlowError = false
 
-		if (e.target.id === 's') {
+		let id = e.target.id
+		let value = Math.abs(Number(e.target.value))
+
+		if (id === 's') {
 			// no flow with zero slope so don't allow it
-			if (Number(e.target.value) == 0) {
+			if (value == 0) {
 				noSlopeError = true
 				e.target.value = Math.pow(10, -sdigs)
 			}
-			triQ.s = Math.abs(Number(e.target.value))
+			triQ.s = value
 			e.target.value = sds(triQ.s)
-		}
-		if (e.target.id === 'n') {
-			triQ.n = Math.abs(Number(e.target.value))
+		} else if (id === 'n') {
+			triQ.n = value
 			e.target.value = sds(triQ.n)
-		}
-		if (e.target.id === 'g') {
+		} else if (id === 'g') {
+			// need e.target.value as a string to measure length
 			let value = e.target.value
-			if (value[0] === '-') {
+			if (value[0] == '-') {
 				value = value.slice(1)
 			}
-			// console.log(value)
 			if (value.length > 4) {
-				triQ.g = Math.abs(Number(value))
+				triQ.g = value
 				e.target.value = sd(triQ.g, 4)
 			} else {
-				triQ.g = Math.abs(Number(value))
+				triQ.g = value
 				e.target.value = sds(triQ.g)
 			}
-		}
-
-		if (e.target.id === 'zl') {
+		} else if (id === 'zl') {
 			let prev = triQ.zl
 			// toFixed in sd chokes on 0 so deal with it here
-			if (Number(e.target.value) == 0) {
+			if (value == 0) {
 				// if zr is already 0, don't change zl to 0 but keep at previous value
 				if (triQ.zr === 0) {
 					verticalError = true
@@ -102,13 +101,12 @@
 					e.target.value = triQ.zl = 0
 				}
 			} else {
-				triQ.zl = Number(sds(e.target.value))
-				e.target.value = sds(e.target.value)
+				triQ.zl = value
+				e.target.value = sds(triQ.zl)
 			}
-		}
-		if (e.target.id === 'zr') {
+		} else if (id === 'zr') {
 			let prev = triQ.zr
-			if (Number(e.target.value) == 0) {
+			if (value == 0) {
 				if (triQ.zl === 0) {
 					verticalError = true
 					e.target.value = sds(prev)
@@ -116,18 +114,17 @@
 					e.target.value = triQ.zr = 0
 				}
 			} else {
-				triQ.zr = Number(sds(e.target.value))
-				e.target.value = sds(e.target.value)
+				triQ.zr = value
+				e.target.value = sds(triQ.zr)
 			}
-		}
-		if (e.target.id === 'Q') {
+		} else if (id === 'Q') {
 			let prev = triQ.Q
 			// === doesn't work
-			if (Number(e.target.value == 0)) {
+			if (value == 0) {
 				noFlowError = true
 				e.target.value = sds(prev)
 			} else {
-				triQ.Q = Number(sds(e.target.value))
+				triQ.Q = value
 				e.target.value = sds(triQ.Q)
 			}
 		}
@@ -141,17 +138,41 @@
 		<div class="inputs-row">
 			<label class="zl-label">
 				<span class="unit">{@html ki(' z_L=')}</span>
-				<input type="number" value={sds(zl)} step="any" min="0" id="zl" oninput={processChange} />
+				<input
+					type="number"
+					value={sds(zl)}
+					step="any"
+					min="0"
+					id="zl"
+					oninput={processChange}
+					onkeydown={processChange}
+				/>
 			</label>
 			<label class="volume-label">
 				<span class="unit">{@html ki(' Q=')}</span>
-				<input type="number" value={sds(Q)} step="any" min="0" id="Q" oninput={processChange} />
+				<input
+					type="number"
+					value={sds(Q)}
+					step="any"
+					min="0"
+					id="Q"
+					oninput={processChange}
+					onkeydown={processChange}
+				/>
 				<span class="unit">{@html ki('\\mathsf{ m^3/s}')}</span>
 			</label>
 
 			<label class="zr-label">
 				<span class="unit">{@html ki(' z_R=')}</span>
-				<input type="number" value={sds(zr)} step="any" min="0" id="zr" oninput={processChange} />
+				<input
+					type="number"
+					value={sds(zr)}
+					step="any"
+					min="0"
+					id="zr"
+					oninput={processChange}
+					onkeydown={processChange}
+				/>
 			</label>
 		</div>
 		<div class="inputs-row">
@@ -162,6 +183,7 @@
 					value={sds(s)}
 					id="s"
 					oninput={processChange}
+					onkeydown={processChange}
 					min="0.001"
 					step="any"
 					style="width: {digits.sdigs > 3 ? '7em' : '6em'}"
@@ -176,6 +198,7 @@
 					value={sds(n)}
 					id="n"
 					oninput={processChange}
+					onkeydown={processChange}
 					min="0"
 					step="any"
 					style="width: {digits.sdigs > 3 ? '7em' : '6em'}"
@@ -189,6 +212,7 @@
 					value={sds(g)}
 					id="g"
 					oninput={processChange}
+					onkeydown={processChange}
 					min="0"
 					step="any"
 					style="width: 4em"
@@ -212,7 +236,7 @@
 	{/if}
 	{#if noFlowError}
 		<div class="error" transition:slide={{ duration: 1000, axis: 'y' }}>
-			Without flow, there's nothing to do...
+			Without flow, there's nothing for me to do...
 		</div>
 	{/if}
 

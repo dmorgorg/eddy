@@ -52,72 +52,71 @@
 		noSlopeError = false
 		verticalError = false
 		zeroDepthError = false
-		if (e.target.id === 's') {
+
+		let id = e.target.id
+		let value = Math.abs(Number(e.target.value))
+
+		if (id === 's') {
 			// no flow with zero slope so don't allow it
-			if (Number(e.target.value) == 0) {
+			if (value == 0) {
 				noSlopeError = true
 				e.target.value = Math.pow(10, -sdigs)
 			}
-			triY.s = Math.abs(Number(e.target.value))
-			e.target.value = sds(triY.s)
-		}
-		if (e.target.id === 'n') {
-			triY.n = Math.abs(Number(e.target.value))
-			e.target.value = sds(triY.n)
-		}
-		if (e.target.id === 'g') {
+			triQ.s = value
+			e.target.value = sds(triQ.s)
+		} else if (id === 'n') {
+			triQ.n = value
+			e.target.value = sds(triQ.n)
+		} else if (id === 'g') {
+			// need e.target.value as a string to measure length
 			let value = e.target.value
-			if (value[0] === '-') {
+			if (value[0] == '-') {
 				value = value.slice(1)
 			}
 			if (value.length > 4) {
-				triY.g = Math.abs(Number(value))
-				e.target.value = sd(triY.g, 4)
+				triQ.g = value
+				e.target.value = sd(triQ.g, 4)
 			} else {
-				triY.g = Math.abs(Number(value))
-				e.target.value = sds(triY.g)
+				triQ.g = value
+				e.target.value = sds(triQ.g)
 			}
-		}
-
-		if (e.target.id === 'zl') {
-			let prev = triY.zl
+		} else if (id === 'zl') {
+			let prev = triQ.zl
 			// toFixed in sd chokes on 0 so deal with it here
-			if (Number(e.target.value) == 0) {
+			if (value == 0) {
 				// if zr is already 0, don't change zl to 0 but keep at previous value
-				if (triY.zr === 0) {
+				if (triQ.zr === 0) {
 					verticalError = true
 					// console.log('true')
 					e.target.value = sds(prev)
 				} else {
-					e.target.value = triY.zl = 0
+					e.target.value = triQ.zl = 0
 				}
 			} else {
-				triY.zl = Number(sds(e.target.value))
-				e.target.value = sds(e.target.value)
+				triQ.zl = value
+				e.target.value = sds(triQ.zl)
 			}
-		}
-		if (e.target.id === 'zr') {
-			let prev = triY.zr
-			if (Number(e.target.value) == 0) {
-				if (triY.zl === 0) {
+		} else if (id === 'zr') {
+			let prev = triQ.zr
+			if (value == 0) {
+				if (triQ.zl === 0) {
 					verticalError = true
 					e.target.value = sds(prev)
 				} else {
-					e.target.value = triY.zr = 0
+					e.target.value = triQ.zr = 0
 				}
 			} else {
-				triY.zr = Number(sds(e.target.value))
-				e.target.value = sds(e.target.value)
+				triQ.zr = value
+				e.target.value = sds(triQ.zr)
 			}
-		}
-		if (e.target.id === 'y') {
+		} else if (id === 'y') {
 			let prev = triY.y
-			if (Number(e.target.value) == 0) {
+			if (value == 0) {
 				zeroDepthError = true
 				triY.y = Number(prev)
 				e.target.value = prev
 			} else {
-				triY.y = Number(sds(e.target.value))
+				triY.y = value
 				e.target.value = triY.y
 			}
 		}
@@ -131,17 +130,41 @@
 		<div class="inputs-row">
 			<label class="zl-label">
 				<span class="unit">{@html ki(' z_L=')}</span>
-				<input type="number" value={sds(zl)} step="any" min="0" id="zl" oninput={processChange} />
+				<input
+					type="number"
+					value={sds(zl)}
+					step="any"
+					min="0"
+					id="zl"
+					oninput={processChange}
+					onkeydown={processChange}
+				/>
 			</label>
 			<label class="depth-label">
 				<span class="unit">{@html ki(' y=')}</span>
-				<input type="number" value={sds(y)} step="any" min="0" id="y" oninput={processChange} />
+				<input
+					type="number"
+					value={sds(y)}
+					step="any"
+					min="0"
+					id="y"
+					oninput={processChange}
+					onkeydown={processChange}
+				/>
 				<span class="unit">{@html ki('\\mathsf{ m}')}</span>
 			</label>
 
 			<label class="zr-label">
 				<span class="unit">{@html ki(' z_R=')}</span>
-				<input type="number" value={sds(zr)} step="any" min="0" id="zr" oninput={processChange} />
+				<input
+					type="number"
+					value={sds(zr)}
+					step="any"
+					min="0"
+					id="zr"
+					oninput={processChange}
+					onkeydown={processChange}
+				/>
 			</label>
 		</div>
 		<div class="inputs-row">
@@ -152,6 +175,7 @@
 					value={sds(s)}
 					id="s"
 					oninput={processChange}
+					onkeydown={processChange}
 					min="0.001"
 					step="any"
 					style="width: {digits.sdigs > 3 ? '7em' : '6em'}"
@@ -166,6 +190,7 @@
 					value={sds(n)}
 					id="n"
 					oninput={processChange}
+					onkeydown={processChange}
 					min="0"
 					step="any"
 					style="width: {digits.sdigs > 3 ? '7em' : '6em'}"
@@ -179,6 +204,7 @@
 					value={sds(g)}
 					id="g"
 					oninput={processChange}
+					onkeydown={processChange}
 					min="0"
 					step="any"
 					style="width: 4em"

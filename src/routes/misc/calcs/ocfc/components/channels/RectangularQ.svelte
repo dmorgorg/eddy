@@ -159,6 +159,7 @@
 					value={sd(g, 4)}
 					id="g"
 					oninput={processChange}
+					onkeydown={processChange}
 					min="0"
 					step="any"
 					style="width: 4em"
