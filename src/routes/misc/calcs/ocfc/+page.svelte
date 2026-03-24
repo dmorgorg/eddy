@@ -41,7 +41,6 @@
 		// just for finer control of home link font-size
 		font-size: 0.65em;
 		min-height: 100vh;
-		// overflow: hidden;
 		width: 100%;
 	}
 	// this sets the width of content and should be modified with media queries
@@ -49,7 +48,6 @@
 	.inner {
 		background-color: inherit;
 		font-size: 1em;
-		// overflow-y: scroll;
 		padding: 1em;
 		padding: 0;
 		padding-bottom: 2em;

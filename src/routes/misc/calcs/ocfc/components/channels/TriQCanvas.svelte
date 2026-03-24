@@ -5,10 +5,10 @@
 	import { ki, debounce, sd } from '$lib/utilities/utils.js'
 	import { digits } from '../../digits.svelte.js'
 	import { drawDirectedLineSegment, snap } from '$lib/utilities/canvasUtils.js'
-	import { triY } from '../../store.svelte.js'
+	import { triQ } from '../../store.svelte.js'
 	import { slide } from 'svelte/transition'
 	import { redirect } from '@sveltejs/kit'
-	let { zl, zr, y = $bindable() } = $props()
+	let { zl, zr, y } = $props()
 
 	let canvas = $state()
 	let canvasWrap = $state()
@@ -96,6 +96,7 @@
 		gradient.addColorStop(0, '#0bb')
 		gradient.addColorStop(1, '#066')
 		ctx.fillStyle = gradient
+		// ctx.fillStyle = 'red'
 		ctx.beginPath()
 		ctx.moveTo(channelLeftX + leftSlopeDX, waterTopY)
 		ctx.lineTo(channelBaseX, channelBottomY)
@@ -134,7 +135,7 @@
 	<!-- waterTopY: {waterTopY}<br />
 	leftSlope: {leftSlope}, leftSlopeDX: {leftSlopeDX} -->
 	<!-- {y}, {3.85 * y - 0.9}, {channelDepthPixels} -->
-	<!-- {extension}, {rightSlope}, {rightExtensionX} -->
+	<!-- {extension}, {rightSlope}, {rightExtensionX}, y: {y} -->
 {/if}
 
 <style>

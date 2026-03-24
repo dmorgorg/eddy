@@ -119,7 +119,9 @@
 	.solution {
 		border-top: 2px solid #088;
 		/* margin-top: 0; */
+		/* margin-bottom: 0; */
 		padding-block: 0.65em;
+		padding-bottom: 0;
 		padding-inline: 5%;
 		text-align: left;
 		width: 100%;

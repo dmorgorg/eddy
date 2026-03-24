@@ -21,3 +21,11 @@ export const triY = $state({
 	n: 0.013,
 	g: 9.81
 })
+export const triQ = $state({
+	zl: 0.85,
+	zr: 1.25,
+	Q: 1.5,
+	s: 0.1,
+	n: 0.013,
+	g: 9.81
+})

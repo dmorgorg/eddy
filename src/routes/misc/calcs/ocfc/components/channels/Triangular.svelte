@@ -5,7 +5,7 @@
 	import TriangularQ from './TriangularQ.svelte'
 	import TriangularY from './TriangularY.svelte'
 	// let { sdigs, wdigs, extraForSdigs, extraForWdigs } = digits;
-	let yorq = 'triangularY'
+	let yorq = 'triangularQ'
 	let channelType = 'triangular'
 </script>
 

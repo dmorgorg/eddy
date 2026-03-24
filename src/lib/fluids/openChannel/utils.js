@@ -21,10 +21,10 @@ export const common = {
 	},
 	getVfromQandA: (Q, A) => {
 		return Q / A
-	},
-	getCriticalSlope: (n, vc, Rc) => {
-		return ((n * vc) / Rc ** (2 / 3)) ** 2 * 100
 	}
+	// getCriticalSlope: (n, vc, Rc) => {
+	// 	return ((n * vc) / Rc ** (2 / 3)) ** 2 * 100
+	// }
 }
 
 export const rect = {
@@ -55,7 +55,10 @@ export const tri = {
 	getYc: (Q, zl, zr, g) => {
 		return ((8 * Q * Q) / g / (+zl / 1 + zr / 1) ** 2) ** 0.2
 	},
-	getVc: (Q, y, zl, zr) => {
-		return Q / tri.getArea(y, zl, zr)
+	getVc: (Q, Ac) => {
+		return Q / Ac
+	},
+	getV: (Q, A) => {
+		return Q / A
 	}
 }

@@ -14,6 +14,7 @@
 
 	let verticalError = $state(false)
 	let noSlopeError = $state(false)
+	let zeroDepthError = $state(false)
 
 	const sds = (num) => {
 		return sd(num, sdigs, extraForSdigs)
@@ -50,6 +51,7 @@
 	const processChange = debounce((e) => {
 		noSlopeError = false
 		verticalError = false
+		zeroDepthError = false
 		if (e.target.id === 's') {
 			// no flow with zero slope so don't allow it
 			if (Number(e.target.value) == 0) {
@@ -68,7 +70,6 @@
 			if (value[0] === '-') {
 				value = value.slice(1)
 			}
-			// console.log(value)
 			if (value.length > 4) {
 				triY.g = Math.abs(Number(value))
 				e.target.value = sd(triY.g, 4)
@@ -100,7 +101,6 @@
 			if (Number(e.target.value) == 0) {
 				if (triY.zl === 0) {
 					verticalError = true
-					console.log('true')
 					e.target.value = sds(prev)
 				} else {
 					e.target.value = triY.zr = 0
@@ -111,9 +111,15 @@
 			}
 		}
 		if (e.target.id === 'y') {
-			const formatted = sds(e.target.value)
-			triY.y = Number(formatted)
-			e.target.value = formatted
+			let prev = triY.y
+			if (Number(e.target.value) == 0) {
+				zeroDepthError = true
+				triY.y = Number(prev)
+				e.target.value = prev
+			} else {
+				triY.y = Number(sds(e.target.value))
+				e.target.value = triY.y
+			}
 		}
 	}, 1000)
 </script>
@@ -192,6 +198,11 @@
 	{#if noSlopeError}
 		<div class="error" transition:slide={{ duration: 1000, axis: 'y' }}>
 			No slope, no flow. That's just how it is.
+		</div>
+	{/if}
+	{#if zeroDepthError}
+		<div class="error" transition:slide={{ duration: 1000, axis: 'y' }}>
+			Zero depth, no water, no flow. Nothing for me here.
 		</div>
 	{/if}
 
