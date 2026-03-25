@@ -62,3 +62,42 @@ export const tri = {
 		return Q / A
 	}
 }
+
+export const trap = {
+	getArea: (y, zl, b, zr) => {
+		return b * y + +((y * y) / 2) * (+zl + +zr)
+	},
+	getP: (y, zl, b, zr) => {
+		return +b + y * ((1 + zl ** 2) ** 0.5 + (1 + zr ** 2) ** 0.5)
+	},
+	getT: (y, zl, b, zr) => {
+		return +b + +y * (+zl + +zr)
+	}
+}
+
+export const circ = {
+	getAlphaRadians: (y, r) => {
+		return Math.acos(Math.abs(r - y) / r)
+	},
+	getAlphaDegrees: (y, r) => {
+		return utils.deg(circ.getAlphaRadians(y, r))
+	},
+	getThetaRadians: (y, r) => {
+		if (y <= r) {
+			return 2 * circ.getAlphaRadians(y, r)
+		}
+		return 2 * (Math.PI - circ.getAlphaRadians(y, r))
+	},
+	getThetaDegrees: (y, r) => {
+		return utils.deg(circ.getThetaRadians(y, r))
+	},
+	getArea: (thetaR, D) => {
+		return ((thetaR - Math.sin(thetaR)) * D ** 2) / 8
+	},
+	getP: (thetaR, D) => {
+		return (thetaR * D) / 2
+	},
+	getT: (alpha, D) => {
+		return D * Math.sin(utils.rad(alpha))
+	}
+}

@@ -62,11 +62,11 @@
 				noSlopeError = true
 				e.target.value = Math.pow(10, -sdigs)
 			}
-			triQ.s = value
-			e.target.value = sds(triQ.s)
+			triY.s = value
+			e.target.value = sds(triY.s)
 		} else if (id === 'n') {
-			triQ.n = value
-			e.target.value = sds(triQ.n)
+			triY.n = value
+			e.target.value = sds(triY.n)
 		} else if (id === 'g') {
 			// need e.target.value as a string to measure length
 			let value = e.target.value
@@ -74,40 +74,40 @@
 				value = value.slice(1)
 			}
 			if (value.length > 4) {
-				triQ.g = value
-				e.target.value = sd(triQ.g, 4)
+				triY.g = value
+				e.target.value = sd(triY.g, 4)
 			} else {
-				triQ.g = value
-				e.target.value = sds(triQ.g)
+				triY.g = value
+				e.target.value = sds(triY.g)
 			}
 		} else if (id === 'zl') {
-			let prev = triQ.zl
+			let prev = triY.zl
 			// toFixed in sd chokes on 0 so deal with it here
 			if (value == 0) {
 				// if zr is already 0, don't change zl to 0 but keep at previous value
-				if (triQ.zr === 0) {
+				if (triY.zr === 0) {
 					verticalError = true
 					// console.log('true')
 					e.target.value = sds(prev)
 				} else {
-					e.target.value = triQ.zl = 0
+					e.target.value = triY.zl = 0
 				}
 			} else {
-				triQ.zl = value
-				e.target.value = sds(triQ.zl)
+				triY.zl = value
+				e.target.value = sds(triY.zl)
 			}
 		} else if (id === 'zr') {
-			let prev = triQ.zr
+			let prev = triY.zr
 			if (value == 0) {
-				if (triQ.zl === 0) {
+				if (triY.zl === 0) {
 					verticalError = true
 					e.target.value = sds(prev)
 				} else {
-					e.target.value = triQ.zr = 0
+					e.target.value = triY.zr = 0
 				}
 			} else {
-				triQ.zr = value
-				e.target.value = sds(triQ.zr)
+				triY.zr = value
+				e.target.value = sds(triY.zr)
 			}
 		} else if (id === 'y') {
 			let prev = triY.y

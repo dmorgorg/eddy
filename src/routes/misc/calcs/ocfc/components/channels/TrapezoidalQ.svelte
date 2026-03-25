@@ -1,12 +1,12 @@
 <script>
 	// @ts-nocheck
 
-	import TriQCanvas from './TriQCanvas.svelte'
+	import TrapQCanvas from './TrapQCanvas.svelte'
 	import Carrd from '../Carrd.svelte'
 	import { ki, kd, sd, debounce } from '$lib/utilities/utils.js'
 	import { common, tri } from '$lib/fluids/openChannel/utils'
 	import { digits } from '../../digits.svelte.js'
-	import { triQ } from '../../store.svelte.js'
+	import { trapQ } from '../../store.svelte.js'
 	import { slide } from 'svelte/transition'
 	// import { isTypeQueryNode } from 'typescript'
 
@@ -33,12 +33,12 @@
 		return ((8 * Q ** 2) / g / (Number(zl) + Number(zr))) ** 0.2
 	}
 
-	let zl = $derived(Number(triQ.zl))
-	let zr = $derived(Number(triQ.zr))
-	let Q = $derived(Number(triQ.Q))
-	let s = $derived(Number(triQ.s))
-	let n = $derived(Number(triQ.n))
-	let g = $derived(Number(triQ.g))
+	let zl = $derived(Number(trapQ.zl))
+	let zr = $derived(Number(trapQ.zr))
+	let Q = $derived(Number(trapQ.Q))
+	let s = $derived(Number(trapQ.s))
+	let n = $derived(Number(trapQ.n))
+	let g = $derived(Number(trapQ.g))
 
 	// calculations for Q specified
 	let y = $derived(sdw(getYFromQ(Q, zl, zr, s, n)))
@@ -132,8 +132,8 @@
 </script>
 
 <article>
-	<section><TriQCanvas bind:zl={triQ.zl} bind:zr={triQ.zr} bind:y /></section>
-	<!-- {triQ.zl}, {triQ.y}, {triQ.zr} -->
+	<section><TrapQCanvas bind:zl={trapQ.zl} bind:zr={trapQ.zr} bind:y /></section>
+	<!-- {trapQ.zl}, {triQ.y}, {triQ.zr} -->
 	<section>
 		<div class="inputs-row">
 			<label class="zl-label">

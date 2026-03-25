@@ -29,3 +29,21 @@ export const triQ = $state({
 	n: 0.013,
 	g: 9.81
 })
+export const trapY = $state({
+	zl: 1.5,
+	zr: 0.75,
+	b: 1,
+	y: 1.7,
+	s: 0.1,
+	n: 0.013,
+	g: 9.81
+})
+export const trapQ = $state({
+	zl: 0.75,
+	zr: 1.5,
+	b: 1,
+	Q: 5.79,
+	s: 0.1,
+	n: 0.013,
+	g: 9.81
+})

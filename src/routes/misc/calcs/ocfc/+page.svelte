@@ -11,7 +11,7 @@
 	import Trapezoidal from './components/channels/Trapezoidal.svelte'
 	import Circular from './components/channels/Circular.svelte'
 
-	let channelType = $state('triangular')
+	let channelType = $state('trapezoidal')
 </script>
 
 <div class="outer">

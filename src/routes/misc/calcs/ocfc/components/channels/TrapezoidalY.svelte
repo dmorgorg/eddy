@@ -1,18 +1,16 @@
 <script>
 	// @ts-nocheck
 
-	import TriYCanvas from './TriYCanvas.svelte'
+	import TrapYCanvas from './TrapYCanvas.svelte'
 	import Carrd from '../Carrd.svelte'
 	import { ki, kd, sd, debounce } from '$lib/utilities/utils.js'
-	import { common, tri } from '$lib/fluids/openChannel/utils'
+	import { common, trap } from '$lib/fluids/openChannel/utils'
 	import { digits } from '../../digits.svelte.js'
-	import { triY } from '../../store.svelte.js'
+	import { trapY } from '../../store.svelte.js'
 	import { slide } from 'svelte/transition'
-	// import { isTypeQueryNode } from 'typescript'
 
 	let { sdigs, wdigs, extraForSdigs, extraForWdigs } = digits
 
-	let verticalError = $state(false)
 	let noSlopeError = $state(false)
 	let zeroDepthError = $state(false)
 
@@ -23,34 +21,55 @@
 		return sd(num, wdigs, extraForWdigs)
 	}
 
-	let zl = $derived(Number(triY.zl))
-	let zr = $derived(Number(triY.zr))
-	let y = $derived(Number(triY.y))
-	let s = $derived(Number(triY.s))
-	let n = $derived(Number(triY.n))
-	let g = $derived(Number(triY.g))
+	const getNFfromY = (y) => {
+		let A = trap.getArea(y, zl, b, zr)
+		let T = trap.getT(y, zl, b, zr)
+		let v = Q / A
+		return v / ((g * A) / T) ** 0.5
+	}
+	const getYCfromQ = (low = 0, high = 100) => {
+		let delta = 1 / 10 ** (wdigs + 1),
+			mid = (low + high) / 2
+		if (Math.abs(low - high) < delta) {
+			return mid
+		}
+		// search
+		if (getNFfromY(mid) > 1) {
+			return getYCfromQ(mid, high)
+		} else {
+			return getYCfromQ(low, mid)
+		}
+	}
+
+	let zl = $derived(Number(trapY.zl))
+	let zr = $derived(Number(trapY.zr))
+	let b = $derived(Number(trapY.b))
+	let y = $derived(Number(trapY.y))
+	let s = $derived(Number(trapY.s))
+	let n = $derived(Number(trapY.n))
+	let g = $derived(Number(trapY.g))
 
 	// calculations for y specified
-	let A = $derived(sdw(tri.getArea(y, zl, zr)))
-	let P = $derived(sdw(tri.getP(y, zl, zr)))
+	let A = $derived(sdw(trap.getArea(y, zl, b, zr)))
+	let P = $derived(sdw(trap.getP(y, zl, b, zr)))
 	let R = $derived(sdw(common.getR(A, P)))
 	let v = $derived(sdw(common.getV(n, R, s)))
 	let Q = $derived(sdw(common.getQfromAandV(A, v)))
 	let E = $derived(sdw(common.getE(y, v, g)))
-	let T = $derived(sdw(tri.getT(y, zl, zr)))
+	let T = $derived(sdw(trap.getT(y, zl, b, zr)))
 	let NF = $derived(sdw(common.getNF(v, A, T, g)))
-	let yc = $derived(sdw(tri.getYc(Q, zl, zr, g)))
-	let Ac = $derived(sdw(tri.getArea(yc, zl, zr)))
-	let vc = $derived(sdw(common.getVfromQandA(Q, Ac)))
+	let yc = $derived(sdw(getYCfromQ()))
+	let Ac = $derived(sdw(trap.getArea(yc, zl, b, zr)))
+	let vc = $derived(sdw(Q / Ac))
 	let Emin = $derived(sdw(common.getE(yc, vc, g)))
-	let Pc = $derived(sdw(tri.getP(yc, zl, zr)))
+	let Pc = $derived(sdw(trap.getP(yc, zl, b, zr)))
 	let Rc = $derived(sdw(common.getR(Ac, Pc)))
 	let Sc = $derived(sdw(common.getCriticalSlope(n, vc, Rc)))
 
 	// Handles s, n, g input changes; stores as numbers, updates input with formatted value
 	const processChange = debounce((e) => {
 		noSlopeError = false
-		verticalError = false
+		// verticalError = false
 		zeroDepthError = false
 
 		let id = e.target.id
@@ -62,11 +81,11 @@
 				noSlopeError = true
 				e.target.value = Math.pow(10, -sdigs)
 			}
-			triQ.s = value
-			e.target.value = sds(triQ.s)
+			trapY.s = value
+			e.target.value = sds(trapY.s)
 		} else if (id === 'n') {
-			triQ.n = value
-			e.target.value = sds(triQ.n)
+			trapY.n = value
+			e.target.value = sds(trapY.n)
 		} else if (id === 'g') {
 			// need e.target.value as a string to measure length
 			let value = e.target.value
@@ -74,59 +93,87 @@
 				value = value.slice(1)
 			}
 			if (value.length > 4) {
-				triQ.g = value
-				e.target.value = sd(triQ.g, 4)
+				trapY.g = value
+				e.target.value = sd(trapY.g, 4)
 			} else {
-				triQ.g = value
-				e.target.value = sds(triQ.g)
+				trapY.g = value
+				e.target.value = sds(trapY.g)
 			}
 		} else if (id === 'zl') {
-			let prev = triQ.zl
+			let prev = trapY.zl
 			// toFixed in sd chokes on 0 so deal with it here
 			if (value == 0) {
 				// if zr is already 0, don't change zl to 0 but keep at previous value
-				if (triQ.zr === 0) {
-					verticalError = true
+				if (trapY.zr === 0) {
+					// verticalError = true
 					// console.log('true')
 					e.target.value = sds(prev)
 				} else {
-					e.target.value = triQ.zl = 0
+					e.target.value = sds((trapY.zl = 0))
 				}
 			} else {
-				triQ.zl = value
-				e.target.value = sds(triQ.zl)
+				trapY.zl = value
+				e.target.value = sds(trapY.zl)
 			}
 		} else if (id === 'zr') {
-			let prev = triQ.zr
+			let prev = trapY.zr
 			if (value == 0) {
-				if (triQ.zl === 0) {
-					verticalError = true
+				if (trapY.zl === 0) {
+					// verticalError = true
 					e.target.value = sds(prev)
 				} else {
-					e.target.value = triQ.zr = 0
+					e.target.value = sds((trapY.zr = 0))
 				}
 			} else {
-				triQ.zr = value
-				e.target.value = sds(triQ.zr)
+				trapY.zr = value
+				e.target.value = sds(trapY.zr)
 			}
-		} else if (id === 'y') {
-			let prev = triY.y
+		} else if (id === 'b') {
+			let prev = trapY.b
 			if (value == 0) {
 				zeroDepthError = true
-				triY.y = Number(prev)
-				e.target.value = prev
+				trapY.b = Number(prev)
+				e.target.value = sds(prev)
 			} else {
-				triY.y = value
-				e.target.value = triY.y
+				trapY.b = value
+				e.target.value = sds(trapY.b)
+			}
+		} else if (id === 'y') {
+			let prev = trapY.y
+			if (value == 0) {
+				zeroDepthError = true
+				trapY.y = Number(prev)
+				e.target.value = sds(prev)
+			} else {
+				trapY.y = value
+				e.target.value = sds(trapY.y)
 			}
 		}
 	}, 1000)
 </script>
 
 <article>
-	<section><TriYCanvas bind:zl={triY.zl} bind:zr={triY.zr} bind:y={triY.y} /></section>
-	<!-- {triY.zl}, {triY.y}, {triY.zr} -->
 	<section>
+		<TrapYCanvas bind:zl={trapY.zl} bind:zr={trapY.zr} bind:b={trapY.b} bind:y={trapY.y} />
+	</section>
+	<!-- {trapY.zl}, {trapY.b}, {trapY.zr}, {trapY.y} -->
+	<section>
+		<div class="inputs-row single">
+			<label class="depth-label">
+				<span class="unit">{@html ki(' y=')}</span>
+				<input
+					type="number"
+					value={sds(y)}
+					step="any"
+					min="0"
+					id="y"
+					oninput={processChange}
+					onkeydown={processChange}
+				/>
+				<span class="unit">{@html ki('\\mathsf{ m}')}</span>
+			</label>
+		</div>
+
 		<div class="inputs-row">
 			<label class="zl-label">
 				<span class="unit">{@html ki(' z_L=')}</span>
@@ -140,14 +187,15 @@
 					onkeydown={processChange}
 				/>
 			</label>
+
 			<label class="depth-label">
-				<span class="unit">{@html ki(' y=')}</span>
+				<span class="unit">{@html ki(' b=')}</span>
 				<input
 					type="number"
-					value={sds(y)}
+					value={sds(b)}
 					step="any"
 					min="0"
-					id="y"
+					id="b"
 					oninput={processChange}
 					onkeydown={processChange}
 				/>
@@ -167,6 +215,7 @@
 				/>
 			</label>
 		</div>
+
 		<div class="inputs-row">
 			<label>
 				<span class="var-name">{@html ki('S =')}</span>
@@ -215,12 +264,12 @@
 		</div>
 	</section>
 
-	{#if verticalError}
+	<!-- {#if verticalError}
 		<div class="error" transition:slide={{ duration: 1000, axis: 'y' }}>
 			No, a triangular channel with two vertical walls is just too weird for this calculator. Just
 			sayin'
 		</div>
-	{/if}
+	{/if} -->
 	{#if noSlopeError}
 		<div class="error" transition:slide={{ duration: 1000, axis: 'y' }}>
 			No slope, no flow. That's just how it is.
@@ -242,12 +291,11 @@
 			{#snippet solution()}
 				{@html kd(`
 					\\begin{aligned}
-							A &= \\frac{\\left(z_L\\cdot y\\right) y}{2} + \\frac{\\left(z_R \\cdot y\\right)\\cdot y}{2} \\\\
-							&= \\frac{\\left(z_L+z_R\\right)y^2}{2} \\\\
-							&= \\frac{\\left(${sds(zl)}+${sds(zr)}\\right)\\left(${sds(y)}\\, \\mathsf{m}\\right)^2}{2} \\\\\\\\
-							A &= ${A}\\, \\mathsf{m^2}
-						\\end{aligned}
-				`)}
+							A &= \\left(b+\\left(\\frac{z_L+z_R}{2}\\right)\\cdot y\\right)\\cdot y \\\\
+							&= \\left(\\!${sds(b)}\\, \\mathsf{m}+\\!\\left(\\frac{\\!${sds(zl)}\\, \\mathsf{m}+${sds(zr)}\\, \\mathsf{m}}{2}\\!\\right)\\!\\cdot\\! ${sds(y)}\\, \\mathsf{m}\\!\\right)\\!\\cdot\\! ${sds(y)}\\, \\mathsf{m} \\\\ \\\\
+							&= ${sdw(A)}\\, \\mathsf{m^2}
+					\\end{aligned}
+			`)}
 			{/snippet}
 		</Carrd>
 
@@ -257,14 +305,12 @@
 			{/snippet}
 			{#snippet solution()}
 				{@html kd(`
-						\\begin{aligned}
-							P &= \\sqrt{y^2+(z_L\\!\\cdot\\!y)^2} + \\sqrt{y^2+(z_R\\!\\cdot\\!y)^2} \\\\
-								&= \\left(\\sqrt{(1+z_L^2)} + \\sqrt{(1+z_R^2)}\\right)\\cdot y \\\\
-								&= \\left(\\sqrt{1+(${sds(zl)})^2} + \\sqrt{1+(${sds(zr)})^2}\\right)\\cdot ${sds(y)}\\, \\mathsf{m} \\\\\\\\
-							
-							P &= ${P}\\, \\mathsf{m}
-						\\end{aligned}
-					`)}
+					\\begin{aligned}
+							P &= b+\\left( \\sqrt{1+z_L^2}+\\sqrt{1+z_R^2}\\right)\\cdot y \\\\
+							 &= ${sds(b)}\\, \\mathsf{m} \\quad+\\\\ &\\quad \\left(\\! \\sqrt{1\\!+\\!\\left(${sds(zl)}\\, \\mathsf{m}\\right)^2}+\\sqrt{1\\!+\\!\\left(${sds(zr)} \\, \\mathsf{m}\\right)^2}\\right)\\!\\cdot\\! ${sds(y)}\\, \\mathsf{m} \\\\ \\\\                               
+							&= ${sdw(P)}\\, \\mathsf{m}
+					\\end{aligned}
+			`)}
 			{/snippet}
 		</Carrd>
 
@@ -274,12 +320,12 @@
 			{/snippet}
 			{#snippet solution()}
 				{@html kd(`
-						\\begin{aligned}
+					\\begin{aligned}
 							R &= A/P \\\\
-							&= \\frac{${A}\\, \\mathsf{m^2}}{ ${P}\\, \\mathsf{m}} \\\\\\\\
-							R&= ${R} \\mathsf{m}
-						\\end{aligned}
-					`)}
+							&= ${sdw(A)}\\, \\mathsf{m^2} / ${sdw(P)}\\, \\mathsf{m} \\\\ \\\\
+							&= ${sdw(R)}\\, \\mathsf{m}
+					\\end{aligned}
+			`)}
 			{/snippet}
 		</Carrd>
 
@@ -289,12 +335,12 @@
 			{/snippet}
 			{#snippet solution()}
 				{@html kd(`
-        \\begin{aligned}
-          v &= \\frac 1n R^{2/3} S^{1/2} \\\\
-          &= \\frac{1}{${sds(n)}} \\left(${R}\\right)^{2/3} \\left(${sds(s / 100)}\\right)^{1/2} \\\\\\\\
-          v &= ${v} \\, \\mathsf{m/s}
-        \\end{aligned}
-      `)}
+					\\begin{aligned}
+							v &= \\frac 1n R^{2/3} S^{1/2} \\\\
+							&= \\frac{1}{${sds(n)}} \\left(${sdw(R)}\\right)^{2/3} \\left(${sds(s / 100)}\\right)^{1/2} \\\\ \\\\
+							&= ${sdw(v)} \\, \\mathsf{m/s}
+					\\end{aligned}
+			`)}
 			{/snippet}
 		</Carrd>
 
@@ -304,28 +350,12 @@
 			{/snippet}
 			{#snippet solution()}
 				{@html kd(`
-        \\begin{aligned}
-          Q &= Av \\\\
-          &= ${A}\\, \\mathsf{m^2}\\times ${v}\\, \\mathsf{m/s} \\\\\\\\
-          Q &= ${Q} \\, \\mathsf{m^3/s}
-        \\end{aligned}
-      `)}
-			{/snippet}
-		</Carrd>
-
-		<Carrd>
-			{#snippet answer()}
-				Specific Energy: {@html ki(`E = ${sds(E)}\\, \\mathsf{m}`)}
-			{/snippet}
-			{#snippet solution()}
-				{@html kd(`
-        \\begin{aligned}
-            E &= y+\\frac{v^2}{2g} \\\\
-            &= ${sds(y)}\\, \\mathsf{m}+\\frac{(${v} \\, \\mathsf{m/s)^2} }
-                {2(${g}\\, \\mathsf{m/s^2}) } \\\\\\\\
-            E &= ${E}\\,\\mathsf{m}
-        \\end{aligned}
-    `)}
+					\\begin{aligned}
+							Q &= Av \\\\
+							&= ${sdw(A)}\\, \\mathsf{m^2}\\times ${sdw(v)}\\, \\mathsf{m/s} \\\\ \\\\
+							&= ${sdw(Q)} \\, \\mathsf{m^3/s}
+					\\end{aligned}
+				`)}
 			{/snippet}
 		</Carrd>
 
@@ -335,13 +365,12 @@
 			{/snippet}
 			{#snippet solution()}
 				{@html kd(`
-        \\begin{aligned}
-            T &= z_L\\!\\cdot\\!y + z_R\\!\\cdot\\!y \\\\
-            &= (z_L + z_R)\\!\\cdot\\!y \\\\
-            &= (${sds(zl)}\\, \\mathsf{m} + ${sds(zr)}\\, \\mathsf{m})\\!\\cdot\\!${sds(y)}\\, \\mathsf{m} \\\\\\\\
-            T &= ${T}\\, \\mathsf{m}  							   
-        \\end{aligned}
-    `)}
+					\\begin{aligned}
+							T &= b + \\left(z_L+z_R\\right)\\cdot y \\\\
+							&= ${sds(b)}\\, \\mathsf{m} + \\left( ${sds(zl)}+${sds(zr)} \\right)\\cdot ${sds(y)}	\\, \\mathsf{m}	\\\\ \\\\
+							T &= ${sdw(T)} \\, \\mathsf{m}	   
+					\\end{aligned}
+				`)}
 			{/snippet}
 		</Carrd>
 
@@ -351,12 +380,14 @@
 			{/snippet}
 			{#snippet solution()}
 				{@html kd(`
-        \\begin{aligned}
-          N_F &=  \\frac{v}{\\sqrt{g(A/T)}} \\\\							   
-          &=  \\frac{${v}\\, \\mathsf{m/s}}{\\sqrt{(${g}\\, \\mathsf{m/s^2})\\cdot(${A}\\, \\mathsf{m^2}/${T}\\, \\mathsf{m})}} \\\\\\\\
-          N_F &= ${NF}
-        \\end{aligned}
-      `)}
+					\\begin{aligned}
+							N_F &=  \\frac{v}{\\sqrt{g(A/T)}} \\\\							   
+							&=  \\frac{${sdw(v)}\\, \\mathsf{m/s}}{\\sqrt{(${sds(g)}\\, \\mathsf{m/s^2})\\cdot(${sdw(
+								A
+							)}\\, \\mathsf{m^2}/${sdw(T)}\\, \\mathsf{m})}} \\\\ \\\\
+							&= ${sdw(NF)}
+					\\end{aligned}
+				`)}
 			{/snippet}
 		</Carrd>
 
@@ -370,41 +401,37 @@
 			{/snippet}
 			{#snippet solution()}
 				{@html kd(`
-        \\begin{aligned}
-          A &=  \\frac{(z_L+z_R)y^2}{2} \\\\
-          T &= (z_L+z_R)y \\\\
-
-          N_F &= 1 \\\\
-          \\Rightarrow v_c &= \\sqrt{ g(A_c/T_c)} \\\\
-          \\Rightarrow \\left(\\frac{Q}{A_c}\\right)^2 &= g(A_c/T_c) \\\\
-          \\Rightarrow \\frac{Q^2}{g} &= \\frac{A_c^3}{T_c} \\\\
-          \\Rightarrow \\frac{Q^2}{g} &= \\frac{(\\frac{(z_L+z_R)y_c^2}{2})^3}{(z_L+z_R)\\cdot y_c} \\\\
-          &= \\frac{(z_L+z_R)^2}{2^3}\\cdot y_c^5 \\\\
-
-          y_c^5 &= \\frac{Q^2}{g}\\cdot \\frac{8}{(z_L+z_R)^2} \\\\
-          y_c^5 &= \\frac{(${Q}\\, \\mathsf{m^3\\!/s})^2}{${g}\\, \\mathsf{m/s^2}}\\cdot \\frac{8}{(${sds(zl)}+${sds(zr)})^2} \\\\
-          y_c &= \\left[\\frac{(${Q}\\, \\mathsf{m^3\\!/s})^2}{${g}\\, \\mathsf{m/s^2}}\\cdot \\frac{8}{(${sds(zl)}+${sds(zr)})^2}\\right]^{0.2}	\\\\\\\\								
-          y_c &= ${yc}\\, \\mathsf{m}
-        \\end{aligned}
-      `)}
+					\\begin{aligned}
+							N_F &= 1 \\\\
+							\\Rightarrow v_c &= \\sqrt{ g(A_c/T_c)} \\\\
+							\\Rightarrow \\left(\\frac{Q}{A_c}\\right)^2 &= g(A_c/T_c) \\\\
+							\\Rightarrow \\frac{Q^2}{g} &= \\frac{A_c^3}{T_c} \\\\
+							&= \\frac{\\left(\\left(b+\\left(\\frac{z_L+z_R}{2}\\right)\\cdot y_c\\right)\\cdot y_c\\right)^3}{b + \\left(z_L+z_R\\right)\\cdot y} \\\\
+							\\Rightarrow \\frac{\\left(${sdw(Q)} \\, \\mathsf{m^3\\!/s}\\right)^2}{${sds(g)} \\, \\mathsf{m/s^2}}&= \\frac{\\left(\\left(${sds(b)}\\, \\mathsf{m}+\\left(\\large\\frac{${sds(zl + zr)}}{2}\\right)\\cdot y_c \\, \\mathsf{m}\\right)\\cdot y_c \\, \\mathsf{m}\\right)^3}{${sds(b)}\\, \\mathsf{m} + \\left(${zl + zr}\\right)\\cdot y_c\\, \\mathsf{m}} 									
+					\\end{aligned}`)}
+				The expression above cannot be solved directly (analytically) for {@html ki(`y_c`)}. It may
+				be solved using trial-and-error methods but it is generally more convenient to solve it,
+				without further simplification, using a numerical solver on a scientific calculator or in a
+				spreadsheet app. (This calculator uses a binary search.)
+				{@html kd(`y_c=${yc}\\, \\mathsf{m}`)}
 			{/snippet}
 		</Carrd>
 
 		<Carrd>
 			{#snippet answer()}
-				Critical Velocity: {@html ki(` v_c = ${sds(vc)}  \\,\\mathsf{m/s}`)}
+				Critical Velocity: {@html ki(`v_c = ${sds(vc)}  \\,\\mathsf{m/s}`)}
 			{/snippet}
 			{#snippet solution()}
 				{@html kd(`
-        \\begin{aligned}
-          A_c &= \\frac{\\left(z_L+z_R\\right)y_c^2}{2} \\\\
-          &= \\frac{\\left(${sds(zl)}+${sds(zr)}\\right)(${yc}\\, \\mathsf{m})^2}{2} \\\\
-          &= ${Ac}\\, \\mathsf{m^2} \\\\\\\\          
-          v_c &= Q/A_c \\\\
-          &= \\frac{${Q}\\, \\mathsf{m^3\\!/s}}{${Ac}\\, \\mathsf{m^2}} \\\\\\\\
-          v_c &= ${vc}\\, \\mathsf{m/s}          
-        \\end{aligned}	
-      `)}
+					\\begin{aligned}
+						A_c &= \\left(b+\\left(\\frac{z_L+z_R}{2}\\right)\\cdot y\\right)\\cdot y \\\\
+						A_c &= \\left(${sds(b)}\\, \\mathsf{m}+\\left(\\frac{${sds(zl + zr)}}{2}\\right)\\cdot ${sdw(yc)}\\, \\mathsf{m}\\right)\\cdot ${yc}\\, \\mathsf{m} \\\\
+						&= ${sdw(Ac)}\\, \\mathsf{m^2}\\\\\\\\
+						v_c &= Q/A_c \\\\
+						&= \\frac{${sdw(Q)}\\, \\mathsf{m^3\\!/s}}{${sdw(Ac)}\\, \\mathsf{m^2}} \\\\ \\\\
+						v_c &= ${sdw(vc)} \\,\\mathsf{m/s}
+					\\end{aligned}	
+				`)}
 			{/snippet}
 		</Carrd>
 
@@ -414,12 +441,12 @@
 			{/snippet}
 			{#snippet solution()}
 				{@html kd(`
-        \\begin{aligned}
-          E_{min} &= y_c+\\frac{ v_c^2 }{ 2g } \\\\
-          &= ${yc}\\, \\mathsf{m}+\\frac{ (${vc}\\, \\mathsf{m/s})^2 }{ 2(${g}\\, \\mathsf{m/s^2}) } \\\\\\\\
-          E_{min} &= ${Emin} \\,\\mathsf{m}
-        \\end{aligned}
-      `)}
+							\\begin{aligned}
+								E_{min} &= y_c+\\frac{ v_c^2 }{ 2g } \\\\
+								&= ${yc}\\, \\mathsf{m}+\\frac{ (${vc}\\, \\mathsf{m/s})^2 }{ 2(${g}\\, \\mathsf{m/s^2}) } \\\\
+								&= ${Emin} \\,\\mathsf{m}
+							\\end{aligned}
+						`)}
 			{/snippet}
 		</Carrd>
 
@@ -429,36 +456,38 @@
 			{/snippet}
 			{#snippet solution()}
 				{@html kd(`
-        \\begin{aligned}
-          A_c &= \\frac{\\left(z_L+z_R\\right)y_c^2}{2} \\\\
-          &= \\frac{\\left(${sds(zl)}+${sds(zr)}\\right)(${yc}\\, \\mathsf{m})^2}{2} \\\\
-          &= ${Ac}\\, \\mathsf{m^2} \\\\
+							\\begin{aligned}
+                  A_c &= \\left(b+\\left(\\frac{z_L+z_R}{2}\\right)\\cdot y\\right)\\cdot y \\\\
+                  &= \\left(${b}\\, \\mathsf{m}+\\left(\\frac{${sds(
+										+zl + +zr
+									)}}{2}\\right)\\cdot ${yc}\\, \\mathsf{m}\\right)\\cdot ${yc}\\, \\mathsf{m} \\\\
+                  &= ${Ac} \\,\\mathsf{m^2} \\\\ \\\\
 
-          P_c &= \\left(\\sqrt{1+z_L^2}+\\sqrt{1+z_R^2} \\right)y_c \\\\
-          &= \\left(\\sqrt{1+(${sds(zl)})^2}+\\sqrt{1+(${sds(zr)})^2} \\right)(${yc}\\, \\mathsf{m}) \\\\								
-          &= ${Pc}\\, \\mathsf{m}\\\\\\\\
+                  P_c &= b+\\left( \\sqrt{1+z_L^2}+\\sqrt{1+z_R^2}\\right)\\cdot y_c \\\\
+                  &= ${b}\\, \\mathsf{m}+\\left( \\sqrt{1+\\left(${zl}\\, \\mathsf{m}\\right)^2}+\\sqrt{1+\\left(${zr} \\, \\mathsf{m}\\right)^2}\\right)\\cdot ${y}\\, \\mathsf{m} \\\\ 
+                  &= ${Pc}\\, \\mathsf{m}\\\\\\\\
 
-          R_c &= A_c/P_c \\\\
-          &= \\frac{${Ac}\\, \\mathsf{m^2}}{${Pc}\\, \\mathsf{m}} \\\\
-          &= ${Rc}\\,\\mathsf{m}\\\\\\\\
+                  R_c &= A_c/P_c \\\\
+                  &= \\frac{${Ac}\\, \\mathsf{m^2}}{${Pc}\\, \\mathsf{m}} \\\\
+                  &= ${Rc}\\,\\mathsf{m}\\\\\\\\
 
-          \\Rightarrow S_c &= \\left(\\frac { nv_c }{ R_c^{2/3} }\\right)^2 \\\\
-          &= \\left(\\frac{${sds(n)}\\times ${vc}\\, \\mathsf{m/s} }{ (${Rc}\\, \\mathsf{m})^{2/3} }\\right)^2\\\\
-          &= ${sdw(Sc / 100)} \\\\
-          &= ${Sc}\\% 								
-        \\end{aligned}
-      `)}
+                  \\Rightarrow S_c &= \\left(\\frac { nv_c }{ R_c^{2/3} }\\right)^2 \\\\
+                  &= \\left(\\frac{${n}\\times ${vc}\\, \\mathsf{m/s} }{ (${Rc}\\, \\mathsf{m})^{2/3} }\\right)^2\\\\
+                  &= ${sdw(Sc / 100)} \\\\
+                  &= ${Sc}\\% 								
+							\\end{aligned}
+						`)}
 			{/snippet}
 		</Carrd>
 
 		<!-- <Carrd>
-		{#snippet answer()}
-			stuff
-		{/snippet}
-		{#snippet solution()}
-			more
-		{/snippet}
-	</Carrd> -->
+			{#snippet answer()}
+				stuff
+			{/snippet}
+			{#snippet solution()}
+				more
+			{/snippet}
+		</Carrd> -->
 	</section>
 </article>
 
@@ -471,6 +500,10 @@
 		margin: 0.625em auto;
 		// border: 1px solid black;
 		width: 90%;
+
+		&.single {
+			justify-content: space-around;
+		}
 	}
 	label {
 		display: flex;
