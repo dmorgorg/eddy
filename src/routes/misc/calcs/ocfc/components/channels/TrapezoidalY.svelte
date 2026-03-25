@@ -152,9 +152,10 @@
 	}, 1000)
 </script>
 
+<TrapYCanvas bind:zl={trapY.zl} bind:zr={trapY.zr} bind:b={trapY.b} bind:y={trapY.y} />
 <article>
 	<!-- <section> -->
-	<TrapYCanvas bind:zl={trapY.zl} bind:zr={trapY.zr} bind:b={trapY.b} bind:y={trapY.y} />
+
 	<!-- </section> -->
 	<!-- {trapY.zl}, {trapY.b}, {trapY.zr}, {trapY.y} -->
 	<section>
@@ -500,7 +501,7 @@
 		justify-content: space-between;
 		margin: 0.625em auto;
 		// border: 1px solid black;
-		//width: 90%;
+		width: 90%;
 
 		&.single {
 			justify-content: space-around;
@@ -570,9 +571,9 @@
 		margin: 0;
 	}
 	article {
-		// border: 2px solid green;
+		border: 2px solid green;
 		margin-inline: auto;
-		width: 34em;
+		width: 40em;
 		// width: fit-content;
 	}
 	.results {
