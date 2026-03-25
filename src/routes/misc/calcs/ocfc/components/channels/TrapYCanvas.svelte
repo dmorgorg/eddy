@@ -18,17 +18,15 @@
 	let canvasPaddingInline = 20
 	let canvasPaddingTop = canvasPaddingInline
 	let canvasPaddingBottom = $derived(canvasPaddingInline)
+	let canvasMaxHeightPixels = 12.75
 	let maxD = $state(5) // max depth of channel set to 5 metres
-	let aspectRatio = $derived(b / maxD)
-	let channelTopWidth = $derived(maxD * aspectRatio + zl * maxD + xr * maxD)
-	// depth of channel in pixels
-	let channelDepthPixels = (widthInPixels - 2 * canvasPaddingInline) / (aspectRatio + zl + zr)
 
-	// maximum drawing height
-	// let maxDepthPixels = $derived(channelDepthPixels + )
-	// minimum drawing height
-	let canvasHeightPixels = $derived(channelDepthPixels + canvasPaddingTop + canvasPaddingBottom)
-	// let minDepthPixels = $state(50)
+	let channelTopWidth = $derived((zl + zr) * maxD + b)
+	let channelAspectRatio = $derived(channelTopWidth / y)
+	let channelDepthPixels = $derived.by(() => {
+		if ((widthInPixels - 2 * canvasPaddingInline) / channelAspectRatio < canvasMaxHeightPixels)
+			return (widthInPixels - 2 * canvasPaddingInline) / channelAspectRatio
+	})
 
 	// let channelWidthPixels = $derived.by(() => {
 	// 	if (widthInPixels > aspectRatio * maxDepthPixels + 2 * canvasPaddingInline) {
@@ -81,7 +79,7 @@
 		let lineWidth = 4
 		const ctx = canvas.getContext('2d')
 		ctx.clearRect(0, 0, canvas.width, canvas.height)
-		ctx.canvas.height = canvasHeightPixels
+		// ctx.canvas.height = canvasHeightPixels
 		ctx.canvas.width = widthInPixels
 
 		// draw grey channel surround/support
@@ -129,6 +127,7 @@
 				<canvas bind:this={canvas} width="200" height="100"> </canvas>
 			</div>
 		</div>
+		channelWidth: {channelTopWidth}, ar: {channelAspectRatio}, channelDepth: {channelDepthPixels}
 	</div>
 	<!-- leftX: {channelLeftX}, channelWidthPixels: {channelWidthPixels}, rightX: {channelRightX},
 	channelDepthPixels: {channelDepthPixels}, channelBaseX: {channelBaseX} <br />

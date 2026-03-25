@@ -153,9 +153,9 @@
 </script>
 
 <article>
-	<section>
-		<TrapYCanvas bind:zl={trapY.zl} bind:zr={trapY.zr} bind:b={trapY.b} bind:y={trapY.y} />
-	</section>
+	<!-- <section> -->
+	<TrapYCanvas bind:zl={trapY.zl} bind:zr={trapY.zr} bind:b={trapY.b} bind:y={trapY.y} />
+	<!-- </section> -->
 	<!-- {trapY.zl}, {trapY.b}, {trapY.zr}, {trapY.y} -->
 	<section>
 		<div class="inputs-row single">
@@ -458,20 +458,21 @@
 				{@html kd(`
 							\\begin{aligned}
                   A_c &= \\left(b+\\left(\\frac{z_L+z_R}{2}\\right)\\cdot y\\right)\\cdot y \\\\
-                  &= \\left(${b}\\, \\mathsf{m}+\\left(\\frac{${sds(
+                  &= \\left(${sds(b)}\\, \\mathsf{m}+\\left(\\frac{${sds(
 										+zl + +zr
 									)}}{2}\\right)\\cdot ${yc}\\, \\mathsf{m}\\right)\\cdot ${yc}\\, \\mathsf{m} \\\\
                   &= ${Ac} \\,\\mathsf{m^2} \\\\ \\\\
 
                   P_c &= b+\\left( \\sqrt{1+z_L^2}+\\sqrt{1+z_R^2}\\right)\\cdot y_c \\\\
-                  &= ${b}\\, \\mathsf{m}+\\left( \\sqrt{1+\\left(${zl}\\, \\mathsf{m}\\right)^2}+\\sqrt{1+\\left(${zr} \\, \\mathsf{m}\\right)^2}\\right)\\cdot ${y}\\, \\mathsf{m} \\\\ 
-                  &= ${Pc}\\, \\mathsf{m}\\\\\\\\
+                  &= ${sds(b)}\\, \\mathsf{m}\\quad+ \\\\ 
+									&\\qquad\\left(\\! \\sqrt{1\\!+\\!\\left(${sds(zl)}\\, \\mathsf{m}\\right)^2}+\\sqrt{1\\!+\\!\\left(${sds(zr)} \\, \\mathsf{m}\\right)^2}\\right)\\!\\cdot\\! ${sds(y)}\\, \\mathsf{m} \\\\ 
+                  &= ${sdw(Pc)}\\, \\mathsf{m}\\\\\\\\
 
                   R_c &= A_c/P_c \\\\
                   &= \\frac{${Ac}\\, \\mathsf{m^2}}{${Pc}\\, \\mathsf{m}} \\\\
                   &= ${Rc}\\,\\mathsf{m}\\\\\\\\
 
-                  \\Rightarrow S_c &= \\left(\\frac { nv_c }{ R_c^{2/3} }\\right)^2 \\\\
+                  S_c &= \\left(\\frac { nv_c }{ R_c^{2/3} }\\right)^2 \\\\
                   &= \\left(\\frac{${n}\\times ${vc}\\, \\mathsf{m/s} }{ (${Rc}\\, \\mathsf{m})^{2/3} }\\right)^2\\\\
                   &= ${sdw(Sc / 100)} \\\\
                   &= ${Sc}\\% 								
@@ -499,7 +500,7 @@
 		justify-content: space-between;
 		margin: 0.625em auto;
 		// border: 1px solid black;
-		width: 90%;
+		//width: 90%;
 
 		&.single {
 			justify-content: space-around;
