@@ -73,9 +73,10 @@
 		font-weight: normal;
 		gap: 0;
 		margin-block: 0.5em;
+		/* margin-inline: 0; */
 		padding: 0.5em 0.625em;
 		padding-bottom: 0;
-		width: 100%;
+		/* width: 100%; */
 
 		/* nested card styling */
 		:global(.card) {
@@ -111,7 +112,7 @@
 		margin-block: 0;
 		padding-bottom: 0.375em;
 		text-align: left;
-		width: 100%;
+		/* width: 100%; */
 		span {
 			color: #088;
 		}

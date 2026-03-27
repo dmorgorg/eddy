@@ -1,7 +1,7 @@
 <script>
 	// @ts-nocheck
 
-	import TrapYCanvas from './TrapYCanvas.svelte'
+	import TrapCanvas from './TrapCanvas.svelte'
 	import Carrd from '../Carrd.svelte'
 	import { ki, kd, sd, debounce } from '$lib/utilities/utils.js'
 	import { common, trap } from '$lib/fluids/openChannel/utils'
@@ -13,6 +13,8 @@
 
 	let noSlopeError = $state(false)
 	let zeroDepthError = $state(false)
+	let zeroBaseWarning = $state(false)
+	let bothVerticalWarning = $state(false)
 
 	const sds = (num) => {
 		return sd(num, sdigs, extraForSdigs)
@@ -69,8 +71,9 @@
 	// Handles s, n, g input changes; stores as numbers, updates input with formatted value
 	const processChange = debounce((e) => {
 		noSlopeError = false
-		// verticalError = false
+		bothVerticalWarning = false
 		zeroDepthError = false
+		zeroBaseWarning = false
 
 		let id = e.target.id
 		let value = Math.abs(Number(e.target.value))
@@ -100,29 +103,31 @@
 				e.target.value = sds(trapY.g)
 			}
 		} else if (id === 'zl') {
-			let prev = trapY.zl
+			// let prev = trapY.zl
 			// toFixed in sd chokes on 0 so deal with it here
 			if (value == 0) {
 				// if zr is already 0, don't change zl to 0 but keep at previous value
 				if (trapY.zr === 0) {
-					// verticalError = true
+					bothVerticalWarning = true
 					// console.log('true')
-					e.target.value = sds(prev)
+					trapY.zl = value
+					e.target.value = trapY.zl
 				} else {
-					e.target.value = sds((trapY.zl = 0))
+					e.target.value = trapY.zl = 0
 				}
 			} else {
 				trapY.zl = value
 				e.target.value = sds(trapY.zl)
 			}
 		} else if (id === 'zr') {
-			let prev = trapY.zr
+			// let prev = trapY.zr
 			if (value == 0) {
 				if (trapY.zl === 0) {
-					// verticalError = true
-					e.target.value = sds(prev)
+					bothVerticalWarning = true
+					trapY.zr = value
+					e.target.value = trapY.zr
 				} else {
-					e.target.value = sds((trapY.zr = 0))
+					e.target.value = trapY.zr = 0
 				}
 			} else {
 				trapY.zr = value
@@ -131,9 +136,9 @@
 		} else if (id === 'b') {
 			let prev = trapY.b
 			if (value == 0) {
-				zeroDepthError = true
-				trapY.b = Number(prev)
-				e.target.value = sds(prev)
+				zeroBaseWarning = true
+				trapY.b = Number(value)
+				e.target.value = sds(value)
 			} else {
 				trapY.b = value
 				e.target.value = sds(trapY.b)
@@ -152,12 +157,14 @@
 	}, 1000)
 </script>
 
-<TrapYCanvas bind:zl={trapY.zl} bind:zr={trapY.zr} bind:b={trapY.b} bind:y={trapY.y} />
+<section class="canvas">
+	<TrapCanvas bind:zl={trapY.zl} bind:zr={trapY.zr} bind:b={trapY.b} bind:y={trapY.y} />
+</section>
 <article>
 	<!-- <section> -->
 
 	<!-- </section> -->
-	<!-- {trapY.zl}, {trapY.b}, {trapY.zr}, {trapY.y} -->
+	<!-- {trap.zl}, {trap.b}, {trap.zr}, {trap.y} -->
 	<section>
 		<div class="inputs-row single">
 			<label class="depth-label">
@@ -279,6 +286,18 @@
 	{#if zeroDepthError}
 		<div class="error" transition:slide={{ duration: 1000, axis: 'y' }}>
 			Zero depth, no water, no flow. Nothing for me here.
+		</div>
+	{/if}
+	{#if zeroBaseWarning}
+		<div class="error" transition:slide={{ duration: 1000, axis: 'y' }}>
+			With a zero base value, you have a simpler triangular channel. You really should use that
+			option...but whatever.
+		</div>
+	{/if}
+	{#if bothVerticalWarning}
+		<div class="error" transition:slide={{ duration: 1000, axis: 'y' }}>
+			With both slopes vertical, you have a simpler rectangular channel. You should use that
+			option...but it's up to you really.
 		</div>
 	{/if}
 
@@ -408,7 +427,7 @@
 							\\Rightarrow \\left(\\frac{Q}{A_c}\\right)^2 &= g(A_c/T_c) \\\\
 							\\Rightarrow \\frac{Q^2}{g} &= \\frac{A_c^3}{T_c} \\\\
 							&= \\frac{\\left(\\left(b+\\left(\\frac{z_L+z_R}{2}\\right)\\cdot y_c\\right)\\cdot y_c\\right)^3}{b + \\left(z_L+z_R\\right)\\cdot y} \\\\
-							\\Rightarrow \\frac{\\left(${sdw(Q)} \\, \\mathsf{m^3\\!/s}\\right)^2}{${sds(g)} \\, \\mathsf{m/s^2}}&= \\frac{\\left(\\left(${sds(b)}\\, \\mathsf{m}+\\left(\\large\\frac{${sds(zl + zr)}}{2}\\right)\\cdot y_c \\, \\mathsf{m}\\right)\\cdot y_c \\, \\mathsf{m}\\right)^3}{${sds(b)}\\, \\mathsf{m} + \\left(${zl + zr}\\right)\\cdot y_c\\, \\mathsf{m}} 									
+							\\Rightarrow \\frac{\\left(${sdw(Q)} \\, \\mathsf{m^3\\!/s}\\right)^2}{${sds(g)} \\, \\mathsf{m/s^2}}&= \\frac{\\left(\\left(${sds(b)}\\, \\mathsf{m}+\\left(\\large\\frac{${sds(zl + zr)}}{2}\\right)\\cdot y_c \\, \\mathsf{m}\\right)\\cdot y_c \\, \\mathsf{m}\\right)^3}{${sds(b)}\\, \\mathsf{m} + \\left(${sds(zl + zr)}\\right)\\cdot y_c\\, \\mathsf{m}} 									
 					\\end{aligned}`)}
 				The expression above cannot be solved directly (analytically) for {@html ki(`y_c`)}. It may
 				be solved using trial-and-error methods but it is generally more convenient to solve it,
@@ -457,28 +476,28 @@
 			{/snippet}
 			{#snippet solution()}
 				{@html kd(`
-							\\begin{aligned}
-                  A_c &= \\left(b+\\left(\\frac{z_L+z_R}{2}\\right)\\cdot y\\right)\\cdot y \\\\
-                  &= \\left(${sds(b)}\\, \\mathsf{m}+\\left(\\frac{${sds(
-										+zl + +zr
-									)}}{2}\\right)\\cdot ${yc}\\, \\mathsf{m}\\right)\\cdot ${yc}\\, \\mathsf{m} \\\\
-                  &= ${Ac} \\,\\mathsf{m^2} \\\\ \\\\
+					\\begin{aligned}
+						A_c &= \\left(b+\\left(\\frac{z_L+z_R}{2}\\right)\\cdot y\\right)\\cdot y \\\\
+						&= \\left(${sds(b)}\\, \\mathsf{m}+\\left(\\frac{${sds(
+							+zl + +zr
+						)}}{2}\\right)\\cdot ${yc}\\, \\mathsf{m}\\right)\\cdot ${yc}\\, \\mathsf{m} \\\\
+						&= ${Ac} \\,\\mathsf{m^2} \\\\ \\\\
 
-                  P_c &= b+\\left( \\sqrt{1+z_L^2}+\\sqrt{1+z_R^2}\\right)\\cdot y_c \\\\
-                  &= ${sds(b)}\\, \\mathsf{m}\\quad+ \\\\ 
-									&\\qquad\\left(\\! \\sqrt{1\\!+\\!\\left(${sds(zl)}\\, \\mathsf{m}\\right)^2}+\\sqrt{1\\!+\\!\\left(${sds(zr)} \\, \\mathsf{m}\\right)^2}\\right)\\!\\cdot\\! ${sds(y)}\\, \\mathsf{m} \\\\ 
-                  &= ${sdw(Pc)}\\, \\mathsf{m}\\\\\\\\
+						P_c &= b+\\left( \\sqrt{1+z_L^2}+\\sqrt{1+z_R^2}\\right)\\cdot y_c \\\\
+						&= ${sds(b)}\\, \\mathsf{m}\\quad+ \\\\ 
+						&\\qquad\\left(\\! \\sqrt{1\\!+\\!\\left(${sds(zl)}\\, \\mathsf{m}\\right)^2}+\\sqrt{1\\!+\\!\\left(${sds(zr)} \\, \\mathsf{m}\\right)^2}\\right)\\!\\cdot\\! ${sds(y)}\\, \\mathsf{m} \\\\ 
+						&= ${sdw(Pc)}\\, \\mathsf{m}\\\\\\\\
 
-                  R_c &= A_c/P_c \\\\
-                  &= \\frac{${Ac}\\, \\mathsf{m^2}}{${Pc}\\, \\mathsf{m}} \\\\
-                  &= ${Rc}\\,\\mathsf{m}\\\\\\\\
+						R_c &= A_c/P_c \\\\
+						&= \\frac{${Ac}\\, \\mathsf{m^2}}{${Pc}\\, \\mathsf{m}} \\\\
+						&= ${Rc}\\,\\mathsf{m}\\\\\\\\
 
-                  S_c &= \\left(\\frac { nv_c }{ R_c^{2/3} }\\right)^2 \\\\
-                  &= \\left(\\frac{${n}\\times ${vc}\\, \\mathsf{m/s} }{ (${Rc}\\, \\mathsf{m})^{2/3} }\\right)^2\\\\
-                  &= ${sdw(Sc / 100)} \\\\
-                  &= ${Sc}\\% 								
-							\\end{aligned}
-						`)}
+						S_c &= \\left(\\frac { nv_c }{ R_c^{2/3} }\\right)^2 \\\\
+						&= \\left(\\frac{${n}\\times ${vc}\\, \\mathsf{m/s} }{ (${Rc}\\, \\mathsf{m})^{2/3} }\\right)^2\\\\
+						&= ${sdw(Sc / 100)} \\\\
+						&= ${Sc}\\% 								
+					\\end{aligned}
+				`)}
 			{/snippet}
 		</Carrd>
 
@@ -494,14 +513,30 @@
 </article>
 
 <style lang="scss">
+	article {
+		// border: 2px solid green;
+		margin-inline: auto;
+		// padding-bottom: 0;
+		// padding-inline: 0;
+		width: 32em;
+		// width: fit-content;
+	}
+	.canvas {
+		margin-inline: auto;
+		width: 40em;
+		// border: 1px solid blue;
+		// background: #eee;
+	}
 	.inputs-row {
 		// font-size: 80%;
 		display: flex;
 		gap: 0.5em;
 		justify-content: space-between;
 		margin: 0.625em auto;
-		// border: 1px solid black;
-		width: 90%;
+		// border: 1px solid red;
+		// width: 90%;
+		// width: 32em;
+		width: 100%;
 
 		&.single {
 			justify-content: space-around;
@@ -520,33 +555,6 @@
 		border-radius: 3px;
 		width: 32%;
 	}
-
-	// input {
-	// 	width: 4em;
-	// 	padding: 0;
-	// 	border: 1px solid #ccc;
-	// 	border: 0.125em solid #c1cdcd;
-	// 	border-radius: 3px;
-	// 	font-size: 0.9em;
-	// 	text-align: center;
-	// 	-moz-appearance: textfield;
-	// 	appearance: textfield;
-
-	// 	&:hover {
-	// 		border: 0.125em solid #088;
-	// 	}
-	// }
-
-	// input[type='number']:focus {
-	// 	// box-shadow: 1px 1px black;
-	// 	// background: #088;
-	// 	border: 0.125em solid #088;
-	// 	// box-sizing: border-box;
-	// 	outline: none;
-	// 	// outline: 1px #000 solid;
-	// 	// color: white;
-	// 	// border-color: #088;
-	// }
 
 	input {
 		width: 4em;
@@ -570,16 +578,16 @@
 		-webkit-appearance: none;
 		margin: 0;
 	}
-	article {
-		border: 2px solid green;
-		margin-inline: auto;
-		width: 40em;
-		// width: fit-content;
-	}
-	.results {
-		margin-inline: auto;
-		width: 90%;
-	}
+
+	// section {
+	// }
+	// .results {
+	// 	// margin-bottom: 0;
+	// 	// margin-inline: auto;
+	// 	// background: pink;
+
+	// 	// width: 90%;
+	// }
 	.heading {
 		color: #088;
 		font-size: 120%;
