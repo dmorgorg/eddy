@@ -5,7 +5,7 @@
 	import TrapezoidalQ from './TrapezoidalQ.svelte'
 	import TrapezoidalY from './TrapezoidalY.svelte'
 	// let { sdigs, wdigs, extraForSdigs, extraForWdigs } = digits;
-	let yorq = 'trapezoidalY'
+	let yorq = 'trapezoidalQ'
 	let channelType = 'trapezoidal'
 </script>
 

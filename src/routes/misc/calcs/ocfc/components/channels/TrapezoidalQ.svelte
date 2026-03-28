@@ -15,12 +15,37 @@
 	let zeroDepthError = $state(false)
 	let zeroBaseWarning = $state(false)
 	let bothVerticalWarning = $state(false)
+	let iteratedYforQ
 
 	const sds = (num) => {
 		return sd(num, sdigs, extraForSdigs)
 	}
 	const sdw = (num) => {
 		return sd(num, wdigs, extraForWdigs)
+	}
+
+	let y = $derived(sdw(getYfromQ()))
+
+	const initGuessQ = sdw(0.5)
+
+	const getQfromY = (y) => {
+		var A = trap.getArea(y, zl, b, zr)
+		let v = common.getV(n, common.getR(A, trap.getP(y, zl, b, zr)), s)
+		return A * v
+	}
+	const getYfromQ = (low = 0, high = 100) => {
+		let delta = 1 / 10 ** (wdigs + 1),
+			mid = (low + high) / 2
+		// console.log(delta+', '+low+', '+high);
+		if (Math.abs(low - high) < delta) {
+			return (low + high) * 0.5
+		}
+		// search
+		if (getQfromY(mid) < Q) {
+			return getYfromQ(mid, high)
+		} else {
+			return getYfromQ(low, mid)
+		}
 	}
 
 	const getNFfromY = (y) => {
@@ -52,21 +77,50 @@
 	let g = $derived(Number(trapQ.g))
 
 	// calculations for y specified
-	// let A = $derived(sdw(trap.getArea(y, zl, b, zr)))
-	// let P = $derived(sdw(trap.getP(y, zl, b, zr)))
-	// let R = $derived(sdw(common.getR(A, P)))
-	// let v = $derived(sdw(common.getV(n, R, s)))
-	// let Q = $derived(sdw(common.getQfromAandV(A, v)))
-	// let E = $derived(sdw(common.getE(y, v, g)))
-	// let T = $derived(sdw(trap.getT(y, zl, b, zr)))
-	// let NF = $derived(sdw(common.getNF(v, A, T, g)))
-	// let yc = $derived(sdw(getYCfromQ()))
-	// let Ac = $derived(sdw(trap.getArea(yc, zl, b, zr)))
-	// let vc = $derived(sdw(Q / Ac))
-	// let Emin = $derived(sdw(common.getE(yc, vc, g)))
-	// let Pc = $derived(sdw(trap.getP(yc, zl, b, zr)))
-	// let Rc = $derived(sdw(common.getR(Ac, Pc)))
-	// let Sc = $derived(sdw(common.getCriticalSlope(n, vc, Rc)))
+	// let y = $derived(Q)
+
+	const setIterationPointsQ = () => {
+		let next = Number(initGuessQ),
+			// make current different from current to guarantee that the loop is entered initially
+			current = next + 1,
+			iterations = 0
+		// when the $effect sees iteratedY change it refires each time, causing a loop. Store the		results in points and assign it once outside the loop
+		const points = []
+
+		while (current != next) {
+			++iterations
+			current = next
+			next = Number(
+				sdw(
+					((b + ((zl + zr) / 2) * current) ** (5 / 3) * current ** (8 / 3)) /
+						(b + ((1 + zl ** 2) ** 0.5 + (1 + zr ** 2) ** 0.5) * current) ** (2 / 3) /
+						((Q * n) / Math.pow(s / 100, 0.5))
+				)
+			)
+			// console.log(next)
+			points.push(next)
+
+			// in case of non convergence
+			if (iterations > 20) break
+		}
+		iteratedYforQ = points || []
+		console.log(iteratedYforQ)
+	}
+
+	let next = initGuessQ
+	let current = next
+	// console.log(
+	// 	sdw(
+	// 		(((b + ((zl + zr) / 2) * current) ** (5 / 3) * current ** (8 / 3)) /
+	// 			(b + ((1 + zl ** 2) ** 0.5 + (1 + zr ** 2) ** 0.5) * current) ** (2 / 3) /
+	// 			((Q * n) / (s / 100))) ^
+	// 			0.5
+	// 	)
+	// )
+	// console.log(sdw((b + ((zl + zr) / 2) * current) ** (5 / 3) * current ** (8 / 3)))
+	// console.log(sdw((b + ((1 + zl ** 2) ** 0.5 + (1 + zr ** 2) ** 0.5) * current) ** (2 / 3)))
+	// console.log(sdw((Q * n) / Math.pow(s / 100, 0.5)))
+	// console.log(sdw((Q * n) / ((s / 100) ^ 0.5)))
 
 	// Handles s, n, g input changes; stores as numbers, updates input with formatted value
 	const processChange = debounce((e) => {
@@ -82,10 +136,11 @@
 			// no flow with zero slope so don't allow it
 			if (value == 0) {
 				noSlopeError = true
-				e.target.value = Math.pow(10, -sdigs)
+				e.target.value = sds(trapQ.s)
+			} else {
+				trapQ.s = value
+				e.target.value = sds(trapQ.s)
 			}
-			trapQ.s = value
-			e.target.value = sds(trapQ.s)
 		} else if (id === 'n') {
 			trapQ.n = value
 			e.target.value = sds(trapQ.n)
@@ -143,22 +198,34 @@
 				trapQ.b = value
 				e.target.value = sds(trapQ.b)
 			}
-		} else if (id === 'y') {
-			let prev = trapQ.y
+		} else if (id === 'Q') {
+			let prev = trapQ.Q
 			if (value == 0) {
 				zeroDepthError = true
-				trapQ.y = Number(prev)
+				trapQ.Q = Number(prev)
 				e.target.value = sds(prev)
 			} else {
-				trapQ.y = value
-				e.target.value = sds(trapQ.y)
+				trapQ.Q = value
+				e.target.value = sds(trapQ.Q)
 			}
 		}
+		// setIterationPoints()
 	}, 1000)
+
+	$effect(() => {
+		void trapQ.b
+		void trapQ.Q
+		void trapQ.zl
+		void trapQ.zr
+		void trapQ.s
+		void trapQ.n
+		void trapQ.g
+		// setIterationPointsQ()
+	})
 </script>
 
 <section class="canvas">
-	<!-- <TrapCanvas bind:zl={trapQ.zl} bind:zr={trapQ.zr} bind:b={trapQ.b} bind:y={trapQ.y} /> -->
+	<TrapCanvas bind:zl={trapQ.zl} bind:zr={trapQ.zr} bind:b={trapQ.b} bind:y />
 </section>
 <article>
 	<!-- <section> -->
@@ -168,7 +235,7 @@
 	<section>
 		<div class="inputs-row single">
 			<label class="depth-label">
-				<span class="unit">{@html ki(' y=')}</span>
+				<span class="unit">{@html ki(' Q=')}</span>
 				<input
 					type="number"
 					value={sds(Q)}
@@ -178,7 +245,7 @@
 					oninput={processChange}
 					onkeydown={processChange}
 				/>
-				<span class="unit">{@html ki('\\mathsf{ m}')}</span>
+				<span class="unit">{@html ki('\\mathsf{ m^3/s}')}</span>
 			</label>
 		</div>
 
@@ -278,9 +345,9 @@
 			sayin'
 		</div>
 	{/if} -->
-	<!-- {#if noSlopeError}
+	{#if noSlopeError}
 		<div class="error" transition:slide={{ duration: 1000, axis: 'y' }}>
-			No slope, no flow. That's just how it is.
+			No slope, no flow, no can do. That's just how it is.
 		</div>
 	{/if}
 	{#if zeroDepthError}
@@ -299,207 +366,156 @@
 			With both slopes vertical, you have a simpler rectangular channel. You should use that
 			option...but it's up to you really.
 		</div>
-	{/if} -->
+	{/if}
 
 	<section class="results">
 		<div class="heading">Normal (Uniform) Flow</div>
 
-		<!-- <Carrd>
+		<Carrd>
 			{#snippet answer()}
-				Flow Area: {@html ki(`A = ${sds(A)}\\, \\mathsf{m^2}`)}
+				Depth of flow: {@html ki(`${sds(y)}\\, \\mathsf{m}`)}
 			{/snippet}
 			{#snippet solution()}
+				{@html kd(`\\normalsize
+						\\begin{aligned}
+							A &= \\left(b+\\frac{z_L+z_R}{2}\\cdot y\\right)y \\\\
+							&= \\left(${sds(b)}\\, \\mathsf{m}+\\frac{${sds(zl)}\\,\\mathsf{m} + ${sds(zr)}\\,\\mathsf{m}}{2}\\cdot y\\right) y \\\\
+							&= \\left(${sds(b)}\\, \\mathsf{m}+${sdw(zl / 2 + zr / 2)} y\\right) y \\\\\\\\
+
+							P &= b+\\left( \\sqrt{1+z_L^2}+\\sqrt{1+z_R^2}\\right) y \\\\
+							&= ${sds(b)}\\, \\mathsf{m}\\!+\\!\\left(\\! \\sqrt{1\\!+\\!(${sds(zl)}\\,\\mathsf{m})^2}+\\sqrt{1\\!+\\!(${sds(zr)}\\,\\mathsf{m})^2}\\!\\right)\\! y 
+							\\\\\\\\
+							
+							Q &= \\frac 1n AR^{2/3}S^{1/2} \\\\							
+							&= \\frac 1n A(A/P)^{2/3}S^{1/2} \\\\
+							 &= \\frac 1n \\cdot\\frac{A^{5/3}}{P^{2/3}}\\cdot S^{1/2} \\\\\\\\
+
+							\\Rightarrow ${sds(Q)}&= \\frac{1}{${sds(n)}}   \\\\
+
+							&\\qquad{\\large\\times}\\,\\frac{\\left(\\left(${sds(b)}\\!+\\!${sdw(
+								zl / 2 + zr / 2
+							)} y\\right) y\\right)^{5/3}}{\\left(${sds(b)}+\\!\\left( \\sqrt{1\\!+\\!${sds(zl)}^2}\\!+\\!\\sqrt{1\\!+\\!${sds(zr)}^2}\\right) y\\right)^{2/3}}\\! \\\\
+
+							&\\qquad{\\large\\times}(${sds(s / 100)})^{1/2} \\\\\\\\
+
+							\\Rightarrow ${sds(Q)} &= \\frac{(${sds(s / 100)})^{1/2}}{${sds(n)}} {\\large \\times} \\frac{\\left(\\left(${sds(b)}+${sdw(
+								zl / 2 + zr / 2
+							)} y\\right) y\\right)^{5/3}}{\\left(${sds(b)}+ ${sdw((1 + zl ** 2) ** 0.5 + (1 + zr ** 2) ** 0.5)}y\\right)^{2/3}}\\\\\\\\
+						\\Rightarrow ${sdw(Q / ((s / 100) ** 0.5 / n))}	&= \\frac{\\left(\\left(${sds(b)}+${sdw(
+							zl / 2 + zr / 2
+						)} y\\right) y\\right)^{5/3}}{\\left(${sds(b)}+ ${sdw((1 + zl ** 2) ** 0.5 + (1 + zr ** 2) ** 0.5)}y\\right)^{2/3}}
+							
+						\\end{aligned}`)}
+				<div>
+					...where {@html ki('y')} is in metres. This expression cannot be solved directly (analytically)
+					for {@html ki(`y`)} but may be found using iterative methods. (Or, more conveniently, by using
+					the numerical solver available on a scientific calculator.)
+				</div>
 				{@html kd(`
-					\\begin{aligned}
-							A &= \\left(b+\\left(\\frac{z_L+z_R}{2}\\right)\\cdot y\\right)\\cdot y \\\\
-							&= \\left(\\!${sds(b)}\\, \\mathsf{m}+\\!\\left(\\frac{\\!${sds(zl)}\\, \\mathsf{m}+${sds(zr)}\\, \\mathsf{m}}{2}\\!\\right)\\!\\cdot\\! ${sds(y)}\\, \\mathsf{m}\\!\\right)\\!\\cdot\\! ${sds(y)}\\, \\mathsf{m} \\\\ \\\\
-							&= ${sdw(A)}\\, \\mathsf{m^2}
-					\\end{aligned}
-			`)}
+						y=${y}\\, \\mathsf{m}
+						`)}
+
+				<Carrd>
+					{#snippet answer()}
+						<strong>Fixed Point Iterative Solution</strong>
+					{/snippet}
+					{#snippet solution()}
+						{@html kd(
+							`${sdw(Q / ((s / 100) ** 0.5 / n))}	= \\frac{\\left(\\left(${sds(b)}+${sdw(
+								zl / 2 + zr / 2
+							)} y\\right) y\\right)^{5/3}}{\\left(${sds(b)}+ ${sdw((1 + zl ** 2) ** 0.5 + (1 + zr ** 2) ** 0.5)}y\\right)^{2/3}}`
+						)}
+						Rearrange the equation to get a single power of {@html ki('y')} on the left:
+						{@html kd(`
+							\\begin{aligned}
+								${sdw(Q / ((s / 100) ** 0.5 / n))}	&= \\frac{\\left(\\left(${sds(b)}+${sdw(
+									zl / 2 + zr / 2
+								)} y\\right) y\\right)^{5/3}}{\\left(${sds(b)}+ ${sdw((1 + zl ** 2) ** 0.5 + (1 + zr ** 2) ** 0.5)}y\\right)^{2/3}}\\cdot\\frac yy \\\\
+
+								\\Rightarrow y	&= \\frac{\\left(${sds(b)}+${sdw(
+									zl / 2 + zr / 2
+								)} y\\right)^{5/3} y^{8/3}}{${sdw(Q / ((s / 100) ** 0.5 / n))}\\left(${sds(b)}+ ${sdw((1 + zl ** 2) ** 0.5 + (1 + zr ** 2) ** 0.5)}y\\right)^{2/3}}\\\\
+							\\end{aligned}
+							`)}
+						Now, the fixed-point iterative process is to guess a starting value for the depth {@html ki(
+							'y_0'
+						)}, evaluate the function for input {@html ki('y_0')} to get {@html ki('y_1')} on the left.
+						Then repeat, evaluating at {@html ki('y_1')} to get {@html ki('y_2')} on the left,... Then
+						{@html ki('y_n')} will converge on {@html ki('y_{n+1}')}. Continue the iteration until
+						you have the desired accuracy, i.e. until the value of {@html ki(
+							'\\left|y_{n+1}-y_n\\right|'
+						)} is sufficiently small.
+						<br /><br />
+						Start with a guess of {@html ki(`y_0=${initGuessQ}`)}:
+					{/snippet}
+				</Carrd>
 			{/snippet}
 		</Carrd>
 
 		<Carrd>
 			{#snippet answer()}
-				Wetted Perimeter: {@html ki(`P = ${sds(P)}\\, \\mathsf{m}`)}
+				stuff
 			{/snippet}
 			{#snippet solution()}
-				{@html kd(`
-					\\begin{aligned}
-							P &= b+\\left( \\sqrt{1+z_L^2}+\\sqrt{1+z_R^2}\\right)\\cdot y \\\\
-							 &= ${sds(b)}\\, \\mathsf{m} \\quad+\\\\ &\\quad \\left(\\! \\sqrt{1\\!+\\!\\left(${sds(zl)}\\, \\mathsf{m}\\right)^2}+\\sqrt{1\\!+\\!\\left(${sds(zr)} \\, \\mathsf{m}\\right)^2}\\right)\\!\\cdot\\! ${sds(y)}\\, \\mathsf{m} \\\\ \\\\                               
-							&= ${sdw(P)}\\, \\mathsf{m}
-					\\end{aligned}
-			`)}
+				more
 			{/snippet}
 		</Carrd>
 
 		<Carrd>
 			{#snippet answer()}
-				Hydraulic Radius: {@html ki(`R = ${sds(R)}\\, \\mathsf m`)}
+				stuff
 			{/snippet}
 			{#snippet solution()}
-				{@html kd(`
-					\\begin{aligned}
-							R &= A/P \\\\
-							&= ${sdw(A)}\\, \\mathsf{m^2} / ${sdw(P)}\\, \\mathsf{m} \\\\ \\\\
-							&= ${sdw(R)}\\, \\mathsf{m}
-					\\end{aligned}
-			`)}
+				more
 			{/snippet}
 		</Carrd>
 
 		<Carrd>
 			{#snippet answer()}
-				Average Flow Velocity: {@html ki(`v = ${sds(v)}\\, \\mathsf{m/s}`)}
+				stuff
 			{/snippet}
 			{#snippet solution()}
-				{@html kd(`
-					\\begin{aligned}
-							v &= \\frac 1n R^{2/3} S^{1/2} \\\\
-							&= \\frac{1}{${sds(n)}} \\left(${sdw(R)}\\right)^{2/3} \\left(${sds(s / 100)}\\right)^{1/2} \\\\ \\\\
-							&= ${sdw(v)} \\, \\mathsf{m/s}
-					\\end{aligned}
-			`)}
+				more
 			{/snippet}
 		</Carrd>
 
 		<Carrd>
 			{#snippet answer()}
-				Flow Rate: {@html ki(`Q = ${sds(Q)}\\, \\mathsf{m^3/s}`)}
+				stuff
 			{/snippet}
 			{#snippet solution()}
-				{@html kd(`
-					\\begin{aligned}
-							Q &= Av \\\\
-							&= ${sdw(A)}\\, \\mathsf{m^2}\\times ${sdw(v)}\\, \\mathsf{m/s} \\\\ \\\\
-							&= ${sdw(Q)} \\, \\mathsf{m^3/s}
-					\\end{aligned}
-				`)}
+				more
 			{/snippet}
 		</Carrd>
 
 		<Carrd>
 			{#snippet answer()}
-				Free Surface: {@html ki(`T = ${sds(T)}\\, \\mathsf{m}`)}
+				stuff
 			{/snippet}
 			{#snippet solution()}
-				{@html kd(`
-					\\begin{aligned}
-							T &= b + \\left(z_L+z_R\\right)\\cdot y \\\\
-							&= ${sds(b)}\\, \\mathsf{m} + \\left( ${sds(zl)}+${sds(zr)} \\right)\\cdot ${sds(y)}	\\, \\mathsf{m}	\\\\ \\\\
-							T &= ${sdw(T)} \\, \\mathsf{m}	   
-					\\end{aligned}
-				`)}
+				more
 			{/snippet}
 		</Carrd>
 
 		<Carrd>
 			{#snippet answer()}
-				Froude Number: {@html ki(`N_F = ${sds(NF)}`)}
+				stuff
 			{/snippet}
 			{#snippet solution()}
-				{@html kd(`
-					\\begin{aligned}
-							N_F &=  \\frac{v}{\\sqrt{g(A/T)}} \\\\							   
-							&=  \\frac{${sdw(v)}\\, \\mathsf{m/s}}{\\sqrt{(${sds(g)}\\, \\mathsf{m/s^2})\\cdot(${sdw(
-								A
-							)}\\, \\mathsf{m^2}/${sdw(T)}\\, \\mathsf{m})}} \\\\ \\\\
-							&= ${sdw(NF)}
-					\\end{aligned}
-				`)}
+				more
+			{/snippet}
+		</Carrd>
+
+		<Carrd>
+			{#snippet answer()}
+				stuff
+			{/snippet}
+			{#snippet solution()}
+				more
 			{/snippet}
 		</Carrd>
 
 		<div class="heading">Critical Flow</div>
-
-		<Carrd>
-			{#snippet answer()}
-				For {@html ki(`Q=${Q} \\, \\mathsf{m^3\\!/s}`)}, Critical Depth {@html ki(
-					`y_c=${sds(yc)} \\, \\mathsf{m}`
-				)}
-			{/snippet}
-			{#snippet solution()}
-				{@html kd(`
-					\\begin{aligned}
-							N_F &= 1 \\\\
-							\\Rightarrow v_c &= \\sqrt{ g(A_c/T_c)} \\\\
-							\\Rightarrow \\left(\\frac{Q}{A_c}\\right)^2 &= g(A_c/T_c) \\\\
-							\\Rightarrow \\frac{Q^2}{g} &= \\frac{A_c^3}{T_c} \\\\
-							&= \\frac{\\left(\\left(b+\\left(\\frac{z_L+z_R}{2}\\right)\\cdot y_c\\right)\\cdot y_c\\right)^3}{b + \\left(z_L+z_R\\right)\\cdot y} \\\\
-							\\Rightarrow \\frac{\\left(${sdw(Q)} \\, \\mathsf{m^3\\!/s}\\right)^2}{${sds(g)} \\, \\mathsf{m/s^2}}&= \\frac{\\left(\\left(${sds(b)}\\, \\mathsf{m}+\\left(\\large\\frac{${sds(zl + zr)}}{2}\\right)\\cdot y_c \\, \\mathsf{m}\\right)\\cdot y_c \\, \\mathsf{m}\\right)^3}{${sds(b)}\\, \\mathsf{m} + \\left(${sds(zl + zr)}\\right)\\cdot y_c\\, \\mathsf{m}} 									
-					\\end{aligned}`)}
-				The expression above cannot be solved directly (analytically) for {@html ki(`y_c`)}. It may
-				be solved using trial-and-error methods but it is generally more convenient to solve it,
-				without further simplification, using a numerical solver on a scientific calculator or in a
-				spreadsheet app. (This calculator uses a binary search.)
-				{@html kd(`y_c=${yc}\\, \\mathsf{m}`)}
-			{/snippet}
-		</Carrd>
-
-		<Carrd>
-			{#snippet answer()}
-				Critical Velocity: {@html ki(`v_c = ${sds(vc)}  \\,\\mathsf{m/s}`)}
-			{/snippet}
-			{#snippet solution()}
-				{@html kd(`
-					\\begin{aligned}
-						A_c &= \\left(b+\\left(\\frac{z_L+z_R}{2}\\right)\\cdot y\\right)\\cdot y \\\\
-						A_c &= \\left(${sds(b)}\\, \\mathsf{m}+\\left(\\frac{${sds(zl + zr)}}{2}\\right)\\cdot ${sdw(yc)}\\, \\mathsf{m}\\right)\\cdot ${yc}\\, \\mathsf{m} \\\\
-						&= ${sdw(Ac)}\\, \\mathsf{m^2}\\\\\\\\
-						v_c &= Q/A_c \\\\
-						&= \\frac{${sdw(Q)}\\, \\mathsf{m^3\\!/s}}{${sdw(Ac)}\\, \\mathsf{m^2}} \\\\ \\\\
-						v_c &= ${sdw(vc)} \\,\\mathsf{m/s}
-					\\end{aligned}	
-				`)}
-			{/snippet}
-		</Carrd>
-
-		<Carrd>
-			{#snippet answer()}
-				Minimum Specific Energy: {@html ki(`E_{min} = ${sds(Emin)}\\, \\mathsf{m}`)}
-			{/snippet}
-			{#snippet solution()}
-				{@html kd(`
-							\\begin{aligned}
-								E_{min} &= y_c+\\frac{ v_c^2 }{ 2g } \\\\
-								&= ${yc}\\, \\mathsf{m}+\\frac{ (${vc}\\, \\mathsf{m/s})^2 }{ 2(${g}\\, \\mathsf{m/s^2}) } \\\\
-								&= ${Emin} \\,\\mathsf{m}
-							\\end{aligned}
-						`)}
-			{/snippet}
-		</Carrd>
-
-		<Carrd>
-			{#snippet answer()}
-				Slope for Critical Flow: {@html ki(`S_c = ${sds(Sc)}\\%`)}
-			{/snippet}
-			{#snippet solution()}
-				{@html kd(`
-					\\begin{aligned}
-						A_c &= \\left(b+\\left(\\frac{z_L+z_R}{2}\\right)\\cdot y\\right)\\cdot y \\\\
-						&= \\left(${sds(b)}\\, \\mathsf{m}+\\left(\\frac{${sds(
-							+zl + +zr
-						)}}{2}\\right)\\cdot ${yc}\\, \\mathsf{m}\\right)\\cdot ${yc}\\, \\mathsf{m} \\\\
-						&= ${Ac} \\,\\mathsf{m^2} \\\\ \\\\
-
-						P_c &= b+\\left( \\sqrt{1+z_L^2}+\\sqrt{1+z_R^2}\\right)\\cdot y_c \\\\
-						&= ${sds(b)}\\, \\mathsf{m}\\quad+ \\\\ 
-						&\\qquad\\left(\\! \\sqrt{1\\!+\\!\\left(${sds(zl)}\\, \\mathsf{m}\\right)^2}+\\sqrt{1\\!+\\!\\left(${sds(zr)} \\, \\mathsf{m}\\right)^2}\\right)\\!\\cdot\\! ${sds(y)}\\, \\mathsf{m} \\\\ 
-						&= ${sdw(Pc)}\\, \\mathsf{m}\\\\\\\\
-
-						R_c &= A_c/P_c \\\\
-						&= \\frac{${Ac}\\, \\mathsf{m^2}}{${Pc}\\, \\mathsf{m}} \\\\
-						&= ${Rc}\\,\\mathsf{m}\\\\\\\\
-
-						S_c &= \\left(\\frac { nv_c }{ R_c^{2/3} }\\right)^2 \\\\
-						&= \\left(\\frac{${n}\\times ${vc}\\, \\mathsf{m/s} }{ (${Rc}\\, \\mathsf{m})^{2/3} }\\right)^2\\\\
-						&= ${sdw(Sc / 100)} \\\\
-						&= ${Sc}\\% 								
-					\\end{aligned}
-				`)}
-			{/snippet}
-		</Carrd> -->
 
 		<!-- <Carrd>
 			{#snippet answer()}
