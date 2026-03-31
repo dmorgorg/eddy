@@ -1,6 +1,6 @@
 <script>
 	import RQC from './RQC.svelte'
-	import Carrd from '../Carrd.svelte'
+	import Card from '../Card.svelte'
 	import { ki, kd, sd, debounce } from '$lib/utilities/utils.js'
 	import { common, rect } from '$lib/fluids/openChannel/utils'
 	import { digits } from '../../digits.svelte.js'
@@ -17,7 +17,10 @@
 		return sd(num, wdigs, extraForWdigs)
 	}
 
-	let initQuess = sdw(1)
+	let initGuess = $state(1)
+	const setInitGuess = debounce((val) => {
+		initGuess = Number(val)
+	}, 800)
 
 	const getQFromY = (y = 0) => {
 		var A = b * y
@@ -63,7 +66,7 @@
 
 	let coeff = $derived(Math.pow((n * Q) / b / Math.pow(s / 100, 0.5), 3 / 5))
 	/** @type {Array<Number>} */
-	let iteratedY = $state([Number(initQuess)])
+	let iteratedY = $state([Number(initGuess)])
 
 	$effect(() => {
 		b = rectQ.base
@@ -74,12 +77,12 @@
 	})
 
 	const setIterationPoints = () => {
-		let next = Number(initQuess),
+		let next = Number(initGuess),
 			// make current different from current to guarantee that the loop is entered initially
 			current = next + 1,
 			iterations = 0
 		// when the $effect sees iteratedY change it refires each time, causing a loop. Store the		results in points and assign it once outside the loop
-		const points = []
+		const points = [next]
 
 		while (current != next) {
 			++iterations
@@ -90,7 +93,7 @@
 			// in case of non convergence
 			if (iterations > 20) break
 		}
-		iteratedY = points || []
+		iteratedY = points
 	}
 
 	// setIterationPoints()
@@ -171,7 +174,7 @@
 	<section class="results">
 		<!-- <section class="normal"> -->
 		<div class="heading">Normal (Uniform) Flow</div>
-		<Carrd>
+		<Card>
 			{#snippet answer()}
 				Depth of flow: {@html ki(`${sds(y)}\\, \\mathsf{m}`)}
 			{/snippet}
@@ -186,14 +189,13 @@
 				<p>
 					The expression above cannot be solved directly (analytically) for {@html ki(`y`)} but may be
 					found using iterative methods. (Or, more conveniently, by using the numerical solver available
-					on a scientific calculator). This calculator uses an automated iterative method called a binary
-					search.
+					on a scientific calculator).
 				</p>
 
 				{@html kd(`
 							y=${sdw(y)}\\, \\mathsf{m}
 							`)}
-				<Carrd>
+				<Card>
 					{#snippet answer()}
 						<strong>Fixed-Point Iterative Solution</strong>
 					{/snippet}
@@ -232,28 +234,44 @@
 								`y,\\,b,\\,S`
 							)} and {@html ki(`n`)}]
 						</p>
+						<br />
 						<p>
-							<br />
-							Start with a guess of {@html ki(`y_0=${initQuess}`)}:
+							Start with an (editable) initial guess of {@html ki('y_0 =')}
+							<!-- svelte-ignore a11y_click_events_have_key_events -->
+							<!-- svelte-ignore a11y_no_static_element_interactions -->
+							<span
+								style="padding: 5em; padding-inline: 2em; margin-inline: -2em; cursor: auto; position: relative;  z-index: 100"
+								onclick={(e) => e.stopPropagation()}
+							>
+								<input
+									type="number"
+									value={sds(initGuess)}
+									min="0"
+									step="any"
+									style="width: 4em"
+									oninput={(e) => setInitGuess(e.currentTarget.value)}
+								/>
+							</span>:
 						</p>
 						<!-- {iteratedY.length} -->
 						{#each iteratedY as pt, i}
 							<!-- don't print out an equation with the last element as independent variable with calculated value not defined -->
 							{#if !isNaN(iteratedY[i + 1])}
 								{@html kd(
-									`y_${i + 1}=${sdw(iteratedY[i + 1])}= ${sdw(coeff)}\\cdot\\left(1+\\frac{2\\times ${sdw(iteratedY[i])}}{${sds(b)}}\\right)^{2/5} `
+									`y_${i + 1}=\\bm{${sdw(iteratedY[i + 1])}}= ${sdw(coeff)}\\cdot\\left(1+\\frac{2\\times \\bm{${i == 0 ? sds(iteratedY[i]) : sdw(iteratedY[i])}}}{${sds(b)}}\\right)^{2/5} `
 								)}
 							{/if}
 						{/each}
-						Notice that now {@html ki(`y=f(y)`)}, that is {@html ki(`f(${y})=${y}`)}, and {@html ki(
-							`\\bm{y=${y}\\,\\mathsf{m}}`
-						)} is the fixed-point solution to the depth of flow equation derived above.
+						Notice that now {@html ki(
+							`\\bm{y_${iteratedY.length - 1}=f(y_${iteratedY.length - 2}})`
+						)}, that is {@html ki(`f(${y})=${y}`)}, and {@html ki(`\\bm{y=${y}\\,\\mathsf{m}}`)} is the
+						fixed-point solution to the depth of flow equation derived above.
 					{/snippet}
-				</Carrd>
+				</Card>
 			{/snippet}
-		</Carrd>
+		</Card>
 
-		<Carrd>
+		<Card>
 			{#snippet answer()}
 				Flow Area: {@html ki(`${sds(A)}\\, \\mathsf{m^2}`)}
 			{/snippet}
@@ -266,9 +284,9 @@
 						\\end{aligned}
 					`)}
 			{/snippet}
-		</Carrd>
+		</Card>
 
-		<Carrd>
+		<Card>
 			{#snippet answer()}
 				Average Flow Velocity: {@html ki(`${sds(v)}\\, \\mathsf{m/s} `)}
 			{/snippet}
@@ -280,9 +298,9 @@
 							&= ${v} \\, \\mathsf{m/s}
 						\\end{aligned}`)}
 			{/snippet}
-		</Carrd>
+		</Card>
 
-		<Carrd>
+		<Card>
 			{#snippet answer()}
 				Specific Energy: {@html ki(`E=${sds(E)}\\, \\mathsf{m} `)}
 			{/snippet}
@@ -294,9 +312,9 @@
 							&= ${E} \\, \\mathsf{m}
 						\\end{aligned}`)}
 			{/snippet}
-		</Carrd>
+		</Card>
 
-		<Carrd>
+		<Card>
 			{#snippet answer()}
 				Free Surface: {@html ki(`T = ${sds(T)}\\, \\mathsf{m}`)}
 			{/snippet}
@@ -308,9 +326,9 @@
 						\\end{aligned}
 				`)}
 			{/snippet}
-		</Carrd>
+		</Card>
 
-		<Carrd>
+		<Card>
 			{#snippet answer()}
 				Froude Number: {@html ki(`N_F = ${sds(NF)}`)}
 			{/snippet}
@@ -325,12 +343,12 @@
 						\\end{aligned}
 				`)}
 			{/snippet}
-		</Carrd>
+		</Card>
 	</section>
 	<section class="results">
 		<div class="heading">Critical Flow</div>
 
-		<Carrd>
+		<Card>
 			{#snippet answer()}
 				For {@html ki(`Q=${sds(Q)} \\, \\mathsf{m^3\\!/s}`)}, the critical depth {@html ki(
 					`y_c=${sds(yc)} \\, \\mathsf{m}`
@@ -354,9 +372,9 @@
             \\end{aligned}
             `)}
 			{/snippet}
-		</Carrd>
+		</Card>
 
-		<Carrd>
+		<Card>
 			{#snippet answer()}
 				Critical Velocity: {@html ki(` v_c = ${sds(vc)}  \\,\\mathsf{m/s}`)}
 			{/snippet}
@@ -372,9 +390,9 @@
 					\\end{aligned}	
 				`)}
 			{/snippet}
-		</Carrd>
+		</Card>
 
-		<Carrd>
+		<Card>
 			{#snippet answer()}
 				Minimum Specific Energy: {@html ki(`E_{min} = ${sds(Emin)}\\, \\mathsf{m}`)}
 			{/snippet}
@@ -387,9 +405,9 @@
 					\\end{aligned}
 				`)}
 			{/snippet}
-		</Carrd>
+		</Card>
 
-		<Carrd>
+		<Card>
 			{#snippet answer()}
 				Slope for Critical Flow: {@html ki(`S_c = ${sds(Sc)}\\%`)}
 			{/snippet}
@@ -415,7 +433,7 @@
 					\\end{aligned}
 				`)}
 			{/snippet}
-		</Carrd>
+		</Card>
 	</section>
 </article>
 

@@ -13,54 +13,52 @@
 	let canvas = $state()
 	let canvasWrap = $state()
 	// width of canvas containing element
-	let widthInPixels = $state(0)
-	// fudge for drawing
+	let elWidthPx = $state(0)
+	// fudge for drawing, no slope less than 1 in 6
 	let zedL = $derived(Math.min(zl, 6))
 	let zedR = $derived(Math.min(zr, 6))
 
 	let canvasPaddingInline = 20
-	let canvasPaddingTop = canvasPaddingInline
+	let canvasPaddingTop = $derived(canvasPaddingInline)
 	let canvasPaddingBottom = $derived(canvasPaddingInline)
-	let channelMaxHeightPixels = 100
-	// max depth of channel set to 5 metres, for drawing channel irrespective of water level
-	let maxD = $derived(Math.min(5, 3 * b))
-	// this value is in metres
-	let channelTopWidth = $derived(Math.round((zedL + zedR) * maxD + b))
-	let channelAspectRatio = $derived(sd(channelTopWidth / maxD, 4))
-	let channelDepthPixels = $derived.by(() => {
-		if ((widthInPixels - 2 * canvasPaddingInline) / channelAspectRatio < channelMaxHeightPixels)
-			return Math.round((widthInPixels - 2 * canvasPaddingInline) / channelAspectRatio)
-		else return channelMaxHeightPixels
+	let channelHeightPixels = 100
+	// full depth of channel set to 5 metres, for drawing channel irrespective of water level
+	let dMetres = $derived(Math.min(5, 3 * b))
+	// this value is the free width in metres
+	let T = $derived(Math.round((zedL + zedR) * dMetres + b))
+	let aspectRatio = $derived(sd(T / dMetres, 4))
+	let dMetresPixels = $derived.by(() => {
+		if ((elWidthPx - 2 * canvasPaddingInline) / aspectRatio < channelHeightPixels)
+			return Math.round((elWidthPx - 2 * canvasPaddingInline) / aspectRatio)
+		else return channelHeightPixels
 	})
-	let channelWidthPixels = $derived(Math.round(channelDepthPixels * channelAspectRatio))
+	let channelWidthPixels = $derived(Math.round(dMetresPixels * aspectRatio))
 
-	let bPixels = $derived(channelWidthPixels - (zedL + zedR) * channelDepthPixels)
+	let bPixels = $derived(channelWidthPixels - (zedL + zedR) * dMetresPixels)
 
 	let surroundTopY = $derived(Math.round(canvasPaddingTop))
-	let surroundBottomY = $derived(
-		Math.round(canvasPaddingTop + channelDepthPixels + canvasPaddingBottom)
-	)
+	let surroundBottomY = $derived(Math.round(canvasPaddingTop + dMetresPixels + canvasPaddingBottom))
 
-	let channelLeftX = $derived(Math.round((widthInPixels - channelWidthPixels) / 2))
+	let channelLeftX = $derived(Math.round((elWidthPx - channelWidthPixels) / 2))
 	let channelRightX = $derived(channelLeftX + channelWidthPixels)
-	let bLeftX = $derived(channelLeftX + zedL * channelDepthPixels)
+	let bLeftX = $derived(channelLeftX + zedL * dMetresPixels)
 	// if b=0, get drawing artifacts from rightX possibly < leftX
-	let bRightX = $derived(Math.max(channelRightX - zedR * channelDepthPixels, bLeftX))
-	let channelBottomY = $derived(Math.round(surroundTopY + channelDepthPixels))
+	let bRightX = $derived(Math.max(channelRightX - zedR * dMetresPixels, bLeftX))
+	let channelBottomY = $derived(Math.round(surroundTopY + dMetresPixels))
 
 	let levelDown = $derived.by(() => {
 		let temp = y <= 0.5 ? 0.5 : y
 		temp = y > 9 ? 9 : y
-		return (-0.1 * temp + 0.95) * channelDepthPixels
+		return (-0.1 * temp + 0.95) * dMetresPixels
 	})
 	let waterTopY = $derived(surroundTopY + levelDown)
 
 	// let channelBaseX = $derived(Math.round(channelLeftX + (channelWidthPixels * zl) / (zl + zr)))
 
 	let extension = $state(10)
-	let leftSlope = $derived(channelDepthPixels / (bLeftX - channelLeftX))
+	let leftSlope = $derived(dMetresPixels / (bLeftX - channelLeftX))
 	let leftSlopeDX = $derived(levelDown / leftSlope)
-	let rightSlope = $derived(channelDepthPixels / (channelRightX - bRightX))
+	let rightSlope = $derived(dMetresPixels / (channelRightX - bRightX))
 	let rightSlopeDX = $derived(levelDown / rightSlope)
 
 	let extensionLeft = $derived(
@@ -84,12 +82,12 @@
 		let lineWidth = 4
 		const ctx = canvas.getContext('2d')
 		ctx.clearRect(0, 0, canvas.width, canvas.height)
-		ctx.canvas.height = channelDepthPixels + 2 * canvasPaddingInline
-		ctx.canvas.width = widthInPixels
+		ctx.canvas.height = dMetresPixels + 2 * canvasPaddingInline
+		ctx.canvas.width = elWidthPx
 
 		// draw grey channel surround/support
 		ctx.fillStyle = '#c1cdcd'
-		ctx.fillRect(0, surroundTopY, widthInPixels, surroundBottomY)
+		ctx.fillRect(0, surroundTopY, elWidthPx, surroundBottomY)
 		//  remove grey channel surround from channel
 		ctx.fillStyle = 'white'
 		ctx.beginPath()
@@ -135,7 +133,7 @@
 </script>
 
 {#if browser}
-	<div bind:clientWidth={widthInPixels}>
+	<div bind:clientWidth={elWidthPx}>
 		<!-- bind:this binds canvasWrap var to this DOM element -->
 		<div class="canvas-wrap" bind:this={canvasWrap}>
 			<div class="rect-wrap">

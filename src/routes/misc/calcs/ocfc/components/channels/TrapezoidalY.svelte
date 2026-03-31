@@ -2,7 +2,7 @@
 	// @ts-nocheck
 
 	import TrapCanvas from './TrapCanvas.svelte'
-	import Carrd from '../Carrd.svelte'
+	import Card from '../Card.svelte'
 	import { ki, kd, sd, debounce } from '$lib/utilities/utils.js'
 	import { common, trap } from '$lib/fluids/openChannel/utils'
 	import { digits } from '../../digits.svelte.js'
@@ -304,7 +304,7 @@
 	<section class="results">
 		<div class="heading">Normal (Uniform) Flow</div>
 
-		<Carrd>
+		<Card>
 			{#snippet answer()}
 				Flow Area: {@html ki(`A = ${sds(A)}\\, \\mathsf{m^2}`)}
 			{/snippet}
@@ -317,9 +317,9 @@
 					\\end{aligned}
 			`)}
 			{/snippet}
-		</Carrd>
+		</Card>
 
-		<Carrd>
+		<Card>
 			{#snippet answer()}
 				Wetted Perimeter: {@html ki(`P = ${sds(P)}\\, \\mathsf{m}`)}
 			{/snippet}
@@ -332,9 +332,9 @@
 					\\end{aligned}
 			`)}
 			{/snippet}
-		</Carrd>
+		</Card>
 
-		<Carrd>
+		<Card>
 			{#snippet answer()}
 				Hydraulic Radius: {@html ki(`R = ${sds(R)}\\, \\mathsf m`)}
 			{/snippet}
@@ -347,9 +347,9 @@
 					\\end{aligned}
 			`)}
 			{/snippet}
-		</Carrd>
+		</Card>
 
-		<Carrd>
+		<Card>
 			{#snippet answer()}
 				Average Flow Velocity: {@html ki(`v = ${sds(v)}\\, \\mathsf{m/s}`)}
 			{/snippet}
@@ -362,9 +362,9 @@
 					\\end{aligned}
 			`)}
 			{/snippet}
-		</Carrd>
+		</Card>
 
-		<Carrd>
+		<Card>
 			{#snippet answer()}
 				Flow Rate: {@html ki(`Q = ${sds(Q)}\\, \\mathsf{m^3/s}`)}
 			{/snippet}
@@ -377,9 +377,9 @@
 					\\end{aligned}
 				`)}
 			{/snippet}
-		</Carrd>
+		</Card>
 
-		<Carrd>
+		<Card>
 			{#snippet answer()}
 				Free Surface: {@html ki(`T = ${sds(T)}\\, \\mathsf{m}`)}
 			{/snippet}
@@ -392,9 +392,9 @@
 					\\end{aligned}
 				`)}
 			{/snippet}
-		</Carrd>
+		</Card>
 
-		<Carrd>
+		<Card>
 			{#snippet answer()}
 				Froude Number: {@html ki(`N_F = ${sds(NF)}`)}
 			{/snippet}
@@ -409,11 +409,11 @@
 					\\end{aligned}
 				`)}
 			{/snippet}
-		</Carrd>
+		</Card>
 
 		<div class="heading">Critical Flow</div>
 
-		<Carrd>
+		<Card>
 			{#snippet answer()}
 				For {@html ki(`Q=${Q} \\, \\mathsf{m^3\\!/s}`)}, Critical Depth {@html ki(
 					`y_c=${sds(yc)} \\, \\mathsf{m}`
@@ -426,18 +426,18 @@
 							\\Rightarrow v_c &= \\sqrt{ g(A_c/T_c)} \\\\
 							\\Rightarrow \\left(\\frac{Q}{A_c}\\right)^2 &= g(A_c/T_c) \\\\
 							\\Rightarrow \\frac{Q^2}{g} &= \\frac{A_c^3}{T_c} \\\\
-							&= \\frac{\\left(\\left(b+\\left(\\frac{z_L+z_R}{2}\\right)\\cdot y_c\\right)\\cdot y_c\\right)^3}{b + \\left(z_L+z_R\\right)\\cdot y} \\\\
+							&= \\frac{\\left(\\left(b+\\left(\\frac{z_L+z_R}{2}\\right)\\cdot y_c\\right)\\cdot y_c\\right)^3}{b + \\left(z_L+z_R\\right)\\cdot y_c} \\\\
 							\\Rightarrow \\frac{\\left(${sdw(Q)} \\, \\mathsf{m^3\\!/s}\\right)^2}{${sds(g)} \\, \\mathsf{m/s^2}}&= \\frac{\\left(\\left(${sds(b)}\\, \\mathsf{m}+\\left(\\large\\frac{${sds(zl + zr)}}{2}\\right)\\cdot y_c \\, \\mathsf{m}\\right)\\cdot y_c \\, \\mathsf{m}\\right)^3}{${sds(b)}\\, \\mathsf{m} + \\left(${sds(zl + zr)}\\right)\\cdot y_c\\, \\mathsf{m}} 									
 					\\end{aligned}`)}
 				The expression above cannot be solved directly (analytically) for {@html ki(`y_c`)}. It may
-				be solved using trial-and-error methods but it is generally more convenient to solve it,
-				without further simplification, using a numerical solver on a scientific calculator or in a
-				spreadsheet app. (This calculator uses a binary search.)
+				be solved using trial-and-error or iterative methods but it is generally more convenient to
+				solve it, without further simplification, using a numerical solver on a scientific
+				calculator or in a spreadsheet app.
 				{@html kd(`y_c=${yc}\\, \\mathsf{m}`)}
 			{/snippet}
-		</Carrd>
+		</Card>
 
-		<Carrd>
+		<Card>
 			{#snippet answer()}
 				Critical Velocity: {@html ki(`v_c = ${sds(vc)}  \\,\\mathsf{m/s}`)}
 			{/snippet}
@@ -453,9 +453,9 @@
 					\\end{aligned}	
 				`)}
 			{/snippet}
-		</Carrd>
+		</Card>
 
-		<Carrd>
+		<Card>
 			{#snippet answer()}
 				Minimum Specific Energy: {@html ki(`E_{min} = ${sds(Emin)}\\, \\mathsf{m}`)}
 			{/snippet}
@@ -468,9 +468,9 @@
 							\\end{aligned}
 						`)}
 			{/snippet}
-		</Carrd>
+		</Card>
 
-		<Carrd>
+		<Card>
 			{#snippet answer()}
 				Slope for Critical Flow: {@html ki(`S_c = ${sds(Sc)}\\%`)}
 			{/snippet}
@@ -499,16 +499,16 @@
 					\\end{aligned}
 				`)}
 			{/snippet}
-		</Carrd>
+		</Card>
 
-		<!-- <Carrd>
+		<!-- <Card>
 			{#snippet answer()}
 				stuff
 			{/snippet}
 			{#snippet solution()}
 				more
 			{/snippet}
-		</Carrd> -->
+		</Card> -->
 	</section>
 </article>
 

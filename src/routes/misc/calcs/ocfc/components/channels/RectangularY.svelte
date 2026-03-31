@@ -3,7 +3,6 @@
 
 	import RYC from './RYC.svelte'
 	import Card from '../Card.svelte'
-	import Carrd from '../Carrd.svelte'
 	import { ki, kd, sd, debounce } from '$lib/utilities/utils.js'
 	import { common, rect } from '$lib/fluids/openChannel/utils'
 	import { digits } from '../../digits.svelte.js'
@@ -123,7 +122,7 @@
 	<section class="results">
 		<div class="heading">Normal (Uniform) Flow</div>
 
-		<Carrd>
+		<Card>
 			{#snippet answer()}
 				Flow Area: {@html ki(`A = ${sds(A)}\\, \\mathsf{m^2}`)}
 			{/snippet}
@@ -136,8 +135,8 @@
 					\\end{aligned}
 				`)}
 			{/snippet}
-		</Carrd>
-		<Carrd>
+		</Card>
+		<Card>
 			{#snippet answer()}
 				Wetted Perimeter: {@html ki(`P = ${sds(P)}\\, \\mathsf{m}`)}
 			{/snippet}
@@ -150,8 +149,8 @@
 					\\end{aligned}
 				`)}
 			{/snippet}
-		</Carrd>
-		<Carrd>
+		</Card>
+		<Card>
 			{#snippet answer()}
 				Hydraulic Radius: {@html ki(`R = ${sds(R)}\\, \\mathsf m`)}
 			{/snippet}
@@ -164,8 +163,8 @@
 					\\end{aligned}
 				`)}
 			{/snippet}
-		</Carrd>
-		<Carrd>
+		</Card>
+		<Card>
 			{#snippet answer()}
 				Average Flow Velocity: {@html ki(`v = ${sds(v)}\\, \\mathsf{m/s}`)}
 			{/snippet}
@@ -178,8 +177,8 @@
 					\\end{aligned}
 				`)}
 			{/snippet}
-		</Carrd>
-		<Carrd>
+		</Card>
+		<Card>
 			{#snippet answer()}
 				Flow Rate: {@html ki(`Q = ${sds(Q)}\\, \\mathsf{m^3/s}`)}
 			{/snippet}
@@ -192,8 +191,8 @@
 					\\end{aligned}
 				`)}
 			{/snippet}
-		</Carrd>
-		<Carrd>
+		</Card>
+		<Card>
 			{#snippet answer()}
 				Specific Energy: {@html ki(`E = ${sds(E)}\\, \\mathsf{m}`)}
 			{/snippet}
@@ -207,8 +206,8 @@
 					\\end{aligned}
 				`)}
 			{/snippet}
-		</Carrd>
-		<Carrd>
+		</Card>
+		<Card>
 			{#snippet answer()}
 				Free Surface: {@html ki(`T = ${sds(T)}\\, \\mathsf{m}`)}
 			{/snippet}
@@ -220,8 +219,8 @@
 					\\end{aligned}
 				`)}
 			{/snippet}
-		</Carrd>
-		<Carrd>
+		</Card>
+		<Card>
 			{#snippet answer()}
 				Froude Number: {@html ki(`N_F = ${sds(NF)}`)}
 			{/snippet}
@@ -236,12 +235,12 @@
 					\\end{aligned}
 				`)}
 			{/snippet}
-		</Carrd>
+		</Card>
 	</section>
 
 	<section class="results">
 		<div class="heading">Critical Flow</div>
-		<Carrd>
+		<Card>
 			{#snippet answer()}
 				For {@html ki(`Q=${sdw(Q)} \\, \\mathsf{m^3\\!/s}`)}, Critical Depth {@html ki(
 					`y_c=${sds(yc)} \\, \\mathsf{m}`
@@ -265,8 +264,8 @@
 					\\end{aligned}
 				`)}
 			{/snippet}
-		</Carrd>
-		<Carrd>
+		</Card>
+		<Card>
 			{#snippet answer()}
 				Critical Velocity: {@html ki(` v_c = ${sds(vc)}  \\,\\mathsf{m/s}`)}
 			{/snippet}
@@ -282,8 +281,8 @@
 					\\end{aligned}	
 				`)}
 			{/snippet}
-		</Carrd>
-		<Carrd>
+		</Card>
+		<Card>
 			{#snippet answer()}
 				Minimum Specific Energy: {@html ki(`E_{min} = ${sds(Emin)}\\, \\mathsf{m}`)}
 			{/snippet}
@@ -296,9 +295,9 @@
 					\\end{aligned}
 				`)}
 			{/snippet}
-		</Carrd>
+		</Card>
 
-		<Carrd>
+		<Card>
 			{#snippet answer()}
 				Slope for Critical Flow: {@html ki(`S_c = ${sds(Sc)}\\%`)}
 			{/snippet}
@@ -324,15 +323,15 @@
 					\\end{aligned}
 				`)}
 			{/snippet}
-		</Carrd>
-		<!-- <Carrd>
+		</Card>
+		<!-- <Card>
 			{#snippet answer()}
 				stuff
 			{/snippet}
 			{#snippet solution()}
 				more
 			{/snippet}
-		</Carrd> -->
+		</Card> -->
 	</section>
 </article>
 
