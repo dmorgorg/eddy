@@ -456,7 +456,7 @@
 							<!-- don't print out an equation with the last element as independent variable with calculated value not defined -->
 							{#if !isNaN(iteratedYforQ[i + 1])}
 								{@html kd(
-									`y_{${i + 1}}=\\bm{${sdw(iteratedYforQ[i + 1])}}= \\frac{${sdw(coeff)}\\cdot(${sds(b)}+ ${sdw((1 + zl ** 2) ** 0.5 + (1 + zr ** 2) ** 0.5)}\\cdot\\bm{${i == 0 ? sds(iteratedYforQ[i]) : sdw(iteratedYforQ[i])}})^{2/5}}{\\left(${sds(b)}+ ${sdw(zl / 2 + zr / 2)}\\cdot\\bm{${sdw(iteratedYforQ[i])}}\\right)^{2/3}}`
+									`y_{${i + 1}}=\\bm{${sdw(iteratedYforQ[i + 1])}}= \\frac{${sdw(coeff)}\\cdot(${sds(b)}+ ${sdw((1 + zl ** 2) ** 0.5 + (1 + zr ** 2) ** 0.5)}\\cdot\\bm{${i == 0 ? sds(iteratedYforQ[i]) : sdw(iteratedYforQ[i])}})^{2/5}}{\\left(${sds(b)}+ ${sdw(zl / 2 + zr / 2)}\\cdot\\bm{${i == 0 ? sds(iteratedYforQ[i]) : sdw(iteratedYforQ[i])}})^{2/5}\\right)^{2/3}}`
 								)}
 							{/if}
 						{/each}
