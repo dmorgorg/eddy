@@ -68,6 +68,84 @@
 	let Rc = $derived(sdw(common.getR(Ac, Pc)))
 	let Sc = $derived(sdw(common.getCriticalSlope(n, vc, Rc)))
 
+	let initGuessYc = $state(1)
+	const setInitGuessYc = debounce((val) => {
+		initGuessYc = Number(val)
+	}, 800)
+	let iteratedYcPoints = $state([])
+	let coeffYc = $derived(sdw(Math.pow((Q * Q) / g, 1 / 3)))
+
+	const setYcIterationPoints = () => {
+		let next = Number(initGuessYc)
+		let current = next + 1
+		let iterations = 0
+		const points = [next]
+		while (current != next) {
+			++iterations
+			current = next
+			next = Number(
+				sdw((coeffYc * Math.pow(b + (zl + zr) * current, 1 / 3)) / (b + ((zl + zr) / 2) * current))
+			)
+			points.push(next)
+			if (iterations > 20) break
+		}
+		iteratedYcPoints = points
+	}
+
+	$effect(() => {
+		void trapY.b
+		void trapY.y
+		void trapY.zl
+		void trapY.zr
+		void trapY.s
+		void trapY.n
+		void trapY.g
+		setYcIterationPoints()
+	})
+
+	let displayedYcPoints = $state([])
+	let colorYc = $state([])
+
+	const fadeSteps = 4
+
+	const makeHex = (age) => {
+		if (age >= fadeSteps) return null
+		const ch = Math.round((1 - age / fadeSteps) * 0x88)
+		const toHex = (n) => n.toString(16).padStart(2, '0')
+		return `${toHex(0)}${toHex(ch)}${toHex(ch)}`
+	}
+
+	const colorize = (color, tex) => (color ? `\\textcolor{#${color}}{${tex}}` : tex)
+
+	$effect(() => {
+		const newPoints = iteratedYcPoints.slice()
+		const timers = []
+		for (let i = 0; i < newPoints.length; i++) {
+			const idx = i
+			timers.push(
+				setTimeout(() => {
+					displayedYcPoints[idx] = newPoints[idx]
+					if (idx === newPoints.length - 1) displayedYcPoints.length = newPoints.length
+					for (let j = 0; j <= idx; j++) colorYc[j] = makeHex(idx - j)
+					if (idx === newPoints.length - 1) colorYc.length = newPoints.length
+				}, idx * 300)
+			)
+		}
+		for (let e = 1; e <= fadeSteps; e++) {
+			const ee = e
+			timers.push(
+				setTimeout(
+					() => {
+						for (let j = 0; j < colorYc.length; j++)
+							colorYc[j] = makeHex(newPoints.length - 1 - j + ee)
+					},
+					(newPoints.length - 1 + ee) * 300
+				)
+			)
+		}
+		return () => timers.forEach(clearTimeout)
+	})
+
 	// Handles s, n, g input changes; stores as numbers, updates input with formatted value
 	const processChange = debounce((e) => {
 		noSlopeError = false
@@ -424,16 +502,80 @@
 					\\begin{aligned}
 							N_F &= 1 \\\\
 							\\Rightarrow v_c &= \\sqrt{ g(A_c/T_c)} \\\\
+
 							\\Rightarrow \\left(\\frac{Q}{A_c}\\right)^2 &= g(A_c/T_c) \\\\
+
 							\\Rightarrow \\frac{Q^2}{g} &= \\frac{A_c^3}{T_c} \\\\
+
 							&= \\frac{\\left(\\left(b+\\left(\\frac{z_L+z_R}{2}\\right)\\cdot y_c\\right)\\cdot y_c\\right)^3}{b + \\left(z_L+z_R\\right)\\cdot y_c} \\\\
-							\\Rightarrow \\frac{\\left(${sdw(Q)} \\, \\mathsf{m^3\\!/s}\\right)^2}{${sds(g)} \\, \\mathsf{m/s^2}}&= \\frac{\\left(\\left(${sds(b)}\\, \\mathsf{m}+\\left(\\large\\frac{${sds(zl + zr)}}{2}\\right)\\cdot y_c \\, \\mathsf{m}\\right)\\cdot y_c \\, \\mathsf{m}\\right)^3}{${sds(b)}\\, \\mathsf{m} + \\left(${sds(zl + zr)}\\right)\\cdot y_c\\, \\mathsf{m}} 									
+
+							\\Rightarrow \\frac{${sdw(Q)}^2}{${sds(g)}} &= \\frac{\\left(\\left(${sds(b)}+${sdw(zl / 2 + zr / 2)}y_c\\right)y_c\\right)^3}{${sds(b)} + ${sdw(zl + zr)}y_c} 									
 					\\end{aligned}`)}
-				The expression above cannot be solved directly (analytically) for {@html ki(`y_c`)}. It may
-				be solved using trial-and-error or iterative methods but it is generally more convenient to
-				solve it, without further simplification, using a numerical solver on a scientific
-				calculator or in a spreadsheet app.
-				{@html kd(`y_c=${yc}\\, \\mathsf{m}`)}
+				<div>
+					...where the depth {@html ki('y_c')} is in metres. This expression cannot be solved directly
+					(analytically) for {@html ki(`y_c`)} but may be found using iterative methods or, more conveniently,
+					by using a numerical solver available on a scientific calculator.)
+				</div>
+				{@html kd(`
+						y_c=${sdw(yc)}\\, \\mathsf{m}
+						`)}
+				<Card>
+					{#snippet answer()}
+						<strong>Fixed Point Iterative Solution</strong>
+					{/snippet}
+					{#snippet solution()}
+						{@html kd(`
+							\\begin{aligned}
+								\\frac{\\left(${sds(Q)}\\right)^2}{${g}}&= \\frac{\\left(\\left(${sds(b)}\\, +${sdw(
+									zl / 2 + zr / 2
+								)} y_c\\right)y_c\\right)^3}{${sds(b)}+ ${sdw(zl / 1 + zr / 1)}y_c} \\\\
+								\\Rightarrow y_c^3 &= \\frac{\\left(${sdw(Q)}\\right)^2}{${g}}\\cdot\\frac{${sds(b)}+ ${sdw(zl + zr)}y_c}{\\left(${sds(b)}+ ${sdw(zl / 2 + zr / 2)} y_c\\right)^3} \\\\
+								\\Rightarrow y_c &= \\left[\\frac{\\left(${sdw(Q)}\\right)^2}{${g}}\\right]^{1/3}\\cdot\\frac{\\left(${sds(b)}+ ${sdw(zl + zr)}y_c\\right)^{1/3}}{${sds(b)}+ ${sdw(zl / 2 + zr / 2)} y_c} \\\\
+								&= ${sdw(Math.pow((Q * Q) / g, 1 / 3))}\\cdot\\frac{\\left(${sds(b)}+ ${sdw(zl + zr)}y_c\\right)^{1/3}}{${sds(b)}+ ${sdw(zl / 2 + zr / 2)} y_c} \\\\
+							\\end{aligned}
+						`)}
+						Now, the fixed-point iterative process is to guess a starting value for the depth {@html ki(
+							'y_0'
+						)}, evaluate the function for input {@html ki('y_0')} to get {@html ki('y_1')} on the left.
+						Then repeat, evaluating at {@html ki('y_1')} to get {@html ki('y_2')} on the left,... Then
+						{@html ki('y_n')} will converge on {@html ki('y_{n+1}')}. Continue the iteration until
+						you have the desired accuracy, i.e. until the value of {@html ki(
+							'\\left|y_{n+1}-y_n\\right|'
+						)} is sufficiently small.
+						<br /><br />
+						Start with an (editable) initial guess of {@html ki('y_0 =')}
+						<!-- svelte-ignore a11y_click_events_have_key_events -->
+						<!-- svelte-ignore a11y_no_static_element_interactions -->
+						<span
+							style="padding: 5em; padding-inline: 2em; margin-inline: -2em; cursor: auto; position: relative; z-index: 100"
+							onclick={(e) => e.stopPropagation()}
+						>
+							<input
+								type="number"
+								value={sds(initGuessYc)}
+								min="0"
+								step="any"
+								style="width: 4em"
+								oninput={(e) => setInitGuessYc(e.currentTarget.value)}
+							/>
+						</span>:
+						{#each displayedYcPoints as pt, i}
+							{#if !isNaN(displayedYcPoints[i + 1])}
+								{@html kd(
+									(() => {
+										const val = colorize(colorYc[i + 1], `\\bm{${sdw(displayedYcPoints[i + 1])}}`)
+										const ptVal = colorize(colorYc[i], `\\bm{${i == 0 ? sds(pt) : sdw(pt)}}`)
+										return `y_{${i + 1}}=${val}= \\frac{${sdw(coeffYc)}\\cdot(${sds(b)}+ ${sdw(zl + zr)}\\cdot${ptVal})^{1/3}}{${sds(b)}+ ${sdw(zl / 2 + zr / 2)}\\cdot${ptVal}}`
+									})()
+								)}
+							{/if}
+						{/each}
+						Notice that now {@html ki(
+							`y_{${iteratedYcPoints.length - 1}}=f(y_{${iteratedYcPoints.length - 2}})`
+						)}, that is {@html ki(`f(${yc})=${yc}`)}, and {@html ki(`\\bm{y=${yc}\\,\\mathsf{m}}`)} is
+						the fixed-point solution to the depth of flow equation derived above.
+					{/snippet}
+				</Card>
 			{/snippet}
 		</Card>
 
