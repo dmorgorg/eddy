@@ -84,17 +84,22 @@
 	let Rc = $derived(sdw(common.getR(Ac, Pc)))
 	let Sc = $derived(sdw(common.getCriticalSlope(n, vc, Rc)))
 
-	let initGuessQ = $state(1)
-	const setInitGuessQ = debounce((val) => {
-		initGuessQ = Number(val)
+	let initGuessY = $state(1)
+	let initGuessYc = $state(1)
+	const setInitGuessY = debounce((val) => {
+		initGuessY = Number(val)
 	}, 800)
-	let iteratedYforQ = $derived([])
-	// let coeff = $derived(((Q * n) / Math.pow(s, 0.5)) ^ 0.6)
-	let coeff = $derived(sdw(Math.pow((Q * n) / Math.pow(s / 100, 0.5), 0.6)))
+	const setInitGuessYc = debounce((val) => {
+		initGuessYc = Number(val)
+	}, 800)
+	let iteratedYPoints = $derived([])
+	let iteratedYcPoints = $derived([])
+	let coeffY = $derived(sdw(Math.pow((Q * n) / Math.pow(s / 100, 0.5), 0.6)))
+	let coeffYc = $derived(sdw(Math.pow((Q * Q) / g, 1 / 3)))
 
-	const setQIterationPoints = () => {
-		let next = Number(initGuessQ)
-		// iteratedYforQ.push(Number(initGuessQ))
+	const setYIterationPoints = () => {
+		let next = Number(initGuessY)
+		// iteratedYPoints.push(Number(initGuessY))
 		let current = next + 1
 		let iterations = 0
 		const points = [next]
@@ -103,7 +108,7 @@
 			current = next
 			next = Number(
 				sdw(
-					(coeff *
+					(coeffY *
 						Math.pow(
 							b + Math.pow(1 + zl * zl, 0.5) * current + Math.pow(1 + zr * zr, 0.5) * current,
 							0.4
@@ -115,12 +120,26 @@
 			// in case of non convergence
 			if (iterations > 20) break
 		}
-		// points.pop()
-		iteratedYforQ = points
-		// console.log(points)
-		// console.log('pts: ' + points)
+		iteratedYPoints = points
 	}
-	// console.log('it: ' + iteratedYforQ)
+	const setYcIterationPoints = () => {
+		let next = Number(initGuessYc)
+		// iteratedYPoints.push(Number(initGuessY))
+		let current = next + 1
+		let iterations = 0
+		const points = [next]
+		while (current != next) {
+			++iterations
+			current = next
+			next = Number(
+				sdw((coeffYc * Math.pow(b + (zl + zr) * current, 1 / 3)) / (b + ((zl + zr) / 2) * current))
+			)
+			points.push(next)
+			// in case of non convergence
+			if (iterations > 20) break
+		}
+		iteratedYcPoints = points
+	}
 
 	$effect(() => {
 		void trapQ.b
@@ -130,7 +149,72 @@
 		void trapQ.s
 		void trapQ.n
 		void trapQ.g
-		setQIterationPoints()
+		// void initGuessYc
+		setYIterationPoints()
+		setYcIterationPoints()
+	})
+
+	let displayedYPoints = $state([])
+	let displayedYcPoints = $state([])
+	let colorY = $state([])   // current hex color per point index (null = black)
+	let colorYc = $state([])
+
+	const fadeSteps = 4
+
+	const makeHex = (age) => {
+		if (age >= fadeSteps) return null
+		const ch = Math.round((1 - age / fadeSteps) * 0x88)
+		const toHex = (n) => n.toString(16).padStart(2, '0')
+		return `${toHex(0)}${toHex(ch)}${toHex(ch)}`
+	}
+
+	const colorize = (color, tex) => color ? `\\textcolor{#${color}}{${tex}}` : tex
+
+	// complicated AI code to let updated initial values in iterations ripple through the iteration rather than show updated values instantly. Seems to work well.
+	$effect(() => {
+		const newPoints = iteratedYPoints.slice()
+		const timers = []
+		for (let i = 0; i < newPoints.length; i++) {
+			const idx = i
+			timers.push(
+				setTimeout(() => {
+					displayedYPoints[idx] = newPoints[idx]
+					if (idx === newPoints.length - 1) displayedYPoints.length = newPoints.length
+					for (let j = 0; j <= idx; j++) colorY[j] = makeHex(idx - j)
+					if (idx === newPoints.length - 1) colorY.length = newPoints.length
+				}, idx * 300)
+			)
+		}
+		for (let e = 1; e <= fadeSteps; e++) {
+			const ee = e
+			timers.push(setTimeout(() => {
+				for (let j = 0; j < colorY.length; j++) colorY[j] = makeHex((newPoints.length - 1 - j) + ee)
+			}, (newPoints.length - 1 + ee) * 300))
+		}
+		return () => timers.forEach(clearTimeout)
+	})
+
+	$effect(() => {
+		const newPoints = iteratedYcPoints.slice()
+		const timers = []
+		for (let i = 0; i < newPoints.length; i++) {
+			const idx = i
+			timers.push(
+				setTimeout(() => {
+					displayedYcPoints[idx] = newPoints[idx]
+					if (idx === newPoints.length - 1) displayedYcPoints.length = newPoints.length
+					for (let j = 0; j <= idx; j++) colorYc[j] = makeHex(idx - j)
+					if (idx === newPoints.length - 1) colorYc.length = newPoints.length
+				}, idx * 300)
+			)
+		}
+		for (let e = 1; e <= fadeSteps; e++) {
+			const ee = e
+			timers.push(setTimeout(() => {
+				for (let j = 0; j < colorYc.length; j++) colorYc[j] = makeHex((newPoints.length - 1 - j) + ee)
+			}, (newPoints.length - 1 + ee) * 300))
+		}
+		return () => timers.forEach(clearTimeout)
 	})
 
 	// Handles s, n, g input changes; stores as numbers, updates input with formatted value
@@ -228,10 +312,6 @@
 	<TrapCanvas bind:zl={trapQ.zl} bind:zr={trapQ.zr} bind:b={trapQ.b} bind:y />
 </section>
 <article>
-	<!-- <section> -->
-
-	<!-- </section> -->
-	<!-- {trap.zl}, {trap.b}, {trap.zr}, {trap.y} -->
 	<section>
 		<div class="inputs-row single">
 			<label class="depth-label">
@@ -380,13 +460,15 @@
 				\\begin{aligned}
 					Q &= \\frac{1}{n}AR^{2/3}S^{1/2} \\\\[0.75em]
 
-					&=  \\frac{S^{1/2}}{n}A(A/P)^{2/3} \\\\[0.75em]
+					\\Rightarrow \\frac{Qn}{S^{1/2}} &=  A(A/P)^{2/3} \\\\[0.75em]
 
-					&=  \\frac{S^{1/2}}{n}\\cdot\\frac{A^{5/3}}{P^{2/3}}\\\\[0.75em]
+					 &=  \\frac{A^{5/3}}{P^{2/3}} \\\\[0.75em]
 
-					&= \\frac{S^{1/2}}{n}\\cdot\\frac{((b+\\frac{zl+zr}{2}\\cdot y)y)^{5/3}}{\\left(b+\\left( \\sqrt{1+z_L^2}+\\sqrt{1+z_R^2}\\right) y\\right)^{2/3} }    \\\\[0.75em]
+						
+
+					&= \\frac{((b+\\frac{zl+zr}{2}\\cdot y)y)^{5/3}}{\\left(b+\\left( \\sqrt{1+z_L^2}+\\sqrt{1+z_R^2}\\right) y\\right)^{2/3} }    \\\\[0.75em]
 					
-					\\Rightarrow ${sds(Q)} &= \\frac{(${sds(s / 100)})^{1/2}}{${sds(n)}} {\\large \\times} \\frac{\\left(\\left(${sds(b)}+${sdw(
+					\\Rightarrow \\frac{${sds(Q)}\\times${sds(n)}}{(${sds(s / 100)})^{1/2}} &=  \\frac{\\left(\\left(${sds(b)}+${sdw(
 						zl / 2 + zr / 2
 					)} y\\right) y\\right)^{5/3}}{\\left(${sds(b)}+ ${sdw((1 + zl ** 2) ** 0.5 + (1 + zr ** 2) ** 0.5)}y\\right)^{2/3}}\\\\[0.75em]
 
@@ -398,7 +480,7 @@
 				`)}
 
 				<div>
-					...where {@html ki('y')} is in metres. This expression cannot be solved directly (analytically)
+					...where the depth {@html ki('y')} is in metres. This expression cannot be solved directly (analytically)
 					for {@html ki(`y`)} but may be found using iterative methods. (Or, more conveniently, by using
 					the numerical solver available on a scientific calculator.)
 				</div>
@@ -427,6 +509,7 @@
 
 							\\end{aligned}
 							`)}
+
 						Now, the fixed-point iterative process is to guess a starting value for the depth {@html ki(
 							'y_0'
 						)}, evaluate the function for input {@html ki('y_0')} to get {@html ki('y_1')} on the left.
@@ -445,23 +528,28 @@
 						>
 							<input
 								type="number"
-								value={sds(initGuessQ)}
+								value={sds(initGuessY)}
 								min="0"
 								step="any"
 								style="width: 4em"
-								oninput={(e) => setInitGuessQ(e.currentTarget.value)}
+								oninput={(e) => setInitGuessY(e.currentTarget.value)}
 							/>
 						</span>:
-						{#each iteratedYforQ as pt, i}
+
+						{#each displayedYPoints as pt, i}
 							<!-- don't print out an equation with the last element as independent variable with calculated value not defined -->
-							{#if !isNaN(iteratedYforQ[i + 1])}
+							{#if !isNaN(displayedYPoints[i + 1])}
 								{@html kd(
-									`y_{${i + 1}}=\\bm{${sdw(iteratedYforQ[i + 1])}}= \\frac{${sdw(coeff)}\\cdot(${sds(b)}+ ${sdw((1 + zl ** 2) ** 0.5 + (1 + zr ** 2) ** 0.5)}\\cdot\\bm{${i == 0 ? sds(iteratedYforQ[i]) : sdw(iteratedYforQ[i])}})^{2/5}}{\\left(${sds(b)}+ ${sdw(zl / 2 + zr / 2)}\\cdot\\bm{${i == 0 ? sds(iteratedYforQ[i]) : sdw(iteratedYforQ[i])}})^{2/5}\\right)^{2/3}}`
+									(() => {
+								const val = colorize(colorY[i + 1], `\\bm{${sdw(displayedYPoints[i + 1])}}`)
+								const ptVal = colorize(colorY[i], `\\bm{${i == 0 ? sds(pt) : sdw(pt)}}`)
+									return `y_{${i + 1}}=${val}= \\frac{${sdw(coeffY)}\\cdot(${sds(b)}+ ${sdw((1 + zl ** 2) ** 0.5 + (1 + zr ** 2) ** 0.5)}\\cdot${ptVal})^{2/5}}{\\left(${sds(b)}+ ${sdw(zl / 2 + zr / 2)}\\cdot${ptVal})^{2/5}\\right)^{2/3}}`
+									})()
 								)}
 							{/if}
 						{/each}
 						Notice that now {@html ki(
-							`y_{${iteratedYforQ.length - 1}}=f(y_{${iteratedYforQ.length - 2}})`
+							`y_{${iteratedYPoints.length - 1}}=f(y_{${iteratedYPoints.length - 2}})`
 						)}, that is {@html ki(`f(${y})=${y}`)}, and {@html ki(`\\bm{y=${y}\\,\\mathsf{m}}`)} is the
 						fixed-point solution to the depth of flow equation derived above.
 					{/snippet}
@@ -566,14 +654,74 @@
 							zl / 2 + zr / 2
 						)} y_c\\right)y_c\\right)^3}{${sds(b)}\\, \\mathsf{m}+ \\left(${sdw(
 							zl / 1 + zr / 1
-						)}\\right)y_c}	\\\\
+						)}\\right)y_c}
 					\\end{aligned}`)}
 				<div>
-					This expression cannot be solved directly (analytically) for {@html ki(`y_c`)}. It may be
-					solved using trial-and-error or iterative methods but it is generally more convenient to
-					solve it using a numerical solver on a scientific calculator or to use a spreadsheet app.
+					...where the critical depth, {@html ki(`y_c`)}, is in metres. This expression cannot be
+					solved directly (analytically) for {@html ki(`y_c`)}. It may be found using iterative
+					methods or, more conveniently, by using a numerical solver on a scientific calculator.
 				</div>
 				{@html kd(`y_c=${yc}\\, \\mathsf{m}`)}
+				<Card>
+					{#snippet answer()}
+						<strong>Fixed Point Iterative Solution</strong>
+					{/snippet}
+					{#snippet solution()}
+						{@html kd(`
+							\\begin{aligned}
+								\\frac{\\left(${sds(Q)}\\right)^2}{${g}}&= \\frac{\\left(\\left(${sds(b)}\\, +${sdw(
+									zl / 2 + zr / 2
+								)} y_c\\right)y_c\\right)^3}{${sds(b)}+ ${sdw(zl / 1 + zr / 1)}y_c} \\\\
+								\\Rightarrow y_c^3 &= \\frac{\\left(${sds(Q)}\\right)^2}{${g}}\\cdot\\frac{${sds(b)}+ ${sdw(
+									zl / 1 + zr / 1
+								)}y_c}{\\left(${sds(b)}\\, +${sdw(zl / 2 + zr / 2)} y_c\\right)^3} \\\\
+								\\Rightarrow y_c &= \\left[\\frac{\\left(${sds(Q)}\\right)^2}{${g}}\\right]^{1/3}\\cdot\\frac{\\left(${sds(b)}+ ${sdw(
+									zl / 1 + zr / 1
+								)}y_c\\right)^{1/3}}{${sds(b)}\\, +${sdw(zl / 2 + zr / 2)} y_c} \\\\
+								&= ${sdw(Math.pow((Q * Q) / g, 1 / 3))}\\cdot\\frac{\\left(${sds(b)}+ ${sdw(
+									zl / 1 + zr / 1
+								)}y_c\\right)^{1/3}}{${sds(b)}\\, +${sdw(zl / 2 + zr / 2)} y_c} \\\\
+							\\end{aligned}
+						`)}
+						Now, the fixed-point iterative process is to guess a starting value for the depth {@html ki(
+							'y_0'
+						)}, evaluate the function for input {@html ki('y_0')} to get {@html ki('y_1')} on the left.
+						Then repeat, evaluating at {@html ki('y_1')} to get {@html ki('y_2')} on the left,... Then
+						{@html ki('y_n')} will converge on {@html ki('y_{n+1}')}. Continue the iteration until
+						you have the desired accuracy, i.e. until the value of {@html ki(
+							'\\left|y_{n+1}-y_n\\right|'
+						)} is sufficiently small.
+						<br /><br />
+						Start with an (editable) initial guess of {@html ki('y_0 =')}
+						<!-- svelte-ignore a11y_click_events_have_key_events -->
+						<!-- svelte-ignore a11y_no_static_element_interactions -->
+						<span
+							style="padding: 5em; padding-inline: 2em; margin-inline: -2em; cursor: auto; position: relative;  z-index: 100"
+							onclick={(e) => e.stopPropagation()}
+						>
+							<input
+								type="number"
+								value={sds(initGuessYc)}
+								min="0"
+								step="any"
+								style="width: 4em"
+								oninput={(e) => setInitGuessYc(e.currentTarget.value)}
+							/>
+						</span>:
+						{#each displayedYcPoints as pt, i}
+							<!-- don't print out an equation with the last element as independent variable with calculated value not defined -->
+							{#if !isNaN(displayedYcPoints[i + 1])}
+								{@html kd(
+									(() => {
+								const val = colorize(colorYc[i + 1], `\\bm{${sdw(displayedYcPoints[i + 1])}}`)
+								const ptVal = colorize(colorYc[i], `\\bm{${i == 0 ? sds(pt) : sdw(pt)}}`)
+									return `y_{${i + 1}}=${val}= \\frac{${sdw(coeffYc)}\\cdot(${sds(b)}+ ${sdw(zl + zr)}\\cdot${ptVal})^{1/3}}{${sds(b)}+ ${sdw(zl / 2 + zr / 2)}\\cdot${ptVal}}`
+									})()
+								)}
+							{/if}
+						{/each}
+					{/snippet}
+				</Card>
 			{/snippet}
 		</Card>
 

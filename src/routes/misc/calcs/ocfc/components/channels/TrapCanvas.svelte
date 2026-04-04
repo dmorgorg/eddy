@@ -21,44 +21,43 @@
 	let canvasPaddingInline = 20
 	let canvasPaddingTop = $derived(canvasPaddingInline)
 	let canvasPaddingBottom = $derived(canvasPaddingInline)
-	let channelHeightPx = 100
+	let channelHeightMaxPx = 100
 	// full depth of channel set to 5 metres, for drawing channel irrespective of water level
-	let dMetres = $derived(Math.min(5, 3 * b))
+	let d = $derived(Math.min(5, 3 * b))
 	// this value is the free width in metres
-	let T = $derived(Math.round((zedL + zedR) * dMetres + b))
-	let aspectRatio = $derived(sd(T / dMetres, 4))
-	let dMetresPx = $derived.by(() => {
-		if ((elWidthPx - 2 * canvasPaddingInline) / aspectRatio < channelHeightPx)
+	let T = $derived(Math.round((zedL + zedR) * d + b))
+	let aspectRatio = $derived(sd(T / d, 4))
+	let dPx = $derived.by(() => {
+		if ((elWidthPx - 2 * canvasPaddingInline) / aspectRatio < channelHeightMaxPx)
 			return Math.round((elWidthPx - 2 * canvasPaddingInline) / aspectRatio)
-		else return channelHeightPx
+		else return channelHeightMaxPx
 	})
-	let channelWidthPx = $derived(Math.round(dMetresPx * aspectRatio))
-
-	let bPx = $derived(channelWidthPx - (zedL + zedR) * dMetresPx)
+	let TPx = $derived(Math.round(dPx * aspectRatio))
+	let bPx = $derived(TPx - (zedL + zedR) * dPx)
 
 	let surroundTopY = $derived(Math.round(canvasPaddingTop))
-	let surroundBottomY = $derived(Math.round(canvasPaddingTop + dMetresPx + canvasPaddingBottom))
+	let surroundBottomY = $derived(Math.round(canvasPaddingTop + dPx + canvasPaddingBottom))
 
-	let channelLeftX = $derived(Math.round((elWidthPx - channelWidthPx) / 2))
-	let channelRightX = $derived(channelLeftX + channelWidthPx)
-	let bLeftX = $derived(channelLeftX + zedL * dMetresPx)
+	let channelLeftX = $derived(Math.round((elWidthPx - TPx) / 2))
+	let channelRightX = $derived(channelLeftX + TPx)
+	let bLeftX = $derived(channelLeftX + zedL * dPx)
 	// if b=0, get drawing artifacts from rightX possibly < leftX
-	let bRightX = $derived(Math.max(channelRightX - zedR * dMetresPx, bLeftX))
-	let channelBottomY = $derived(Math.round(surroundTopY + dMetresPx))
+	let bRightX = $derived(Math.max(channelRightX - zedR * dPx, bLeftX))
+	let channelBottomY = $derived(Math.round(surroundTopY + dPx))
 
 	let levelDown = $derived.by(() => {
 		let temp = y <= 0.5 ? 0.5 : y
 		temp = y > 9 ? 9 : y
-		return (-0.1 * temp + 0.95) * dMetresPx
+		return (-0.1 * temp + 0.95) * dPx
 	})
 	let waterTopY = $derived(surroundTopY + levelDown)
 
-	// let channelBaseX = $derived(Math.round(channelLeftX + (channelWidthPx * zl) / (zl + zr)))
+	// let channelBaseX = $derived(Math.round(channelLeftX + (TPx * zl) / (zl + zr)))
 
 	let extension = $state(10)
-	let leftSlope = $derived(dMetresPx / (bLeftX - channelLeftX))
+	let leftSlope = $derived(dPx / (bLeftX - channelLeftX))
 	let leftSlopeDX = $derived(levelDown / leftSlope)
-	let rightSlope = $derived(dMetresPx / (channelRightX - bRightX))
+	let rightSlope = $derived(dPx / (channelRightX - bRightX))
 	let rightSlopeDX = $derived(levelDown / rightSlope)
 
 	let extensionLeft = $derived(
@@ -82,7 +81,7 @@
 		let lineWidth = 4
 		const ctx = canvas.getContext('2d')
 		ctx.clearRect(0, 0, canvas.width, canvas.height)
-		ctx.canvas.height = dMetresPx + 2 * canvasPaddingInline
+		ctx.canvas.height = dPx + 2 * canvasPaddingInline
 		ctx.canvas.width = elWidthPx
 
 		// draw grey channel surround/support
@@ -141,6 +140,7 @@
 			</div>
 		</div>
 	</div>
+	b: {bPx}, T: {TPx}, d: {dPx}, ar: {aspectRatio}
 {/if}
 
 <style>
