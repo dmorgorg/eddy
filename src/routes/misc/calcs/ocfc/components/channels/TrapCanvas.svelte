@@ -21,16 +21,16 @@
 	let canvasPaddingInline = 20
 	let canvasPaddingTop = $derived(canvasPaddingInline)
 	let canvasPaddingBottom = $derived(canvasPaddingInline)
-	let channelHeightMaxPx = 100
+	let maxDPx = 100
 	// full depth of channel set to 5 metres, for drawing channel irrespective of water level
-	let d = $derived(Math.min(5, 3 * b))
+	let d = $state(5)
 	// this value is the free width in metres
-	let T = $derived(Math.round((zedL + zedR) * d + b))
+	let T = $derived((zedL + zedR) * d + b)
 	let aspectRatio = $derived(sd(T / d, 4))
 	let dPx = $derived.by(() => {
-		if ((elWidthPx - 2 * canvasPaddingInline) / aspectRatio < channelHeightMaxPx)
+		if (elWidthPx - 2 * canvasPaddingInline < maxDPx * aspectRatio)
 			return Math.round((elWidthPx - 2 * canvasPaddingInline) / aspectRatio)
-		else return channelHeightMaxPx
+		else return maxDPx
 	})
 	let TPx = $derived(Math.round(dPx * aspectRatio))
 	let bPx = $derived(TPx - (zedL + zedR) * dPx)
@@ -46,9 +46,10 @@
 	let channelBottomY = $derived(Math.round(surroundTopY + dPx))
 
 	let levelDown = $derived.by(() => {
-		let temp = y <= 0.5 ? 0.5 : y
-		temp = y > 9 ? 9 : y
-		return (-0.1 * temp + 0.95) * dPx
+		let temp = y <= 0.25 ? 0.25 : y
+		temp = y > 15 ? 15 : y
+		// Used Lagrange intgerpolation for a quadratic that levels off at higher values
+		return ((0.267 * temp * temp - 10.33 * temp + 95) * dPx) / 100
 	})
 	let waterTopY = $derived(surroundTopY + levelDown)
 
@@ -112,9 +113,6 @@
 		// ctx.stroke()
 
 		ctx.strokeStyle = 'black'
-		// ctx.strokeStyle = '#6d8888'
-		// ctx.strokeStyle = '#566c6c'
-		// ctx.strokeStyle = '#404f4f'
 		ctx.lineCap = 'round'
 		ctx.lineJoin = 'round'
 		ctx.beginPath()
@@ -135,12 +133,13 @@
 	<div bind:clientWidth={elWidthPx}>
 		<!-- bind:this binds canvasWrap var to this DOM element -->
 		<div class="canvas-wrap" bind:this={canvasWrap}>
-			<div class="rect-wrap">
-				<canvas bind:this={canvas} width="200" height="100"> </canvas>
-			</div>
+			<!-- <div class="rect-wrap"> -->
+			<canvas bind:this={canvas} width="200" height="100"> </canvas>
 		</div>
+		<!-- </div> -->
 	</div>
-	b: {bPx}, T: {TPx}, d: {dPx}, ar: {aspectRatio}
+	<!-- y: {y}, levelD: {sds(levelDown)}, waterTopY: {sds(waterTopY)}, channelBY: {channelBottomY}, dPx: {dPx} -->
+	<!-- b: {bPx}, T: {T}, TPx: {TPx}, d: {dPx}, ar: {aspectRatio}, elWidthPx: {elWidthPx} -->
 {/if}
 
 <style>
@@ -151,29 +150,28 @@
 		width: 90%;
 		width: 40em;
 	} */
-	canvas {
-		width: 100%;
-		/* height: 100%; */
-		/* width: fit-content; */
-		/* margin-inline: 0; */
-		/* border: 0.1px solid red; */
-	}
-	.canvas-wrap {
-		/* background: darkseagreen; */
+	/* canvas { */
+	/* width: 100%; */
+	/* height: 100%; */
+	/* width: fit-content; */
+	/* margin-inline: 0; */
+	/* border: 0.1px solid red; */
+	/* } */
+	/* .canvas-wrap { */
+	/* background: darkseagreen; */
 
-		/* margin-inline: auto; */
-		/* padding-top: 1em; */
-		/* padding-bottom: 3em; */
-		/* padding-inline: 1em; */
-		padding: 0;
-		/* width: fit-content; */
-		/* width: 100%; */
-		/* width: 20em; */
-	}
-	.rect-wrap {
-		/* border: 1px solid blue; */
+	/* margin-inline: auto; */
+	/* padding-top: 1em; */
+	/* padding-bottom: 3em; */
+	/* padding-inline: 1em; */
+	/* padding: 0; */
+	/* width: fit-content; */
+	/* width: 100%; */
+	/* width: 20em; */
+	/* } */
+	/* .rect-wrap {
 		position: relative;
 		display: inline-block;
 		width: 100%;
-	}
+	} */
 </style>

@@ -163,7 +163,7 @@
 
 	const makeHex = (age) => {
 		if (age >= fadeSteps) return null
-		const ch = Math.round((1 - age / fadeSteps) * 0x88)
+		const ch = Math.round((1 - age / fadeSteps) * 0xff)
 		const toHex = (n) => n.toString(16).padStart(2, '0')
 		return `${toHex(0)}${toHex(ch)}${toHex(ch)}`
 	}
@@ -320,10 +320,10 @@
 	}, 1000)
 </script>
 
-<section class="canvas">
-	<TrapCanvas bind:zl={trapQ.zl} bind:zr={trapQ.zr} bind:b={trapQ.b} bind:y />
-</section>
 <article>
+	<section class="canvas">
+		<TrapCanvas bind:zl={trapQ.zl} bind:zr={trapQ.zr} bind:b={trapQ.b} bind:y />
+	</section>
 	<section>
 		<div class="inputs-row single">
 			<label class="depth-label">
@@ -455,8 +455,8 @@
 	{/if}
 	{#if bothVerticalWarning}
 		<div class="error" transition:slide={{ duration: 1000, axis: 'y' }}>
-			With both slopes vertical, you have a simpler rectangular channel. You should use that
-			option...but it's up to you really.
+			With both slopes vertical, you have a rectangular channel. You should use that simpler
+			calculator option...but it's up to you really.
 		</div>
 	{/if}
 
@@ -819,28 +819,15 @@
 
 <style lang="scss">
 	article {
-		// border: 2px solid green;
 		margin-inline: auto;
-		// padding-bottom: 0;
-		// padding-inline: 0;
 		width: 32em;
-		// width: fit-content;
 	}
-	.canvas {
-		margin-inline: auto;
-		width: 40em;
-		// border: 1px solid blue;
-		// background: #eee;
-	}
+
 	.inputs-row {
-		// font-size: 80%;
 		display: flex;
 		gap: 0.5em;
 		justify-content: space-between;
 		margin: 0.625em auto;
-		// border: 1px solid red;
-		// width: 90%;
-		// width: 32em;
 		width: 100%;
 
 		&.single {

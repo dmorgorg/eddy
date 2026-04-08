@@ -30,6 +30,24 @@ body {
 	color: var(--primaryColor);
 } */
 
+.error {
+	align-items: center;
+	border: 2px solid red;
+	border: 2px solid #677;
+	border: 1px solid black;
+	border-radius: 3px;
+	box-shadow: 2px 2px 4px red;
+	box-shadow: 2px 2px 4px #abb;
+	color: red;
+	display: flex;
+	font-weight: bold;
+	justify-content: center;
+	margin: 2em auto;
+	padding: 1em;
+	text-align: center;
+	/* width: 90%; */
+}
+
 .hide {
 	display: none !important;
 }

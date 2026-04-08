@@ -15,6 +15,8 @@
 	let zeroDepthError = $state(false)
 	let zeroBaseWarning = $state(false)
 	let bothVerticalWarning = $state(false)
+	let noFlowAreaError = $state(false)
+	let ySoHighError = $state(false)
 
 	const sds = (num) => {
 		return sd(num, sdigs, extraForSdigs)
@@ -23,25 +25,48 @@
 		return sd(num, wdigs, extraForWdigs)
 	}
 
-	const getNFfromY = (y) => {
-		let A = trap.getArea(y, zl, b, zr)
-		let T = trap.getT(y, zl, b, zr)
-		let v = Q / A
-		return v / ((g * A) / T) ** 0.5
-	}
-	const getYCfromQ = (low = 0, high = 100) => {
-		let delta = 1 / 10 ** (wdigs + 1),
-			mid = (low + high) / 2
-		if (Math.abs(low - high) < delta) {
-			return mid
+	// const getNFfromY = (y) => {
+	// 	let A = trap.getArea(y, zl, b, zr)
+	// 	let T = trap.getT(y, zl, b, zr)
+	// 	let v = Q / A
+	// 	return v / ((g * A) / T) ** 0.5
+	// }
+	// const getYCfromQ = (low = 0, high = 100) => {
+	// 	let delta = 1 / 10 ** (wdigs + 1),
+	// 		mid = (low + high) / 2
+	// 	if (Math.abs(low - high) < delta) {
+	// 		return mid
+	// 	}
+	// 	// search
+	// 	if (getNFfromY(mid) > 1) {
+	// 		return getYCfromQ(mid, high)
+	// 	} else {
+	// 		return getYCfromQ(low, mid)
+	// 	}
+	// }
+
+	const setYcIterationPoints = () => {
+		let next = Number(initGuessYc)
+		let current = next + 1
+		let iterations = 0
+		const points = [next]
+		while (current != next) {
+			++iterations
+			current = next
+			next = Number(
+				sdw((coeffYc * Math.pow(b + (zl + zr) * current, 1 / 3)) / (b + ((zl + zr) / 2) * current))
+			)
+			points.push(next)
+			if (iterations > 40) break
 		}
-		// search
-		if (getNFfromY(mid) > 1) {
-			return getYCfromQ(mid, high)
-		} else {
-			return getYCfromQ(low, mid)
-		}
+		iteratedYcPoints = points
 	}
+
+	let initGuessYc = $state(1)
+	const setInitGuessYc = debounce((val) => {
+		initGuessYc = Number(val)
+	}, 800)
+	let iteratedYcPoints = $state([])
 
 	let zl = $derived(Number(trapY.zl))
 	let zr = $derived(Number(trapY.zr))
@@ -60,37 +85,18 @@
 	let E = $derived(sdw(common.getE(y, v, g)))
 	let T = $derived(sdw(trap.getT(y, zl, b, zr)))
 	let NF = $derived(sdw(common.getNF(v, A, T, g)))
-	let yc = $derived(sdw(getYCfromQ()))
+
+	// we need Q before we can call this
+	let coeffYc = $derived(sdw(Math.pow((Q * Q) / g, 1 / 3)))
+	setYcIterationPoints()
+
+	let yc = $derived(sdw(iteratedYcPoints[iteratedYcPoints.length - 1]))
 	let Ac = $derived(sdw(trap.getArea(yc, zl, b, zr)))
 	let vc = $derived(sdw(Q / Ac))
 	let Emin = $derived(sdw(common.getE(yc, vc, g)))
 	let Pc = $derived(sdw(trap.getP(yc, zl, b, zr)))
 	let Rc = $derived(sdw(common.getR(Ac, Pc)))
 	let Sc = $derived(sdw(common.getCriticalSlope(n, vc, Rc)))
-
-	let initGuessYc = $state(1)
-	const setInitGuessYc = debounce((val) => {
-		initGuessYc = Number(val)
-	}, 800)
-	let iteratedYcPoints = $state([])
-	let coeffYc = $derived(sdw(Math.pow((Q * Q) / g, 1 / 3)))
-
-	const setYcIterationPoints = () => {
-		let next = Number(initGuessYc)
-		let current = next + 1
-		let iterations = 0
-		const points = [next]
-		while (current != next) {
-			++iterations
-			current = next
-			next = Number(
-				sdw((coeffYc * Math.pow(b + (zl + zr) * current, 1 / 3)) / (b + ((zl + zr) / 2) * current))
-			)
-			points.push(next)
-			if (iterations > 20) break
-		}
-		iteratedYcPoints = points
-	}
 
 	$effect(() => {
 		void trapY.b
@@ -152,21 +158,30 @@
 		bothVerticalWarning = false
 		zeroDepthError = false
 		zeroBaseWarning = false
+		noFlowAreaError = false
 
 		let id = e.target.id
 		let value = Math.abs(Number(e.target.value))
 
+		// slope change
 		if (id === 's') {
+			let prev = trapY.s
 			// no flow with zero slope so don't allow it
 			if (value == 0) {
 				noSlopeError = true
-				e.target.value = Math.pow(10, -sdigs)
+				// trapY.s = prev
+				e.target.value = prev
+			} else {
+				trapY.s = value
+				e.target.value = sds(trapY.s)
 			}
-			trapY.s = value
-			e.target.value = sds(trapY.s)
+
+			// n change
 		} else if (id === 'n') {
 			trapY.n = value
 			e.target.value = sds(trapY.n)
+
+			// g change
 		} else if (id === 'g') {
 			// need e.target.value as a string to measure length
 			let value = e.target.value
@@ -180,43 +195,66 @@
 				trapY.g = value
 				e.target.value = sds(trapY.g)
 			}
+
+			// left slope change
 		} else if (id === 'zl') {
-			// let prev = trapY.zl
+			let prev = trapY.zl
 			// toFixed in sd chokes on 0 so deal with it here
 			if (value == 0) {
-				// if zr is already 0, don't change zl to 0 but keep at previous value
+				// if zr is 0 AND b is 0 don't change zl to 0 but keep at previous value and issue warning
 				if (trapY.zr === 0) {
-					bothVerticalWarning = true
-					// console.log('true')
-					trapY.zl = value
-					e.target.value = trapY.zl
+					if (trapY.b === 0) {
+						noFlowAreaError = true
+						// trapY.zl = value
+						e.target.value = trapY.zl = sds(prev)
+					} else {
+						bothVerticalWarning = true
+						// trapY.zl = value
+						e.target.value = trapY.zl = value
+					}
 				} else {
-					e.target.value = trapY.zl = 0
+					e.target.value = trapY.zl = value
 				}
+				// non-zero value for left slope
 			} else {
 				trapY.zl = value
 				e.target.value = sds(trapY.zl)
 			}
+
+			// right slope change
 		} else if (id === 'zr') {
-			// let prev = trapY.zr
+			let prev = trapY.zr
 			if (value == 0) {
 				if (trapY.zl === 0) {
-					bothVerticalWarning = true
-					trapY.zr = value
-					e.target.value = trapY.zr
+					if (trapY.b === 0) {
+						noFlowAreaError = true
+						// trapY.zr = value
+						e.target.value = trapY.zr = sds(prev)
+					} else {
+						bothVerticalWarning = true
+						// trapY.zr = value
+						e.target.value = trapY.zr = value
+					}
 				} else {
-					e.target.value = trapY.zr = 0
+					e.target.value = trapY.zr = value
 				}
 			} else {
 				trapY.zr = value
 				e.target.value = sds(trapY.zr)
 			}
+
+			// base width change
 		} else if (id === 'b') {
 			let prev = trapY.b
 			if (value == 0) {
-				zeroBaseWarning = true
-				trapY.b = Number(value)
-				e.target.value = sds(value)
+				if (trapY.zl === 0 && trapY.zr === 0) {
+					noFlowAreaError = true
+					e.target.value = sds(prev)
+				} else {
+					zeroBaseWarning = true
+					trapY.b = value
+					e.target.value = value
+				}
 			} else {
 				trapY.b = value
 				e.target.value = sds(trapY.b)
@@ -235,10 +273,12 @@
 	}, 1000)
 </script>
 
-<section class="canvas">
-	<TrapCanvas bind:zl={trapY.zl} bind:zr={trapY.zr} bind:b={trapY.b} bind:y={trapY.y} />
-</section>
 <article>
+	<section class="canvas">
+		<TrapCanvas bind:zl={trapY.zl} bind:zr={trapY.zr} bind:b={trapY.b} bind:y={trapY.y} />
+	</section>
+	<!-- dPx: {dPx} -->
+
 	<!-- <section> -->
 
 	<!-- </section> -->
@@ -374,8 +414,15 @@
 	{/if}
 	{#if bothVerticalWarning}
 		<div class="error" transition:slide={{ duration: 1000, axis: 'y' }}>
-			With both slopes vertical, you have a simpler rectangular channel. You should use that
-			option...but it's up to you really.
+			With both slopes vertical, you have a rectangular channel. You should use that simpler
+			calculator option...but it's up to you really.
+		</div>
+	{/if}
+	{#if noFlowAreaError}
+		<div class="error" transition:slide={{ duration: 1000, axis: 'y' }}>
+			With both slopes vertical and a zero base width value, there is no flow area and nothing to
+			calculate. You need at least one of the base or side slope values to be a non-zero positive
+			value.
 		</div>
 	{/if}
 
@@ -574,6 +621,7 @@
 							`y_{${iteratedYcPoints.length - 1}}=f(y_{${iteratedYcPoints.length - 2}})`
 						)}, that is {@html ki(`f(${yc})=${yc}`)}, and {@html ki(`\\bm{y=${yc}\\,\\mathsf{m}}`)} is
 						the fixed-point solution to the depth of flow equation derived above.
+						{iteratedYcPoints[iteratedYcPoints.length - 1]}
 					{/snippet}
 				</Card>
 			{/snippet}
@@ -663,12 +711,12 @@
 		width: 32em;
 		// width: fit-content;
 	}
-	.canvas {
-		margin-inline: auto;
-		width: 40em;
-		// border: 1px solid blue;
-		// background: #eee;
-	}
+	// .canvas {
+	// 	margin-inline: auto;
+	// 	width: 40em;
+	// 	// border: 1px solid blue;
+	// 	// background: #eee;
+	// }
 	.inputs-row {
 		// font-size: 80%;
 		display: flex;
@@ -737,17 +785,19 @@
 		margin-top: 1em;
 		margin-bottom: 0.5em;
 	}
-	.error {
-		align-items: center;
-		border: 2px solid red;
-		box-shadow: 2px 2px 4px red;
-		color: red;
-		display: flex;
-		font-weight: bold;
-		justify-content: center;
-		margin: 2em auto;
-		padding: 1em;
-		text-align: center;
-		width: 90%;
-	}
+	// .error {
+	// 	align-items: center;
+	// 	border: 2px solid red;
+	// 	// border: 2px solid #088;
+	// 	box-shadow: 2px 2px 4px red;
+	// 	// box-shadow: 2px 2px 4px #088;
+	// 	color: red;
+	// 	display: flex;
+	// 	font-weight: bold;
+	// 	justify-content: center;
+	// 	margin: 2em auto;
+	// 	padding: 1em;
+	// 	text-align: center;
+	// 	width: 90%;
+	// }
 </style>
