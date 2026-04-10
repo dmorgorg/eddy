@@ -3,7 +3,7 @@
 
 	import TrapCanvas from './TrapCanvas.svelte'
 	import Card from '../Card.svelte'
-	import { ki, kd, sd, debounce } from '$lib/utilities/utils.js'
+	import { ki, kd, sd, sdD, debounce, makeHex, colorize } from '$lib/utilities/utils.js'
 	import { common, trap } from '$lib/fluids/openChannel/utils'
 	import { digits } from '../../digits.svelte.js'
 	import { trapQ } from '../../store.svelte.js'
@@ -20,10 +20,14 @@
 	let oscillatingYc = $state(false)
 
 	const sds = (num) => {
-		return sd(num, sdigs, extraForSdigs)
+		return sdD(num, sdigs, extraForSdigs)
 	}
 	const sdw = (num) => {
-		return sd(num, wdigs, extraForWdigs)
+		return sdD(num, wdigs, extraForWdigs)
+	}
+	// an extra digit to prevent oscillating results in display of iteration
+	const sdx = (num) => {
+		return sdD(num, wdigs + 1, extraForWdigs)
 	}
 
 	const getQfromY = (y) => {
@@ -90,7 +94,8 @@
 	let E = $derived(sdw(common.getE(y, v, g)))
 	let T = $derived(sdw(trap.getT(y, zl, b, zr)))
 	let NF = $derived(sdw(common.getNF(v, A, T, g)))
-	let yc = $derived(sdw(getYCfromQ()))
+	let yc = $derived(sdw(iteratedYcPoints[iteratedYcPoints.length - 1]))
+	// let yc = $derived(sdw(getYCfromQ()))
 	let Ac = $derived(sdw(trap.getArea(yc, zl, b, zr)))
 	let vc = $derived(sdw(common.getVfromQandA(Q, Ac)))
 	let Emin = $derived(sdw(common.getE(yc, vc, g)))
@@ -182,15 +187,7 @@
 	let colorYc = $state([])
 
 	const fadeSteps = 4
-
-	const makeHex = (age) => {
-		if (age >= fadeSteps) return null
-		const ch = Math.round((1 - age / fadeSteps) * 0xff)
-		const toHex = (n) => n.toString(16).padStart(2, '0')
-		return `${toHex(0)}${toHex(ch)}${toHex(ch)}`
-	}
-
-	const colorize = (color, tex) => (color ? `\\textcolor{#${color}}{${tex}}` : tex)
+	const mkHex = (age, color) => makeHex(age, fadeSteps, color)
 
 	// complicated AI code to let updated initial values in iterations ripple through the iteration rather than show updated values instantly. Seems to work well.
 	$effect(() => {
@@ -202,7 +199,7 @@
 				setTimeout(() => {
 					displayedYPoints[idx] = newPoints[idx]
 					if (idx === newPoints.length - 1) displayedYPoints.length = newPoints.length
-					for (let j = 0; j <= idx; j++) colorY[j] = makeHex(idx - j)
+					for (let j = 0; j <= idx; j++) colorY[j] = mkHex(idx - j)
 					if (idx === newPoints.length - 1) colorY.length = newPoints.length
 				}, idx * 300)
 			)
@@ -212,8 +209,7 @@
 			timers.push(
 				setTimeout(
 					() => {
-						for (let j = 0; j < colorY.length; j++)
-							colorY[j] = makeHex(newPoints.length - 1 - j + ee)
+						for (let j = 0; j < colorY.length; j++) colorY[j] = mkHex(newPoints.length - 1 - j + ee)
 					},
 					(newPoints.length - 1 + ee) * 300
 				)
@@ -231,9 +227,9 @@
 				setTimeout(() => {
 					displayedYcPoints[idx] = newPoints[idx]
 					if (idx === newPoints.length - 1) displayedYcPoints.length = newPoints.length
-					for (let j = 0; j <= idx; j++) colorYc[j] = makeHex(idx - j)
+					for (let j = 0; j <= idx; j++) colorYc[j] = mkHex(idx - j)
 					if (idx === newPoints.length - 1) colorYc.length = newPoints.length
-				}, idx * 300)
+				}, idx * 150)
 			)
 		}
 		for (let e = 1; e <= fadeSteps; e++) {
@@ -242,9 +238,9 @@
 				setTimeout(
 					() => {
 						for (let j = 0; j < colorYc.length; j++)
-							colorYc[j] = makeHex(newPoints.length - 1 - j + ee)
+							colorYc[j] = mkHex(newPoints.length - 1 - j + ee)
 					},
-					(newPoints.length - 1 + ee) * 300
+					(newPoints.length - 1 + ee) * 150
 				)
 			)
 		}
@@ -725,6 +721,12 @@
 							'\\left|y_{n+1}-y_n\\right|'
 						)} is sufficiently small.
 						<br /><br />
+						(We iterate until two consecutive values for {@html ki('y_c')} are the same when converted
+						to the required number of significant digits. If we use the same precision in our iterations
+						that we use to test for convergence, it is not uncommon - due to rounding - for iterated values
+						to get into an oscillating state and never converge. For that reason we use an extra significant
+						digit for the iterations.)
+						<br /><br />
 						Start with an (editable) initial guess of {@html ki('y_0 =')}
 						<!-- svelte-ignore a11y_click_events_have_key_events -->
 						<!-- svelte-ignore a11y_no_static_element_interactions -->
@@ -748,19 +750,11 @@
 								{#if i < iteratedYcPoints.length - 2}
 									{@html kd(
 										(() => {
-											const val = colorize(colorYc[i + 1], `\\bm{${displayedYcPoints[i + 1]}}`)
-											const ptVal = colorize(colorYc[i], `\\bm{${i == 0 ? sds(pt) : pt}}`)
-											return `y_{${i + 1}}=${val}= \\frac{${sdw(coeffYc)}(${sds(b)}+ ${sdw(zl + zr)}\\cdot${ptVal})^{1/3}}{${sds(b)}+ ${sdw(zl / 2 + zr / 2)}\\cdot${ptVal}}`
+											const val = colorize(colorYc[i + 1], `\\bm{${sdx(displayedYcPoints[i + 1])}}`)
+											const ptVal = colorize(colorYc[i], `\\bm{${i == 0 ? sds(pt) : sdx(pt)}}`)
+											return `y_{${i + 1}}=${val}= \\frac{${sdw(coeffYc)}(${sds(b)}+ ${sdw(zl + zr)}\\cdot${sdx(ptVal)})^{1/3}}{${sds(b)}+ ${sdw(zl / 2 + zr / 2)}\\cdot${sdx(ptVal)}}`
 										})()
 									)}
-									<!-- {:else}
-									{@html kd(
-										(() => {
-											const val = colorize(colorYc[i + 1], `\\bm{${sdw(displayedYcPoints[i + 1])}}`)
-											const ptVal = colorize(colorYc[i], `\\bm{${i == 0 ? sds(pt) : sdw(pt)}}`)
-											return `y_{${i + 1}}=${val}= \\frac{${sd(coeffYc, wdigs + 1)}(${sds(b)}+ ${sdw(zl + zr)}\\cdot${ptVal})^{1/3}}{${sds(b)}+ ${sdw(zl / 2 + zr / 2)}\\cdot${ptVal}}`
-										})()
-									)} -->
 								{/if}
 							{/if}
 						{/each}
@@ -784,10 +778,10 @@
 							dropdown at the top of this page.)
 						{:else}
 							Notice that now {@html ki(
-								`y_{${iteratedYcPoints.length - 1}}=f(y_{${iteratedYcPoints.length - 2}})`
-							)}, that is {@html ki(`f(${yc})=${yc}`)}, and {@html ki(
-								`\\bm{y=${yc}\\,\\mathsf{m}}`
-							)} is the fixed-point solution to the depth of flow equation derived above.
+								`y_{${iteratedYcPoints.length - 2}}=f(y_{${iteratedYcPoints.length - 3}})=${yc}`
+							)} when rounded to the specified number of interim working digits. The fixed-point solution
+							to the depth of flow equation derived above is
+							{@html kd(`\\bm{y=${yc}\\,\\mathsf{m}}`)}
 						{/if}
 					{/snippet}
 				</Card>

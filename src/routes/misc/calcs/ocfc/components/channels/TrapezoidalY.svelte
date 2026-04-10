@@ -3,7 +3,7 @@
 
 	import TrapCanvas from './TrapCanvas.svelte'
 	import Card from '../Card.svelte'
-	import { ki, kd, sd, debounce } from '$lib/utilities/utils.js'
+	import { ki, kd, sd, debounce, makeHex, colorize } from '$lib/utilities/utils.js'
 	import { common, trap } from '$lib/fluids/openChannel/utils'
 	import { digits } from '../../digits.svelte.js'
 	import { trapY } from '../../store.svelte.js'
@@ -113,15 +113,7 @@
 	let colorYc = $state([])
 
 	const fadeSteps = 4
-
-	const makeHex = (age) => {
-		if (age >= fadeSteps) return null
-		const ch = Math.round((1 - age / fadeSteps) * 0x88)
-		const toHex = (n) => n.toString(16).padStart(2, '0')
-		return `${toHex(0)}${toHex(ch)}${toHex(ch)}`
-	}
-
-	const colorize = (color, tex) => (color ? `\\textcolor{#${color}}{${tex}}` : tex)
+	const mkHex = (age, color) => makeHex(age, fadeSteps, color)
 
 	$effect(() => {
 		const newPoints = iteratedYcPoints.slice()
@@ -132,7 +124,7 @@
 				setTimeout(() => {
 					displayedYcPoints[idx] = newPoints[idx]
 					if (idx === newPoints.length - 1) displayedYcPoints.length = newPoints.length
-					for (let j = 0; j <= idx; j++) colorYc[j] = makeHex(idx - j)
+					for (let j = 0; j <= idx; j++) colorYc[j] = mkHex(idx - j)
 					if (idx === newPoints.length - 1) colorYc.length = newPoints.length
 				}, idx * 300)
 			)
@@ -143,7 +135,7 @@
 				setTimeout(
 					() => {
 						for (let j = 0; j < colorYc.length; j++)
-							colorYc[j] = makeHex(newPoints.length - 1 - j + ee)
+							colorYc[j] = mkHex(newPoints.length - 1 - j + ee)
 					},
 					(newPoints.length - 1 + ee) * 300
 				)

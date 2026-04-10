@@ -1,4 +1,33 @@
 import katex from 'katex'
+import Decimal from 'decimal.js'
+
+Decimal.set({ rounding: Decimal.ROUND_HALF_UP })
+
+/**
+ * Fades a packed 24-bit RGB color toward black over fadeSteps steps.
+ * Returns null when fully faded (use as signal to skip \textcolor).
+ * @param {number} age - Steps since this value was last updated
+ * @param {number} fadeSteps - Total steps to fade over
+ * @param {number} color - Packed 24-bit RGB integer, e.g. 0xff0000 for red
+ * @returns {string|null}
+ */
+export const makeHex = (age, fadeSteps, color = 0xff0000) => {
+	if (age >= fadeSteps) return null
+	const factor = 1 - age / fadeSteps
+	const toHex = (/** @type {number} */ n) => Math.round(n).toString(16).padStart(2, '0')
+	const r = ((color >> 16) & 0xff) * factor
+	const g = ((color >> 8) & 0xff) * factor
+	const b = (color & 0xff) * factor
+	return `${toHex(r)}${toHex(g)}${toHex(b)}`
+}
+
+/**
+ * Wraps a KaTeX string in \textcolor if a color is provided.
+ * @param {string|null} color - Hex color string without '#', or null for black
+ * @param {string} tex - KaTeX string to colorize
+ * @returns {string}
+ */
+export const colorize = (color, tex) => (color ? `\\textcolor{#${color}}{${tex}}` : tex)
 
 export const ki = (/** @type {string} */ tex) => {
 	return katex.renderToString(tex)
@@ -50,6 +79,46 @@ export const sd = (num, sigdig, extra = true) => {
 		const expMagnitude = Math.floor(Math.log10(Math.abs(numVal)))
 		const expDecimalPlaces = Math.max(0, actualSigdig - expMagnitude - 1)
 		result = numVal.toFixed(expDecimalPlaces)
+	}
+
+	return result
+}
+
+/**
+ * Like sd() but uses Decimal.js for consistent ROUND_HALF_UP behaviour.
+ * @param {number} num
+ * @param {number} sigdig
+ * @param {boolean} extra - If true and first non-zero digit is 1, use sigdig+1
+ * @returns {string}
+ */
+export const sdD = (num, sigdig, extra = true) => {
+	if (num === 0) return '0'
+	if (num == null || !isFinite(num)) return String(num)
+
+	const d = new Decimal(num)
+	const absD = d.abs()
+	const sign = d.isNegative() ? '-' : ''
+
+	const firstNonZeroDigit = parseInt(absD.toString().match(/[1-9]/)?.[0] ?? '1')
+	const actualSigdig = extra && firstNonZeroDigit === 1 ? sigdig + 1 : sigdig
+
+	const magnitude = absD.log(10).floor().toNumber()
+	const decimalPlaces = actualSigdig - magnitude - 1
+
+	let result
+	if (decimalPlaces >= 0) {
+		result = sign + absD.toDecimalPlaces(decimalPlaces).toFixed(decimalPlaces)
+	} else {
+		const factor = new Decimal(10).pow(-decimalPlaces)
+		result = sign + absD.div(factor).toDecimalPlaces(0).mul(factor).toFixed()
+	}
+
+	// Convert exponential notation if it slips through
+	if (result.includes('e')) {
+		const numVal = new Decimal(result.replace(sign, ''))
+		const expMagnitude = numVal.log(10).floor().toNumber()
+		const expDecimalPlaces = Math.max(0, actualSigdig - expMagnitude - 1)
+		result = sign + numVal.toDecimalPlaces(expDecimalPlaces).toFixed(expDecimalPlaces)
 	}
 
 	return result
