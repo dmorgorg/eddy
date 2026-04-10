@@ -15,6 +15,9 @@
 	let zeroDepthError = $state(false)
 	let zeroBaseWarning = $state(false)
 	let bothVerticalWarning = $state(false)
+	let noFlowAreaError = $state(false)
+	let oscillatingY = $state(false)
+	let oscillatingYc = $state(false)
 
 	const sds = (num) => {
 		return sd(num, sdigs, extraForSdigs)
@@ -62,6 +65,17 @@
 		}
 	}
 
+	let initGuessY = $state(1)
+	let initGuessYc = $state(1)
+	const setInitGuessY = debounce((val) => {
+		initGuessY = Number(val)
+	}, 800)
+	const setInitGuessYc = debounce((val) => {
+		initGuessYc = Number(val)
+	}, 800)
+	let iteratedYPoints = $derived([])
+	let iteratedYcPoints = $derived([])
+
 	let zl = $derived(Number(trapQ.zl))
 	let zr = $derived(Number(trapQ.zr))
 	let b = $derived(Number(trapQ.b))
@@ -84,24 +98,15 @@
 	let Rc = $derived(sdw(common.getR(Ac, Pc)))
 	let Sc = $derived(sdw(common.getCriticalSlope(n, vc, Rc)))
 
-	let initGuessY = $state(1)
-	let initGuessYc = $state(1)
-	const setInitGuessY = debounce((val) => {
-		initGuessY = Number(val)
-	}, 800)
-	const setInitGuessYc = debounce((val) => {
-		initGuessYc = Number(val)
-	}, 800)
-	let iteratedYPoints = $derived([])
-	let iteratedYcPoints = $derived([])
 	let coeffY = $derived(sdw(Math.pow((Q * n) / Math.pow(s / 100, 0.5), 0.6)))
-	let coeffYc = $derived(sdw(Math.pow((Q * Q) / g, 1 / 3)))
+	let coeffYc = $derived(sd(Math.pow((Q * Q) / g, 1 / 3), wdigs + 1))
 
 	const setYIterationPoints = () => {
 		let next = Number(initGuessY)
 		// iteratedYPoints.push(Number(initGuessY))
 		let current = next + 1
 		let iterations = 0
+		oscillatingY = false
 		const points = [next]
 		while (current != next) {
 			++iterations
@@ -118,27 +123,44 @@
 			)
 			points.push(next)
 			// in case of non convergence
-			if (iterations > 20) break
+			if (iterations > 40) break
 		}
 		iteratedYPoints = points
 	}
 	const setYcIterationPoints = () => {
 		let next = Number(initGuessYc)
-		// iteratedYPoints.push(Number(initGuessY))
+		let isOscillating = false
 		let current = next + 1
-		let iterations = 0
+		let iterations = 1
 		const points = [next]
-		while (current != next) {
+		while (sdw(current) != sdw(next)) {
 			++iterations
 			current = next
 			next = Number(
-				sdw((coeffYc * Math.pow(b + (zl + zr) * current, 1 / 3)) / (b + ((zl + zr) / 2) * current))
+				sd(
+					(coeffYc * Math.pow(b + (zl + zr) * current, 1 / 3)) / (b + ((zl + zr) / 2) * current),
+					wdigs + 1,
+					extraForWdigs
+				)
 			)
 			points.push(next)
 			// in case of non convergence
-			if (iterations > 20) break
+			if (iterations > 5) {
+				if (points[iterations - 1] == points[iterations - 3]) {
+					if (points[iterations - 2] == points[iterations - 4]) {
+						isOscillating = true
+						points.push(sdw(points[iterations - 2] / 2 + points[iterations - 1] / 2))
+						break
+					}
+				}
+			}
 		}
+		if (!isOscillating) {
+			points.push(next)
+		}
+		oscillatingYc = isOscillating
 		iteratedYcPoints = points
+		console.log(points)
 	}
 
 	$effect(() => {
@@ -722,19 +744,51 @@
 						{#each displayedYcPoints as pt, i}
 							<!-- don't print out an equation with the last element as independent variable with calculated value not defined -->
 							{#if !isNaN(displayedYcPoints[i + 1])}
-								{@html kd(
-									(() => {
-										const val = colorize(colorYc[i + 1], `\\bm{${sdw(displayedYcPoints[i + 1])}}`)
-										const ptVal = colorize(colorYc[i], `\\bm{${i == 0 ? sds(pt) : sdw(pt)}}`)
-										return `y_{${i + 1}}=${val}= \\frac{${sdw(coeffYc)}\\cdot(${sds(b)}+ ${sdw(zl + zr)}\\cdot${ptVal})^{1/3}}{${sds(b)}+ ${sdw(zl / 2 + zr / 2)}\\cdot${ptVal}}`
-									})()
-								)}
+								<!-- if oscillating, calculated value is pushed to the array of points so we don't display the last one -->
+								{#if i < iteratedYcPoints.length - 2}
+									{@html kd(
+										(() => {
+											const val = colorize(colorYc[i + 1], `\\bm{${displayedYcPoints[i + 1]}}`)
+											const ptVal = colorize(colorYc[i], `\\bm{${i == 0 ? sds(pt) : pt}}`)
+											return `y_{${i + 1}}=${val}= \\frac{${sdw(coeffYc)}(${sds(b)}+ ${sdw(zl + zr)}\\cdot${ptVal})^{1/3}}{${sds(b)}+ ${sdw(zl / 2 + zr / 2)}\\cdot${ptVal}}`
+										})()
+									)}
+									<!-- {:else}
+									{@html kd(
+										(() => {
+											const val = colorize(colorYc[i + 1], `\\bm{${sdw(displayedYcPoints[i + 1])}}`)
+											const ptVal = colorize(colorYc[i], `\\bm{${i == 0 ? sds(pt) : sdw(pt)}}`)
+											return `y_{${i + 1}}=${val}= \\frac{${sd(coeffYc, wdigs + 1)}(${sds(b)}+ ${sdw(zl + zr)}\\cdot${ptVal})^{1/3}}{${sds(b)}+ ${sdw(zl / 2 + zr / 2)}\\cdot${ptVal}}`
+										})()
+									)} -->
+								{/if}
 							{/if}
 						{/each}
-						Notice that now {@html ki(
-							`y_{${iteratedYcPoints.length - 1}}=f(y_{${iteratedYcPoints.length - 2}})`
-						)}, that is {@html ki(`f(${yc})=${yc}`)}, and {@html ki(`\\bm{y=${yc}\\,\\mathsf{m}}`)} is
-						the fixed-point solution to the depth of flow equation derived above.
+						{#if oscillatingYc}
+							Notice that {@html ki(
+								`y_{${iteratedYcPoints.length - 2}}=y_{${iteratedYcPoints.length - 4}}=\\bm{${iteratedYcPoints[iteratedYcPoints.length - 1]}}`
+							)} and that {@html ki(
+								`y_{${iteratedYcPoints.length - 3}}=y_{${iteratedYcPoints.length - 5}}=\\bm{${iteratedYcPoints[iteratedYcPoints.length - 3]}}`
+							)}. This iteration is oscillating, and will continue to do so; it will not converge
+							with the number of significant digits specified for interim calculations (i.e., {@html ki(
+								`${wdigs}`
+							)}). But the value for {@html ki(`y_c`)} lies between these two values. Take the average
+							of the two values and round to {@html ki(`${wdigs}`)} significant digits for {@html ki(
+								`y_c`
+							)}.
+							{@html kd(
+								`y_c=\\frac{${iteratedYcPoints[iteratedYcPoints.length - 2]}+${iteratedYcPoints[iteratedYcPoints.length - 3]}}{2}= ${iteratedYcPoints[iteratedYcPoints.length - 3]}\\,\\mathsf{m}`
+							)}
+							(Be aware that, by taking the average, this result may be inaccurate in the last digit.
+							If the last digit is important to you, you can increase the working digits in the Show Information
+							dropdown at the top of this page.)
+						{:else}
+							Notice that now {@html ki(
+								`y_{${iteratedYcPoints.length - 1}}=f(y_{${iteratedYcPoints.length - 2}})`
+							)}, that is {@html ki(`f(${yc})=${yc}`)}, and {@html ki(
+								`\\bm{y=${yc}\\,\\mathsf{m}}`
+							)} is the fixed-point solution to the depth of flow equation derived above.
+						{/if}
 					{/snippet}
 				</Card>
 			{/snippet}
@@ -820,7 +874,7 @@
 <style lang="scss">
 	article {
 		margin-inline: auto;
-		width: 32em;
+		width: 36em;
 	}
 
 	.inputs-row {

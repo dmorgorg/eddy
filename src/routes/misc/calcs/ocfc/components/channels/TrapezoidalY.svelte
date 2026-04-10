@@ -16,7 +16,7 @@
 	let zeroBaseWarning = $state(false)
 	let bothVerticalWarning = $state(false)
 	let noFlowAreaError = $state(false)
-	let ySoHighError = $state(false)
+	// let ySoHighError = $state(false)
 
 	const sds = (num) => {
 		return sd(num, sdigs, extraForSdigs)
