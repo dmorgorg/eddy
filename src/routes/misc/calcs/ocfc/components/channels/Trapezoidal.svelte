@@ -5,7 +5,7 @@
 	import TrapezoidalQ from './TrapezoidalQ.svelte'
 	import TrapezoidalY from './TrapezoidalY.svelte'
 	// let { sdigs, wdigs, extraForSdigs, extraForWdigs } = digits;
-	let yorq = 'trapezoidalQ'
+	let yorq = 'trapezoidalY'
 	let channelType = 'trapezoidal'
 </script>
 
@@ -16,7 +16,7 @@
 	<div class:hide={yorq !== 'trapezoidalY'}>
 		<TrapezoidalY />
 	</div>
-	<div class:hide={yorq !== 'trapezoidalQ'}>
+	<!-- <div class:hide={yorq !== 'trapezoidalQ'}>
 		<TrapezoidalQ />
-	</div>
+	</div> -->
 {/if}

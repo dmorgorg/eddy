@@ -45,21 +45,51 @@
 	let bRightX = $derived(Math.max(channelRightX - zedR * dPx, bLeftX))
 	let channelBottomY = $derived(Math.round(surroundTopY + dPx))
 
-	let levelDown = $derived.by(() => {
-		let temp = y <= 0.25 ? 0.25 : y
-		temp = y > 15 ? 15 : y
-		// Used Lagrange intgerpolation for a quadratic that levels off at higher values
-		return ((0.267 * temp * temp - 10.33 * temp + 95) * dPx) / 100
-	})
-	let waterTopY = $derived(surroundTopY + levelDown)
+	// let levelDown = $derived.by(() => {
+	// 	let temp = y <= 0.25 ? 0.25 : y
+	// 	temp = y > 15 ? 15 : y
+	// 	// Used Lagrange intgerpolation for a quadratic that levels off at higher values
+	// 	// return ((0.267 * temp * temp - 10.33 * temp + 95) * dPx) / 100
+	// 	return ((0.422 * temp * temp - 12.67 * temp + 90) * dPx) / 100
+	// })
+	let levelUp = $derived.by(() => {
+		let temp = y <= 0.01 ? 0.011 : y
+		temp = temp > 15 ? 15 : temp
 
+		let yy = (Math.pow(222 - Math.pow(temp - 14.9, 2), 0.5) * 6.5 * dPx) / 100 + 2
+		// console.log('y: ' + y + ', temp: ' + temp + ', yy: ' + yy)
+		// console.log(
+		// 	'cBy: ' +
+		// 		channelBottomY +
+		// 		', sTy: ' +
+		// 		surroundTopY +
+		// 		', diff: ' +
+		// 		(channelBottomY - surroundTopY) +
+		// 		', dPx: ' +
+		// 		dPx
+		// )
+
+		return Math.round(yy)
+	})
+	// let waterTopY = $derived(surroundTopY + levelDown)
+	let waterTopY = $derived(channelBottomY - levelUp)
+	// console.log(levelUp)
 	// let channelBaseX = $derived(Math.round(channelLeftX + (TPx * zl) / (zl + zr)))
 
 	let extension = $state(10)
-	let leftSlope = $derived(dPx / (bLeftX - channelLeftX))
-	let leftSlopeDX = $derived(levelDown / leftSlope)
-	let rightSlope = $derived(dPx / (channelRightX - bRightX))
-	let rightSlopeDX = $derived(levelDown / rightSlope)
+	let leftSlope = $derived((bLeftX - channelLeftX) / dPx)
+	let leftSlopeDX = $derived(Math.round(levelUp * leftSlope))
+	let rightSlope = $derived((channelRightX - bRightX) / dPx)
+	let rightSlopeDX = $derived(Math.round(levelUp * rightSlope))
+
+	$effect(() => {
+		console.log(
+			'(' + channelLeftX + ', ' + surroundTopY + '), (' + bLeftX + ', ' + channelBottomY + ')'
+		)
+		console.log(
+			'rSlope: ' + rightSlope + ', levelUp: ' + levelUp + ', rightSlopeDX: ' + rightSlopeDX
+		)
+	})
 
 	let extensionLeft = $derived(
 		leftSlope < 0.5 ? 1.5 * extension : leftSlope > 0.95 ? 0.5 * extension : extension
@@ -98,17 +128,17 @@
 		ctx.fill()
 		// ctx.stroke()
 
-		const gradient = ctx.createLinearGradient(0, canvasPaddingTop + levelDown, 0, channelBottomY)
+		const gradient = ctx.createLinearGradient(0, channelBottomY - levelUp, 0, channelBottomY)
 		gradient.addColorStop(0, '#0bb')
 		gradient.addColorStop(1, '#066')
 		ctx.fillStyle = gradient
 		ctx.strokeStyle = 'red'
 		ctx.beginPath()
-		ctx.moveTo(channelLeftX + leftSlopeDX, waterTopY)
+		ctx.moveTo(bLeftX - leftSlopeDX, waterTopY)
 		// ctx.moveTo(channelLeftX, waterTopY)
 		ctx.lineTo(bLeftX, channelBottomY)
 		ctx.lineTo(bRightX, channelBottomY)
-		ctx.lineTo(channelRightX - rightSlopeDX, waterTopY)
+		ctx.lineTo(bRightX + rightSlopeDX, waterTopY)
 		ctx.fill()
 		// ctx.stroke()
 
@@ -117,10 +147,10 @@
 		ctx.lineJoin = 'round'
 		ctx.beginPath()
 		ctx.lineWidth = 2
-		ctx.moveTo(channelLeftX - leftExtensionX, surroundTopY - leftExtensionY)
+		ctx.moveTo(channelLeftX, surroundTopY)
 		ctx.lineTo(bLeftX, channelBottomY)
 		ctx.lineTo(bRightX, channelBottomY)
-		ctx.lineTo(channelRightX + rightExtensionX, surroundTopY - rightExtensionY)
+		ctx.lineTo(channelRightX, surroundTopY)
 		ctx.stroke()
 	}
 

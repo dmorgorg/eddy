@@ -77,8 +77,8 @@
 	const setInitGuessYc = debounce((val) => {
 		initGuessYc = Number(val)
 	}, 800)
-	let iteratedYPoints = $derived([])
-	let iteratedYcPoints = $derived([])
+	let iteratedYPoints = $state([1])
+	let iteratedYcPoints = $state([1])
 
 	let zl = $derived(Number(trapQ.zl))
 	let zr = $derived(Number(trapQ.zr))
@@ -88,14 +88,13 @@
 	let n = $derived(Number(trapQ.n))
 	let g = $derived(Number(trapQ.g))
 
-	let y = $derived(sdw(getYfromQ()))
+	let y = $derived(sdw(iteratedYPoints[iteratedYPoints.length - 1]))
 	let A = $derived(sdw(trap.getArea(y, zl, b, zr)))
 	let v = $derived(sdw(common.getVfromQandA(Q, A)))
 	let E = $derived(sdw(common.getE(y, v, g)))
 	let T = $derived(sdw(trap.getT(y, zl, b, zr)))
 	let NF = $derived(sdw(common.getNF(v, A, T, g)))
 	let yc = $derived(sdw(iteratedYcPoints[iteratedYcPoints.length - 1]))
-	// let yc = $derived(sdw(getYCfromQ()))
 	let Ac = $derived(sdw(trap.getArea(yc, zl, b, zr)))
 	let vc = $derived(sdw(common.getVfromQandA(Q, Ac)))
 	let Emin = $derived(sdw(common.getE(yc, vc, g)))
@@ -108,32 +107,7 @@
 
 	const setYIterationPoints = () => {
 		let next = Number(initGuessY)
-		// iteratedYPoints.push(Number(initGuessY))
-		let current = next + 1
-		let iterations = 0
-		oscillatingY = false
-		const points = [next]
-		while (current != next) {
-			++iterations
-			current = next
-			next = Number(
-				sdw(
-					(coeffY *
-						Math.pow(
-							b + Math.pow(1 + zl * zl, 0.5) * current + Math.pow(1 + zr * zr, 0.5) * current,
-							0.4
-						)) /
-						(b + (zl / 2 + zr / 2) * current)
-				)
-			)
-			points.push(next)
-			// in case of non convergence
-			if (iterations > 40) break
-		}
-		iteratedYPoints = points
-	}
-	const setYcIterationPoints = () => {
-		let next = Number(initGuessYc)
+		// just required locally so as to not repeatedly trigger $effect
 		let isOscillating = false
 		let current = next + 1
 		let iterations = 1
@@ -142,10 +116,13 @@
 			++iterations
 			current = next
 			next = Number(
-				sd(
-					(coeffYc * Math.pow(b + (zl + zr) * current, 1 / 3)) / (b + ((zl + zr) / 2) * current),
-					wdigs + 1,
-					extraForWdigs
+				sdx(
+					(coeffY *
+						Math.pow(
+							b + Math.pow(1 + zl * zl, 0.5) * current + Math.pow(1 + zr * zr, 0.5) * current,
+							0.4
+						)) /
+						(b + (zl / 2 + zr / 2) * current)
 				)
 			)
 			points.push(next)
@@ -163,23 +140,53 @@
 		if (!isOscillating) {
 			points.push(next)
 		}
+		oscillatingY = isOscillating
+		iteratedYPoints = points
+		// console.log(points)
+	}
+	const setYcIterationPoints = () => {
+		let next = Number(initGuessYc)
+		// just required locally so as not to repeatedly trigger $effect
+		let isOscillating = false
+		let current = next + 1
+		let iterations = 1
+		const points = [next]
+		while (sdw(current) != sdw(next)) {
+			++iterations
+			current = next
+			next = Number(
+				sdx((coeffYc * Math.pow(b + (zl + zr) * current, 1 / 3)) / (b + ((zl + zr) / 2) * current))
+			)
+			points.push(next)
+			// check for oscillation
+			if (iterations > 5) {
+				if (points[iterations - 1] == points[iterations - 3]) {
+					if (points[iterations - 2] == points[iterations - 4]) {
+						isOscillating = true
+						points.push(sdw(points[iterations - 2] / 2 + points[iterations - 1] / 2))
+						break
+					}
+				}
+			}
+		}
+		if (!isOscillating) {
+			points.push(next)
+		}
 		oscillatingYc = isOscillating
 		iteratedYcPoints = points
-		console.log(points)
+		// console.log(points)
 	}
 
+	// setYIterationPoints()
+	// setYcIterationPoints()
+
 	$effect(() => {
-		void trapQ.b
-		void trapQ.Q
-		void trapQ.zl
-		void trapQ.zr
-		void trapQ.s
-		void trapQ.n
-		void trapQ.g
-		// void initGuessYc
 		setYIterationPoints()
 		setYcIterationPoints()
 	})
+
+	// console.log(y + ', ' + iteratedYPoints[iteratedYPoints.length - 1])
+	// console.log(yc + ', ' + iteratedYcPoints[iteratedYcPoints.length - 1])
 
 	let displayedYPoints = $state([])
 	let displayedYcPoints = $state([])
@@ -201,7 +208,7 @@
 					if (idx === newPoints.length - 1) displayedYPoints.length = newPoints.length
 					for (let j = 0; j <= idx; j++) colorY[j] = mkHex(idx - j)
 					if (idx === newPoints.length - 1) colorY.length = newPoints.length
-				}, idx * 300)
+				}, idx * 150)
 			)
 		}
 		for (let e = 1; e <= fadeSteps; e++) {
@@ -211,7 +218,7 @@
 					() => {
 						for (let j = 0; j < colorY.length; j++) colorY[j] = mkHex(newPoints.length - 1 - j + ee)
 					},
-					(newPoints.length - 1 + ee) * 300
+					(newPoints.length - 1 + ee) * 150
 				)
 			)
 		}
@@ -549,6 +556,12 @@
 							'\\left|y_{n+1}-y_n\\right|'
 						)} is sufficiently small.
 						<br /><br />
+						(We iterate until two consecutive values for {@html ki('y_c')} are the same when converted
+						to the required number of significant digits. If we use the same precision in our iterations
+						that we use to test for convergence, it is not uncommon - due to rounding - for iterated values
+						to get into an oscillating state and never converge. For that reason we use an extra significant
+						digit for the iterations.)
+						<br /><br />
 						Start with an (editable) initial guess of {@html ki('y_0 =')}
 						<!-- svelte-ignore a11y_click_events_have_key_events -->
 						<!-- svelte-ignore a11y_no_static_element_interactions -->
@@ -569,19 +582,47 @@
 						{#each displayedYPoints as pt, i}
 							<!-- don't print out an equation with the last element as independent variable with calculated value not defined -->
 							{#if !isNaN(displayedYPoints[i + 1])}
-								{@html kd(
-									(() => {
-										const val = colorize(colorY[i + 1], `\\bm{${sdw(displayedYPoints[i + 1])}}`)
-										const ptVal = colorize(colorY[i], `\\bm{${i == 0 ? sds(pt) : sdw(pt)}}`)
-										return `y_{${i + 1}}=${val}= \\frac{${sdw(coeffY)}\\cdot(${sds(b)}+ ${sdw((1 + zl ** 2) ** 0.5 + (1 + zr ** 2) ** 0.5)}\\cdot${ptVal})^{2/5}}{\\left(${sds(b)}+ ${sdw(zl / 2 + zr / 2)}\\cdot${ptVal})^{2/5}\\right)^{2/3}}`
-									})()
-								)}
+								<!-- if oscillating, calculated value is pushed to the array of points so we don't display the last one -->
+								{#if i < iteratedYPoints.length - 2}
+									{@html kd(
+										(() => {
+											const val = colorize(colorY[i + 1], `\\bm{${sdx(displayedYPoints[i + 1])}}`)
+											const ptVal = colorize(colorY[i], `\\bm{${i == 0 ? sds(pt) : sdx(pt)}}`)
+											return `y_{${i + 1}}=${val}= \\frac{${sdw(coeffY)}\\cdot(${sds(b)}+ ${sdw((1 + zl ** 2) ** 0.5 + (1 + zr ** 2) ** 0.5)}\\cdot${ptVal})^{2/5}}{${sds(b)}+ ${sdw(zl / 2 + zr / 2)}\\cdot${ptVal}}`
+										})()
+									)}
+								{/if}
 							{/if}
 						{/each}
-						Notice that now {@html ki(
+						<!-- Notice that now {@html ki(
 							`y_{${iteratedYPoints.length - 1}}=f(y_{${iteratedYPoints.length - 2}})`
 						)}, that is {@html ki(`f(${y})=${y}`)}, and {@html ki(`\\bm{y=${y}\\,\\mathsf{m}}`)} is the
-						fixed-point solution to the depth of flow equation derived above.
+						fixed-point solution to the depth of flow equation derived above. -->
+						{#if oscillatingY}
+							Notice that {@html ki(
+								`y_{${iteratedYPoints.length - 2}}=y_{${iteratedYPoints.length - 4}}=\\bm{${iteratedYPoints[iteratedYPoints.length - 1]}}`
+							)} and that {@html ki(
+								`y_{${iteratedYPoints.length - 3}}=y_{${iteratedYPoints.length - 5}}=\\bm{${iteratedYPoints[iteratedYPoints.length - 3]}}`
+							)}. This iteration is oscillating, and will continue to do so; it will not converge
+							with the number of significant digits specified for interim calculations (i.e., {@html ki(
+								`${wdigs}`
+							)}). But the value for {@html ki(`y_c`)} lies between these two values. Take the average
+							of the two values and round to {@html ki(`${wdigs}`)} significant digits for {@html ki(
+								`y_c`
+							)}.
+							{@html kd(
+								`y_c=\\frac{${iteratedYPoints[iteratedYPoints.length - 2]}+${iteratedYPoints[iteratedYPoints.length - 3]}}{2}= ${iteratedYPoints[iteratedYPoints.length - 3]}\\,\\mathsf{m}`
+							)}
+							(Be aware that, by taking the average, this result may be inaccurate in the last digit.
+							If the last digit is important to you, you can increase the working digits in the Show Information
+							dropdown at the top of this page.)
+						{:else}
+							Notice that now {@html ki(
+								`y_{${iteratedYPoints.length - 2}}=f(y_{${iteratedYPoints.length - 3}})=${y}`
+							)} when rounded to the specified number of interim working digits. The fixed-point solution
+							to the depth of flow equation derived above is
+							{@html kd(`\\bm{y=${y}\\,\\mathsf{m}}`)}
+						{/if}
 					{/snippet}
 				</Card>
 			{/snippet}
@@ -781,7 +822,7 @@
 								`y_{${iteratedYcPoints.length - 2}}=f(y_{${iteratedYcPoints.length - 3}})=${yc}`
 							)} when rounded to the specified number of interim working digits. The fixed-point solution
 							to the depth of flow equation derived above is
-							{@html kd(`\\bm{y=${yc}\\,\\mathsf{m}}`)}
+							{@html kd(`\\bm{y_c=${yc}\\,\\mathsf{m}}`)}
 						{/if}
 					{/snippet}
 				</Card>
