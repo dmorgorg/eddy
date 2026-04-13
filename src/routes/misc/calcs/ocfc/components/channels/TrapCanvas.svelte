@@ -83,27 +83,6 @@
 	let rightSlopeDX = $derived(Math.round(levelUp * rightSlope))
 
 	$effect(() => {
-		console.log(
-			'(' + channelLeftX + ', ' + surroundTopY + '), (' + bLeftX + ', ' + channelBottomY + ')'
-		)
-		console.log(
-			'rSlope: ' + rightSlope + ', levelUp: ' + levelUp + ', rightSlopeDX: ' + rightSlopeDX
-		)
-	})
-
-	let extensionLeft = $derived(
-		leftSlope < 0.5 ? 1.5 * extension : leftSlope > 0.95 ? 0.5 * extension : extension
-	)
-	let extensionRight = $derived(
-		rightSlope < 0.5 ? 1.5 * extension : rightSlope > 0.95 ? 0.5 * extension : extension
-	)
-
-	let rightExtensionX = $derived(Math.round(extensionRight * Math.cos(Math.atan(rightSlope))))
-	let rightExtensionY = $derived(Math.round(extensionRight * Math.sin(Math.atan(rightSlope))))
-	let leftExtensionX = $derived(Math.round(extensionLeft * Math.cos(Math.atan(leftSlope))))
-	let leftExtensionY = $derived(Math.round(extensionLeft * Math.sin(Math.atan(leftSlope))))
-
-	$effect(() => {
 		draw()
 	})
 
@@ -117,7 +96,7 @@
 
 		// draw grey channel surround/support
 		ctx.fillStyle = '#c1cdcd'
-		ctx.fillRect(0, surroundTopY, elWidthPx, surroundBottomY)
+		ctx.fillRect(0, surroundTopY + 2, elWidthPx, surroundBottomY)
 		//  remove grey channel surround from channel
 		ctx.fillStyle = 'white'
 		ctx.beginPath()
@@ -126,21 +105,18 @@
 		ctx.lineTo(bRightX, channelBottomY)
 		ctx.lineTo(channelRightX, surroundTopY)
 		ctx.fill()
-		// ctx.stroke()
 
 		const gradient = ctx.createLinearGradient(0, channelBottomY - levelUp, 0, channelBottomY)
-		gradient.addColorStop(0, '#0bb')
-		gradient.addColorStop(1, '#066')
+		gradient.addColorStop(0, '#0cc')
+		gradient.addColorStop(1, '#055')
 		ctx.fillStyle = gradient
 		ctx.strokeStyle = 'red'
 		ctx.beginPath()
 		ctx.moveTo(bLeftX - leftSlopeDX, waterTopY)
-		// ctx.moveTo(channelLeftX, waterTopY)
 		ctx.lineTo(bLeftX, channelBottomY)
 		ctx.lineTo(bRightX, channelBottomY)
 		ctx.lineTo(bRightX + rightSlopeDX, waterTopY)
 		ctx.fill()
-		// ctx.stroke()
 
 		ctx.strokeStyle = 'black'
 		ctx.lineCap = 'round'
@@ -168,40 +144,4 @@
 		</div>
 		<!-- </div> -->
 	</div>
-	<!-- y: {y}, levelD: {sds(levelDown)}, waterTopY: {sds(waterTopY)}, channelBY: {channelBottomY}, dPx: {dPx} -->
-	<!-- b: {bPx}, T: {T}, TPx: {TPx}, d: {dPx}, ar: {aspectRatio}, elWidthPx: {elWidthPx} -->
 {/if}
-
-<style>
-	/* .w-90 {
-		background: yellow;
-		margin-block: 1em;
-		margin-inline: auto;
-		width: 90%;
-		width: 40em;
-	} */
-	/* canvas { */
-	/* width: 100%; */
-	/* height: 100%; */
-	/* width: fit-content; */
-	/* margin-inline: 0; */
-	/* border: 0.1px solid red; */
-	/* } */
-	/* .canvas-wrap { */
-	/* background: darkseagreen; */
-
-	/* margin-inline: auto; */
-	/* padding-top: 1em; */
-	/* padding-bottom: 3em; */
-	/* padding-inline: 1em; */
-	/* padding: 0; */
-	/* width: fit-content; */
-	/* width: 100%; */
-	/* width: 20em; */
-	/* } */
-	/* .rect-wrap {
-		position: relative;
-		display: inline-block;
-		width: 100%;
-	} */
-</style>
