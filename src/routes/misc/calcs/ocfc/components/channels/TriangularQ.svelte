@@ -445,6 +445,12 @@
 </article>
 
 <style lang="scss">
+	article {
+		font-size: 120%;
+		margin-inline: auto;
+		padding-inline: 1em;
+		border: 1px solid red;
+	}
 	.inputs-row {
 		// font-size: 80%;
 		display: flex;
@@ -452,7 +458,7 @@
 		justify-content: space-between;
 		margin: 0.625em auto;
 		// border: 1px solid black;
-		width: 90%;
+		width: 100%;
 	}
 	label {
 		display: flex;
@@ -490,16 +496,11 @@
 		-webkit-appearance: none;
 		margin: 0;
 	}
-	article {
-		// border: 2px solid green;
-		margin-inline: auto;
-		width: 34em;
-		// width: fit-content;
-	}
-	.results {
-		margin-inline: auto;
-		width: 90%;
-	}
+
+	// .results {
+	// 	margin-inline: auto;
+	// 	// width: 90%;
+	// }
 	.heading {
 		color: #088;
 		font-size: 120%;

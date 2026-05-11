@@ -694,7 +694,7 @@
 		font-size: 120%;
 		margin-inline: auto;
 		padding-inline: 1em;
-		border: 1px solid green;
+		// border: 1px solid green;
 	}
 	.inputs-row {
 		display: flex;

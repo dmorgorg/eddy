@@ -514,12 +514,7 @@
 		-webkit-appearance: none;
 		margin: 0;
 	}
-	// article {
-	// 	// border: 2px solid green;
-	// 	margin-inline: auto;
-	// 	width: 34em;
-	// 	// width: fit-content;
-	// }
+
 	// .results {
 	// 	margin-inline: auto;
 	// 	width: 90%;
