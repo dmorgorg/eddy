@@ -16,7 +16,7 @@
 	<div class:hide={yorq !== 'trapezoidalY'}>
 		<TrapezoidalY />
 	</div>
-	<!-- <div class:hide={yorq !== 'trapezoidalQ'}>
+	<div class:hide={yorq !== 'trapezoidalQ'}>
 		<TrapezoidalQ />
-	</div> -->
+	</div>
 {/if}

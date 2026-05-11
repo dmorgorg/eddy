@@ -174,19 +174,12 @@
 		}
 		oscillatingYc = isOscillating
 		iteratedYcPoints = points
-		// console.log(points)
 	}
-
-	// setYIterationPoints()
-	// setYcIterationPoints()
 
 	$effect(() => {
 		setYIterationPoints()
 		setYcIterationPoints()
 	})
-
-	// console.log(y + ', ' + iteratedYPoints[iteratedYPoints.length - 1])
-	// console.log(yc + ', ' + iteratedYcPoints[iteratedYcPoints.length - 1])
 
 	let displayedYPoints = $state([])
 	let displayedYcPoints = $state([])
@@ -296,7 +289,6 @@
 				// if zr is already 0, don't change zl to 0 but keep at previous value
 				if (trapQ.zr === 0) {
 					bothVerticalWarning = true
-					// console.log('true')
 					trapQ.zl = value
 					e.target.value = trapQ.zl
 				} else {
@@ -307,7 +299,6 @@
 				e.target.value = sds(trapQ.zl)
 			}
 		} else if (id === 'zr') {
-			// let prev = trapQ.zr
 			if (value == 0) {
 				if (trapQ.zl === 0) {
 					bothVerticalWarning = true
@@ -908,8 +899,10 @@
 
 <style lang="scss">
 	article {
+		font-size: 120%;
 		margin-inline: auto;
-		width: 36em;
+		padding-inline: 1em;
+		// border: 1px solid pink;
 	}
 
 	.inputs-row {

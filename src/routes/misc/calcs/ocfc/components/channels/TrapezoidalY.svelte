@@ -269,12 +269,7 @@
 	<section class="canvas">
 		<TrapCanvas bind:zl={trapY.zl} bind:zr={trapY.zr} bind:b={trapY.b} bind:y={trapY.y} />
 	</section>
-	<!-- dPx: {dPx} -->
 
-	<!-- <section> -->
-
-	<!-- </section> -->
-	<!-- {trap.zl}, {trap.b}, {trap.zr}, {trap.y} -->
 	<section>
 		<div class="inputs-row single">
 			<label class="depth-label">
@@ -696,12 +691,9 @@
 
 <style lang="scss">
 	article {
-		// border: 2px solid green;
+		font-size: 120%;
 		margin-inline: auto;
-		// padding-bottom: 0;
-		// padding-inline: 0;
-		width: 32em;
-		// width: fit-content;
+		padding-inline: 1em;
 	}
 	// .canvas {
 	// 	margin-inline: auto;
