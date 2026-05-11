@@ -266,7 +266,7 @@
 </script>
 
 <article>
-	<section class="canvas">
+	<section>
 		<TrapCanvas bind:zl={trapY.zl} bind:zr={trapY.zr} bind:b={trapY.b} bind:y={trapY.y} />
 	</section>
 
@@ -694,22 +694,13 @@
 		font-size: 120%;
 		margin-inline: auto;
 		padding-inline: 1em;
+		border: 1px solid green;
 	}
-	// .canvas {
-	// 	margin-inline: auto;
-	// 	width: 40em;
-	// 	// border: 1px solid blue;
-	// 	// background: #eee;
-	// }
 	.inputs-row {
-		// font-size: 80%;
 		display: flex;
 		gap: 0.5em;
 		justify-content: space-between;
 		margin: 0.625em auto;
-		// border: 1px solid red;
-		// width: 90%;
-		// width: 32em;
 		width: 100%;
 
 		&.single {
@@ -769,19 +760,16 @@
 		margin-top: 1em;
 		margin-bottom: 0.5em;
 	}
-	// .error {
-	// 	align-items: center;
-	// 	border: 2px solid red;
-	// 	// border: 2px solid #088;
-	// 	box-shadow: 2px 2px 4px red;
-	// 	// box-shadow: 2px 2px 4px #088;
-	// 	color: red;
-	// 	display: flex;
-	// 	font-weight: bold;
-	// 	justify-content: center;
-	// 	margin: 2em auto;
-	// 	padding: 1em;
-	// 	text-align: center;
-	// 	width: 90%;
-	// }
+	@media (min-width: 481px) {
+		article {
+			font-size: 110%;
+			width: 36em;
+		}
+	}
+	@media (min-width: 641px) {
+		article {
+			font-size: 1em;
+			width: 36em;
+		}
+	}
 </style>

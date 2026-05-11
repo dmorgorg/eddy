@@ -124,8 +124,10 @@
 </script>
 
 <article>
-	<section><TriYCanvas bind:zl={triY.zl} bind:zr={triY.zr} bind:y={triY.y} /></section>
-	<!-- {triY.zl}, {triY.y}, {triY.zr} -->
+	<section>
+		<TriYCanvas bind:zl={triY.zl} bind:zr={triY.zr} bind:y={triY.y} />
+	</section>
+
 	<section>
 		<div class="inputs-row">
 			<label class="zl-label">
@@ -463,14 +465,18 @@
 </article>
 
 <style lang="scss">
+	article {
+		font-size: 120%;
+		margin-inline: auto;
+		padding-inline: 1em;
+		border: 1px solid green;
+	}
 	.inputs-row {
-		// font-size: 80%;
 		display: flex;
 		gap: 0.5em;
 		justify-content: space-between;
 		margin: 0.625em auto;
-		// border: 1px solid black;
-		width: 90%;
+		width: 100%;
 	}
 	label {
 		display: flex;
@@ -485,33 +491,6 @@
 		border-radius: 3px;
 		width: 32%;
 	}
-
-	// input {
-	// 	width: 4em;
-	// 	padding: 0;
-	// 	border: 1px solid #ccc;
-	// 	border: 0.125em solid #c1cdcd;
-	// 	border-radius: 3px;
-	// 	font-size: 0.9em;
-	// 	text-align: center;
-	// 	-moz-appearance: textfield;
-	// 	appearance: textfield;
-
-	// 	&:hover {
-	// 		border: 0.125em solid #088;
-	// 	}
-	// }
-
-	// input[type='number']:focus {
-	// 	// box-shadow: 1px 1px black;
-	// 	// background: #088;
-	// 	border: 0.125em solid #088;
-	// 	// box-sizing: border-box;
-	// 	outline: none;
-	// 	// outline: 1px #000 solid;
-	// 	// color: white;
-	// 	// border-color: #088;
-	// }
 
 	input {
 		width: 4em;
@@ -535,16 +514,16 @@
 		-webkit-appearance: none;
 		margin: 0;
 	}
-	article {
-		// border: 2px solid green;
-		margin-inline: auto;
-		width: 34em;
-		// width: fit-content;
-	}
-	.results {
-		margin-inline: auto;
-		width: 90%;
-	}
+	// article {
+	// 	// border: 2px solid green;
+	// 	margin-inline: auto;
+	// 	width: 34em;
+	// 	// width: fit-content;
+	// }
+	// .results {
+	// 	margin-inline: auto;
+	// 	width: 90%;
+	// }
 	.heading {
 		color: #088;
 		font-size: 120%;
@@ -564,5 +543,18 @@
 		padding: 1em;
 		text-align: center;
 		width: 90%;
+	}
+
+	@media (min-width: 481px) {
+		article {
+			font-size: 110%;
+			width: 36em;
+		}
+	}
+	@media (min-width: 641px) {
+		article {
+			font-size: 1em;
+			width: 36em;
+		}
 	}
 </style>

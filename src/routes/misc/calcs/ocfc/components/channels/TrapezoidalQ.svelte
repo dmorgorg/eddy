@@ -982,4 +982,17 @@
 		text-align: center;
 		width: 90%;
 	}
+
+	@media (min-width: 481px) {
+		article {
+			font-size: 110%;
+			width: 36em;
+		}
+	}
+	@media (min-width: 641px) {
+		article {
+			font-size: 1em;
+			width: 36em;
+		}
+	}
 </style>
